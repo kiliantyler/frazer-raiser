@@ -1,0 +1,138 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "bun format:check",
+      "type": "shell",
+      "command": "bun",
+      "args": [
+        "run",
+        "format:check"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "bun format:write",
+      "type": "shell",
+      "command": "bun",
+      "args": [
+        "run",
+        "format:write"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "bun check",
+      "type": "shell",
+      "command": "bun",
+      "args": [
+        "run",
+        "check"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [
+        "$eslint-stylish",
+        "$tsc"
+      ]
+    },
+    {
+      "label": "bun check:all",
+      "type": "shell",
+      "command": "bun",
+      "args": [
+        "run",
+        "check:all"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "bun fix:all",
+      "type": "shell",
+      "command": "bun",
+      "args": [
+        "run",
+        "fix:all"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "bun test",
+      "type": "shell",
+      "command": "bun",
+      "args": [
+        "run",
+        "test"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "bun sync:pet-gallery",
+      "type": "shell",
+      "command": "bun",
+      "args": [
+        "run",
+        "sync:pet-gallery"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "bun build",
+      "type": "shell",
+      "command": "bun",
+      "args": [
+        "run",
+        "build"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "bun knip",
+      "type": "shell",
+      "command": "bun",
+      "args": [
+        "run",
+        "knip"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "bun knip:deps",
+      "type": "shell",
+      "command": "bun",
+      "args": [
+        "run",
+        "knip:deps"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
