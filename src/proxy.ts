@@ -25,26 +25,22 @@ function isValidReturnPath(pathname: string): boolean {
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const searchParams = request.nextUrl.searchParams
-  
+
   // Skip processing if this is a static asset or invalid path
   if (!isValidReturnPath(pathname)) {
     return NextResponse.next()
   }
-  
+
   // Skip RSC (React Server Component) requests - these are internal Next.js fetches
   // and should not trigger auth redirects (they'll be handled by the page navigation)
   if (searchParams.has('_rsc')) {
     return NextResponse.next()
   }
-  
+
   const redirectUri = new URL('/login/callback', request.url).toString()
-  
-  // Use the current pathname as return path if it's valid, otherwise use '/'
-  const returnPathname = isValidReturnPath(pathname) ? pathname : '/'
-  
+
   const { session, headers, authorizationUrl } = await authkit(request, {
     redirectUri,
-    returnPathname,
   })
 
   if (!isPublicPath(pathname) && !('user' in session && session.user) && authorizationUrl) {
