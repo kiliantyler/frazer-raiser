@@ -14,7 +14,7 @@
     "lint:fix": "oxlint --fix .",
     "knip": "knip",
     "knip:deps": "knip --deps",
-    "dev": "next dev --turbo",
+    "dev": "bunx convex deploy --cmd 'next dev --turbo'",
     "preview": "next build && next start",
     "start": "next start",
     "typecheck": "tsc --noEmit"
