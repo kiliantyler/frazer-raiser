@@ -1,29 +1,63 @@
-# Create T3 App
+# Frazer Raiser
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+A Next.js 16 + Convex app for showcasing and privately managing the restoration of a 1948 Frazer.
 
-## What's next? How do I make an app with this?
+## Stack
+- Next.js 16 (App Router, RSC, Server Actions)
+- Convex (DB, queries/mutations)
+- UploadThing (image upload)
+- WorkOS (Auth)
+- PostHog (Analytics)
+- Tailwind CSS v4 + ShadCN UI
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## Local development
+1. Install deps
+   - `npm i` (or `bun install`)
+2. Copy `.env.example` to `.env.local` and set values (see Env Vars)
+3. Start Convex dev: `npx convex dev`
+4. Run app: `npm run dev`
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Environment variables
+Server:
+- `NODE_ENV`
+- `WORKOS_CLIENT_ID`
+- `WORKOS_API_KEY`
+- `WORKOS_COOKIE_PASSWORD` (32 characters, used for session cookie encryption)
+- `CONVEX_DEPLOYMENT`
+- `UPLOADTHING_TOKEN`
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+Client:
+- `NEXT_PUBLIC_CONVEX_URL`
+- `NEXT_PUBLIC_POSTHOG_KEY`
+- `NEXT_PUBLIC_POSTHOG_HOST` (e.g. `https://us.i.posthog.com`)
 
-## Learn More
+## Deployment
+### Vercel
+1. Import the repo to Vercel
+2. Set all env vars from above in Vercel Project Settings
+3. Configure domains
+4. Deploy
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+### Convex
+1. Create a Convex project and production deployment
+2. Set `CONVEX_DEPLOYMENT` and `NEXT_PUBLIC_CONVEX_URL` in Vercel
+3. Deploy functions using Convex dashboard or `npx convex deploy`
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+### WorkOS
+1. Create a WorkOS project (Client ID/API Key)
+2. Configure redirect URIs (absolute):
+   - Local: `http://localhost:3000/api/auth/workos`
+   - Prod: `https://<your-domain>/api/auth/workos`
+3. Add allowed origins for your Vercel domain
+4. Set `WORKOS_COOKIE_PASSWORD` to a 32-character random string
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+### UploadThing
+1. Create an app and token
+2. Set `UPLOADTHING_TOKEN` in Vercel
 
-## How do I deploy this?
+### PostHog
+1. Create a project, copy the public key and host
+2. Set `NEXT_PUBLIC_POSTHOG_KEY` and `NEXT_PUBLIC_POSTHOG_HOST`
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+## Theming
+Tailwind CSS variables (OKLCH) define a dark theme with a deep maroon primary and subtle chrome accents. See `src/styles/globals.css`.
