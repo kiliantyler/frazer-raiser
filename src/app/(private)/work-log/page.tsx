@@ -1,10 +1,13 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { api } from '@convex/_generated/api'
+import { withAuth } from '@workos-inc/authkit-nextjs'
 import { fetchQuery } from 'convex/nextjs'
 import { addWorkLogAction } from './actions'
 
 export default async function WorkLogPage() {
+  // Read request data before any non-deterministic operations (Date.now) to satisfy Next RSC constraint
+  await withAuth({ ensureSignedIn: true })
   const now = Date.now()
   const thirtyDays = 1000 * 60 * 60 * 24 * 30
   type WorkLogItem = { _id: string; date: number; hours: number; description: string; costDeltaCents?: number }

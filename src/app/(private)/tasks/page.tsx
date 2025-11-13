@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { api } from '@convex/_generated/api'
+import { withAuth } from '@workos-inc/authkit-nextjs'
 import { fetchQuery } from 'convex/nextjs'
 import { assignToMeAction, createTaskAction, updateTaskStatusAction } from './actions'
 
@@ -69,6 +70,8 @@ async function TasksByStatus({
 }
 
 export default async function TasksPage() {
+  // Read request data before any non-deterministic libs (Convex) to satisfy Next RSC constraint
+  await withAuth({ ensureSignedIn: true })
   return (
     <section className="space-y-6">
       <div className="flex items-end justify-between gap-4">
