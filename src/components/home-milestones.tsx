@@ -9,9 +9,9 @@ export function HomeMilestones() {
           <div className="mb-4 inline-block">
             <span className="text-sm font-semibold uppercase tracking-wider text-primary">Process</span>
           </div>
-          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Key Milestones</h2>
+          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Milestones</h2>
           <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
-            From disassembly to the final polish, track the major stages of this intricate restoration process.
+            From the first teardown bolts to final polish—these are the big steps.
           </p>
         </div>
 
@@ -19,22 +19,22 @@ export function HomeMilestones() {
           <MilestoneCard
             Icon={Search}
             title="Discovery & Teardown"
-            description="Carefully documenting and disassembling the vehicle to assess its condition."
+            description="Pulling it apart, bagging and tagging, and figuring out what's good and what's not."
           />
           <MilestoneCard
             Icon={Hammer}
             title="Body & Chassis Work"
-            description="Painstaking metalwork and structural repairs to bring the frame and body back to factory‑perfect form."
+            description="Rust repair, metalwork, and getting the shell straight and solid."
           />
           <MilestoneCard
             Icon={Cog}
             title="Mechanical Overhaul"
-            description="Rebuilding the original engine, transmission, and drivetrain to ensure performance and reliability."
+            description="Brakes, fuel, wiring, engine—and everything that makes it move and stop."
           />
           <MilestoneCard
             Icon={Sparkles}
             title="Paint & Final Assembly"
-            description="Period‑correct finish, re‑installed chrome, and a fully reupholstered interior."
+            description="Paint, chrome, interior, and the satisfying puzzle of putting it all back together."
           />
         </div>
       </div>

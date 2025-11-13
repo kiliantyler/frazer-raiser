@@ -9,24 +9,26 @@ export function HomeStory() {
           <div className="inline-block">
             <span className="text-sm font-semibold uppercase tracking-wider text-primary">The Story</span>
           </div>
-          <h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">The Story of a Time Capsule</h2>
+          <h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">How this started</h2>
           <div className="space-y-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
             <p>
-              Discovered after decades of slumber, this 1948 Frazer Manhattan is more than just a car; it&apos;s a
-              preserved piece of American history. Our mission is to meticulously restore every detail, from the iconic
-              chrome grille to the straight-six engine, preserving its heritage while preparing it for a new chapter on
-              the open road.
+              A friend gifted me a 1948 Frazer that had been tucked away in a barn for about twenty years. My dad and I
+              drove 25 hours to pick it up and haul it back home. Dust on the dash, flat tires, and the smell of old
+              fuel came with it.
             </p>
             <p>
-              This project is a testament to timeless design and enduring craftsmanship. We invite you to follow along
-              as we combine historical accuracy with modern techniques to give this automotive icon a second life.
+              We winched it onto a trailer, checked the straps at every stop, and chased sunrise across a few states.
+              Now we plan to make the most of it. Get it safe and reliable, keep its history intact, and do the hard
+              parts right. Brakes, steering, fuel, ignition, wiring, then trim and comfort. The goal is simple: first
+              start, first drive, first car show. We will share real numbers as we go, including time, parts, costs,
+              mistakes, and fixes.
             </p>
           </div>
         </div>
         <div className="mx-auto w-full max-w-xl">
           <Card className="group relative overflow-hidden border-border/40 bg-card/50 shadow-xl transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5">
             <CardContent className="p-4">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
+              <div className="relative aspect-4/3 overflow-hidden rounded-lg">
                 <Image
                   src="/frazer-badge.jpg"
                   alt="Chrome hood ornament close-up"
@@ -36,7 +38,7 @@ export function HomeStory() {
                   priority={false}
                   unoptimized
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               </div>
             </CardContent>
           </Card>
