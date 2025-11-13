@@ -12,7 +12,7 @@ export default async function PartsCostsPage() {
     _id: string
     name: string
     vendor?: string
-    status: 'ordered' | 'shipped' | 'received' | 'installed' | 'cancelled'
+    status?: 'ordered' | 'shipped' | 'received' | 'installed' | 'cancelled'
     priceCents: number
     purchasedOn?: number
     installedOn?: number

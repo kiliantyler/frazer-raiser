@@ -28,7 +28,7 @@ type PartListItem = {
   supplierName?: string
   supplierId?: string
   partNumber?: string
-  status: 'ordered' | 'shipped' | 'received' | 'installed' | 'cancelled'
+  status?: 'ordered' | 'shipped' | 'received' | 'installed' | 'cancelled'
   priceCents: number
   purchasedOn?: number
   installedOn?: number

@@ -37,12 +37,14 @@ export default defineSchema({
     vendor: v.optional(v.string()),
     supplierId: v.optional(v.id('suppliers')),
     partNumber: v.optional(v.string()),
-    status: v.union(
-      v.literal('ordered'),
-      v.literal('shipped'),
-      v.literal('received'),
-      v.literal('installed'),
-      v.literal('cancelled'),
+    status: v.optional(
+      v.union(
+        v.literal('ordered'),
+        v.literal('shipped'),
+        v.literal('received'),
+        v.literal('installed'),
+        v.literal('cancelled'),
+      ),
     ),
     priceCents: v.number(),
     purchasedOn: v.optional(v.number()),
