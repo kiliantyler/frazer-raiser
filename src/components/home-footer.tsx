@@ -9,7 +9,9 @@ export function HomeFooter() {
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
           <Button asChild size="sm" className="w-full sm:w-auto" aria-label="Login">
-            <Link href="/dashboard">Login</Link>
+            <Link href="/dashboard" prefetch={false}>
+              Login
+            </Link>
           </Button>
           <p className="text-xs text-muted-foreground text-center sm:text-right">
             © {new Date().getFullYear()} Frazer Raiser. All rights reserved.
