@@ -52,5 +52,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   // Skip Next.js assets and any file with an extension
-  matcher: [String.raw`/((?!_next/static|_next/image|favicon.ico|.*\..*).*)`],
+  // oxlint-disable-next-line prefer-string-raw
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)'],
 }
