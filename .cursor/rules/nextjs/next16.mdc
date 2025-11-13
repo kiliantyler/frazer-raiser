@@ -135,4 +135,5 @@ Follow these rules when you write code:
   - Favor server components and Next.js SSR.
   - Use only for Web API access in small components.
   - Avoid for data fetching or state management.
+- Do not use middleware.ts, it is now proxy.ts in Next 16
 - **NEVER USE UNKNOWNS OR ANY ALWAYS USE AN EXISTING TYPE (or create one as a last resort)**

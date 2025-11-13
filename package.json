@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build",
+    "build": "bunx convex deploy --cmd 'next build'",
     "check": "oxlint --deny-warnings . && tsc --noEmit",
     "check:all": "bun run typecheck && bun run format:check && bun run lint && bun run knip",
     "fix:all": "bun run format:write && bun run lint:fix",
