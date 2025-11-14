@@ -41,24 +41,6 @@ export async function createPartAction(formData: FormData) {
   revalidatePath('/parts-costs')
 }
 
-async function markInstalledAction(formData: FormData) {
-  const partId = String(formData.get('partId') ?? '')
-  if (!partId) return
-  const { user } = await withAuth({ ensureSignedIn: true })
-  if (!user) return
-  await fetchMutation(api.parts.setStatus, { partId: partId as unknown as Id<'parts'>, status: 'installed' })
-  revalidatePath('/parts-costs')
-}
-
-async function markOrderedAction(formData: FormData) {
-  const partId = String(formData.get('partId') ?? '')
-  if (!partId) return
-  const { user } = await withAuth({ ensureSignedIn: true })
-  if (!user) return
-  await fetchMutation(api.parts.setStatus, { partId: partId as unknown as Id<'parts'>, status: 'ordered' })
-  revalidatePath('/parts-costs')
-}
-
 export async function deletePartAction(formData: FormData) {
   const partId = String(formData.get('partId') ?? '')
   if (!partId) return

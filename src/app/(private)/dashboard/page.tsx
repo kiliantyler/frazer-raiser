@@ -14,16 +14,17 @@ export default async function DashboardPage() {
   // Access request data first to ensure deterministic rendering
   await withAuth({ ensureSignedIn: true })
 
-  const [upcomingTasks, parts, recentActivity, latestImages] = await Promise.all([
+  const [upcomingTasks, parts, recentActivity, latestImages, settings] = await Promise.all([
     fetchQuery(api.tasks.listUpcoming, { limit: 4 }),
     fetchQuery(api.parts.list, {}),
     fetchQuery(api.worklog.listRecent, { limit: 3 }),
     fetchQuery(api.images.listLatest, { limit: 4, visibility: 'private' }),
+    fetchQuery(api.settings.get, {}),
   ])
 
   const totalSpentCents = parts.reduce((sum, p) => sum + p.priceCents, 0)
   const totalSpent = totalSpentCents / 100
-  const budgetCents = 2500000 // $25,000 budget
+  const budgetCents = settings.budgetCents
   const budget = budgetCents / 100
 
   return (
