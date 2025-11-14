@@ -11,6 +11,7 @@
 import type * as guestbook from "../guestbook.js";
 import type * as images from "../images.js";
 import type * as parts from "../parts.js";
+import type * as settings from "../settings.js";
 import type * as suppliers from "../suppliers.js";
 import type * as tasks from "../tasks.js";
 import type * as updates from "../updates.js";
@@ -27,6 +28,7 @@ declare const fullApi: ApiFromModules<{
   guestbook: typeof guestbook;
   images: typeof images;
   parts: typeof parts;
+  settings: typeof settings;
   suppliers: typeof suppliers;
   tasks: typeof tasks;
   updates: typeof updates;

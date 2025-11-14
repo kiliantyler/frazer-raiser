@@ -119,4 +119,10 @@ export default defineSchema({
     createdBy: v.id('users'),
     createdAt: v.number(),
   }).index('by_name', ['name']),
+
+  settings: defineTable({
+    budgetCents: v.number(),
+    updatedAt: v.number(),
+    updatedBy: v.id('users'),
+  }),
 })
