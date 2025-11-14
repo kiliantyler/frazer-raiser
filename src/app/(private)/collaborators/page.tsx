@@ -1,3 +1,7 @@
+import { CollaboratorRoleSelect } from '@/components/private/collaborator-role-select'
+import { EmptyState } from '@/components/private/empty-state'
+import { PageHeader } from '@/components/private/page-header'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { api } from '@convex/_generated/api'
 import { withAuth } from '@workos-inc/authkit-nextjs'
 import { fetchQuery } from 'convex/nextjs'
@@ -18,41 +22,38 @@ export default async function CollaboratorsPage() {
   const users = (await fetchQuery(api.users.list, {})) as Collaborator[]
   return (
     <section className="space-y-6">
-      <h1 className="font-serif text-2xl">Collaborators</h1>
-      <table className="w-full text-sm">
-        <thead className="text-left text-muted-foreground">
-          <tr>
-            <th className="py-2">Name</th>
-            <th className="py-2">Email</th>
-            <th className="py-2">Role</th>
-            <th className="py-2" />
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((u: Collaborator) => (
-            <tr key={String(u._id)} className="border-t border-border/40">
-              <td className="py-2">{u.name}</td>
-              <td className="py-2">{u.email}</td>
-              <td className="py-2">{u.role}</td>
-              <td className="py-2">
-                {canAdmin && (
-                  <form action={updateRoleAction} className="flex items-center gap-2">
-                    <input type="hidden" name="userId" value={String(u._id)} />
-                    <select name="role" className="bg-background border border-border/40 rounded px-2 py-1">
-                      <option value="VIEWER">Viewer</option>
-                      <option value="COLLABORATOR">Collaborator</option>
-                      <option value="ADMIN">Admin</option>
-                    </select>
-                    <button className="text-primary underline" type="submit">
-                      Update
-                    </button>
-                  </form>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <PageHeader title="Collaborators" />
+      {users.length === 0 ? (
+        <EmptyState message="No collaborators yet" />
+      ) : (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Role</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {users.map((u: Collaborator) => (
+              <TableRow key={String(u._id)}>
+                <TableCell>{u.name}</TableCell>
+                <TableCell>{u.email}</TableCell>
+                <TableCell>
+                  {canAdmin ? (
+                    <form action={updateRoleAction} className="flex items-center gap-2">
+                      <input type="hidden" name="userId" value={String(u._id)} />
+                      <CollaboratorRoleSelect initialRole={u.role} />
+                    </form>
+                  ) : (
+                    u.role
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </section>
   )
 }

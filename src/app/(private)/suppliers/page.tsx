@@ -1,23 +1,15 @@
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { EmptyState } from '@/components/private/empty-state'
+import { FormCard } from '@/components/private/form-card'
+import { PageHeader } from '@/components/private/page-header'
+import { normalizeExternalUrl } from '@/lib/utils/format'
 import { api } from '@convex/_generated/api'
 import { withAuth } from '@workos-inc/authkit-nextjs'
 import { fetchQuery } from 'convex/nextjs'
 import Link from 'next/link'
 import { createSupplierAction } from './actions'
-
-function normalizeExternalUrl(url: string | undefined): `https://${string}` | `http://${string}` | null {
-  if (!url) return null
-  if (url.startsWith('http://')) {
-    return url as `http://${string}`
-  }
-  if (url.startsWith('https://')) {
-    return url as `https://${string}`
-  }
-  return `https://${url}` as `https://${string}`
-}
 
 export default async function SuppliersPage() {
   // Read request data before any non-deterministic libs (Convex) to satisfy Next RSC constraint
@@ -26,38 +18,28 @@ export default async function SuppliersPage() {
   const suppliers = (await fetchQuery(api.suppliers.list, {})) as Supplier[]
   return (
     <section className="space-y-6">
-      <div className="flex items-end justify-between gap-4">
-        <h1 className="font-serif text-2xl">Suppliers</h1>
-      </div>
+      <PageHeader title="Suppliers" />
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-serif">Add Supplier</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form action={createSupplierAction} className="grid gap-4 sm:grid-cols-2">
-            <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" name="name" placeholder="e.g. Kanter Auto" required />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="websiteUrl">Website</Label>
-              <Input id="websiteUrl" name="websiteUrl" type="url" placeholder="https://example.com" />
-            </div>
-            <div className="sm:col-span-2">
-              <Button type="submit">Add Supplier</Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+      <FormCard title="Add Supplier">
+        <form action={createSupplierAction} className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-2">
+            <Label htmlFor="name">Name</Label>
+            <Input id="name" name="name" placeholder="e.g. Kanter Auto" required />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="websiteUrl">Website</Label>
+            <Input id="websiteUrl" name="websiteUrl" type="url" placeholder="https://example.com" />
+          </div>
+          <div className="sm:col-span-2">
+            <Button type="submit">Add Supplier</Button>
+          </div>
+        </form>
+      </FormCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-serif">All Suppliers</CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-3">
+      <FormCard title="All Suppliers">
+        <div className="grid gap-3">
           {suppliers.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No suppliers yet</p>
+            <EmptyState message="No suppliers yet" />
           ) : (
             suppliers.map(s => {
               const externalUrl = normalizeExternalUrl(s.websiteUrl)
@@ -79,8 +61,8 @@ export default async function SuppliersPage() {
               )
             })
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </FormCard>
     </section>
   )
 }

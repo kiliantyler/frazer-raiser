@@ -1,4 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { PageHeader } from '@/components/private/page-header'
+import { StatCard } from '@/components/private/stat-card'
+import { formatCurrency } from '@/lib/utils/format'
 import { api } from '@convex/_generated/api'
 import { withAuth } from '@workos-inc/authkit-nextjs'
 import { fetchQuery } from 'convex/nextjs'
@@ -27,42 +29,14 @@ export default async function PartsCostsPage() {
   const totalParts = parts.length
   const averageCents = totalParts > 0 ? Math.round(totalCents / totalParts) : 0
 
-  function formatCurrency(cents: number) {
-    const dollars = cents / 100
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(dollars)
-  }
   return (
     <section className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="font-serif text-2xl">Parts & Cost Tracker</h1>
-        <PartDialog mode="create" suppliers={suppliers} />
-      </div>
+      <PageHeader title="Parts & Cost Tracker" action={<PartDialog mode="create" suppliers={suppliers} />} />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm text-muted-foreground">Total Spent</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-semibold text-red-600">{formatCurrency(totalCents)}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm text-muted-foreground">Total Parts</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-semibold">{totalParts}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm text-muted-foreground">Average Cost per Part</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-semibold">{formatCurrency(averageCents)}</div>
-          </CardContent>
-        </Card>
+        <StatCard title="Total Spent" value={formatCurrency(totalCents)} valueClassName="text-red-600" />
+        <StatCard title="Total Parts" value={totalParts} />
+        <StatCard title="Average Cost per Part" value={formatCurrency(averageCents)} />
       </div>
 
       <PartsTable parts={parts} suppliers={suppliers} />

@@ -2,6 +2,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { EmptyState } from '@/components/private/empty-state'
+import { PageHeader } from '@/components/private/page-header'
 import { api } from '@convex/_generated/api'
 import { withAuth } from '@workos-inc/authkit-nextjs'
 import { fetchQuery } from 'convex/nextjs'
@@ -26,44 +28,47 @@ async function TasksByStatus({
     <div className="space-y-3">
       <h3 className="font-serif text-lg">{title}</h3>
       <div className="space-y-3">
-        {tasks.length === 0 ? <p className="text-sm text-muted-foreground">No tasks</p> : null}
-        {tasks.map((t: TaskListItem) => (
-          <Card key={t._id} className="border-border/40">
-            <CardHeader>
-              <CardTitle className="text-base">{t.title}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-xs text-muted-foreground">
-              <div className="flex items-center justify-between">
-                <span>
-                  {t.status} • {t.priority}
-                </span>
-                <div className="flex items-center gap-2">
-                  <form action={assignToMeAction}>
-                    <input type="hidden" name="taskId" value={String(t._id)} />
-                    <Button type="submit" variant="ghost" className="px-2 text-xs">
-                      Assign to me
-                    </Button>
-                  </form>
-                  <form action={updateTaskStatusAction} className="flex items-center gap-1">
-                    <input type="hidden" name="taskId" value={String(t._id)} />
-                    <select
-                      name="status"
-                      defaultValue={t.status}
-                      className="bg-background border border-border/40 rounded px-2 py-1">
-                      <option value="todo">To do</option>
-                      <option value="in_progress">In progress</option>
-                      <option value="blocked">Blocked</option>
-                      <option value="done">Done</option>
-                    </select>
-                    <Button type="submit" variant="secondary" className="px-2 text-xs">
-                      Update
-                    </Button>
-                  </form>
+        {tasks.length === 0 ? (
+          <EmptyState message="No tasks" />
+        ) : (
+          tasks.map((t: TaskListItem) => (
+            <Card key={t._id} className="border-border/40">
+              <CardHeader>
+                <CardTitle className="text-base">{t.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="text-xs text-muted-foreground">
+                <div className="flex items-center justify-between">
+                  <span>
+                    {t.status} • {t.priority}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <form action={assignToMeAction}>
+                      <input type="hidden" name="taskId" value={String(t._id)} />
+                      <Button type="submit" variant="ghost" className="px-2 text-xs">
+                        Assign to me
+                      </Button>
+                    </form>
+                    <form action={updateTaskStatusAction} className="flex items-center gap-1">
+                      <input type="hidden" name="taskId" value={String(t._id)} />
+                      <select
+                        name="status"
+                        defaultValue={t.status}
+                        className="bg-background border border-border/40 rounded px-2 py-1">
+                        <option value="todo">To do</option>
+                        <option value="in_progress">In progress</option>
+                        <option value="blocked">Blocked</option>
+                        <option value="done">Done</option>
+                      </select>
+                      <Button type="submit" variant="secondary" className="px-2 text-xs">
+                        Update
+                      </Button>
+                    </form>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          ))
+        )}
       </div>
     </div>
   )
@@ -74,13 +79,15 @@ export default async function TasksPage() {
   await withAuth({ ensureSignedIn: true })
   return (
     <section className="space-y-6">
-      <div className="flex items-end justify-between gap-4">
-        <h1 className="font-serif text-2xl">Tasks</h1>
-        <form action={createTaskAction} className="flex gap-2">
-          <Input name="title" placeholder="New task title" aria-label="New task title" />
-          <Button type="submit">Add Task</Button>
-        </form>
-      </div>
+      <PageHeader
+        title="Tasks"
+        action={
+          <form action={createTaskAction} className="flex gap-2">
+            <Input name="title" placeholder="New task title" aria-label="New task title" />
+            <Button type="submit">Add Task</Button>
+          </form>
+        }
+      />
       <Tabs defaultValue="todo">
         <TabsList>
           <TabsTrigger value="todo">To do</TabsTrigger>

@@ -17,6 +17,7 @@ import { Search as SearchIcon } from 'lucide-react'
 import type { Route } from 'next'
 import Link from 'next/link'
 import * as React from 'react'
+import { formatCurrency } from '@/lib/utils/format'
 import { setPartStatusAction } from './actions'
 import { DeletePartDialog } from './delete-part-dialog'
 import { PartDialog } from './part-dialog'
@@ -37,11 +38,6 @@ type PartListItem = {
 }
 
 type StatusFilter = 'all' | 'ordered' | 'shipped' | 'received' | 'installed' | 'cancelled'
-
-function formatCurrency(cents: number) {
-  const dollars = (cents ?? 0) / 100
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(dollars)
-}
 
 function getStatus(part: PartListItem): StatusFilter {
   // Backward compatibility for older parts with no status

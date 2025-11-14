@@ -1,6 +1,7 @@
 'use client'
 
 import type { FrazerFileRouter } from '@/app/api/uploadthing/core'
+import { PageHeader } from '@/components/private/page-header'
 import { UploadButton } from '@uploadthing/react'
 import { useState } from 'react'
 
@@ -8,7 +9,7 @@ export default function InternalGalleryPage() {
   const [uploaded, setUploaded] = useState(0)
   return (
     <section className="space-y-6">
-      <h1 className="font-serif text-2xl">Internal Gallery</h1>
+      <PageHeader title="Internal Gallery" />
       <div>
         <UploadButton<FrazerFileRouter, 'imageUploader'>
           endpoint="imageUploader"
