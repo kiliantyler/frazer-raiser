@@ -19,6 +19,31 @@ export const create = mutation({
   },
 })
 
+export const update = mutation({
+  args: {
+    supplierId: v.id('suppliers'),
+    name: v.optional(v.string()),
+    websiteUrl: v.optional(v.string()),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const { supplierId, ...patch } = args
+    const supplier = await ctx.db.get(supplierId)
+    if (!supplier) return null
+    await ctx.db.patch(supplierId, patch)
+    return null
+  },
+})
+
+export const remove = mutation({
+  args: { supplierId: v.id('suppliers') },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.supplierId)
+    return null
+  },
+})
+
 export const list = query({
   args: {},
   returns: v.array(
