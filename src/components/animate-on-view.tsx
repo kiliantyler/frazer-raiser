@@ -23,11 +23,12 @@ export function AnimateOnView({ children, className }: AnimateOnViewProps) {
     }
 
     const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
+      for (const entry of entries) {
         if (entry.isIntersecting) {
           setHasShown(true)
+          break
         }
-      })
+      }
     })
 
     observer.observe(element)
@@ -45,5 +46,3 @@ export function AnimateOnView({ children, className }: AnimateOnViewProps) {
     </div>
   )
 }
-
-

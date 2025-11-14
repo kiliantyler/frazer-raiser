@@ -53,7 +53,7 @@ export function HomeHeader() {
               Frazer Raiser
             </span>
           </Link>
-          <div className="group/nav absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center gap-1 rounded-full border border-border/50 bg-card/50 px-2 py-1.5 shadow-sm backdrop-blur-sm animate-in fade-in duration-700">
+          <div className="group/nav absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center gap-1 rounded-full border border-border/50 bg-card/50 px-2 py-1.5 shadow-sm backdrop-blur-sm">
             <NavLink href="/about">About</NavLink>
             <NavLink href="/gallery">Gallery</NavLink>
             <NavLink href="/timeline">Timeline</NavLink>

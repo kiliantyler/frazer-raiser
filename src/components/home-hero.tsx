@@ -1,16 +1,17 @@
+import { ScrollIndicator } from '@/components/scroll-indicator'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
 export function HomeHero() {
   return (
-    <section className="relative isolate overflow-hidden">
+    <section className="relative isolate flex min-h-[calc(100vh-5rem)] items-center overflow-hidden">
       <div aria-hidden="true" className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[url('/kaiser.jpg')] bg-cover bg-center bg-no-repeat" />
         <div className="absolute inset-0 bg-linear-to-b from-black/85 via-black/75 to-black/85" />
       </div>
-      <div className="mx-auto max-w-7xl px-6 py-16 sm:py-24 lg:py-32">
-        <div className="max-w-3xl relative">
+      <div className="mx-auto flex w-full max-w-7xl px-6 py-16 sm:py-24 lg:py-32">
+        <div className="relative max-w-3xl">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/30 bg-black/40 px-4 py-1.5 text-xs font-medium text-white shadow-lg backdrop-blur-md">
             <Sparkles className="size-3.5" aria-hidden="true" />
             <span>Wrenching in progress</span>
@@ -33,12 +34,15 @@ export function HomeHero() {
               asChild
               variant="outline"
               size="lg"
-              className="h-12 border-white/30 bg-black/40 px-8 text-base text-white backdrop-blur-md shadow-lg hover:bg-black/60 hover:border-white/40"
+              className="h-12 border-white/30 bg-black/40 px-8 text-base text-white backdrop-blur-md shadow-lg hover:border-white/40 hover:bg-black/60"
               aria-label="View gallery">
               <Link href="/gallery">View Gallery</Link>
             </Button>
           </div>
         </div>
+      </div>
+      <div className="pointer-events-none absolute inset-x-0 bottom-20 flex justify-center z-10 pb-2">
+        <ScrollIndicator />
       </div>
       <div
         aria-hidden="true"

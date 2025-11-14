@@ -19,14 +19,15 @@ export function SectionFadeIn({ children, delayMs }: SectionFadeInProps) {
 
     const observer = new IntersectionObserver(
       entries => {
-        entries.forEach(entry => {
+        for (const entry of entries) {
           if (entry.isIntersecting) {
             setIsVisible(true)
             observer.disconnect()
+            break
           }
-        })
+        }
       },
-      { threshold: 0.25 }
+      { threshold: 0.25 },
     )
 
     observer.observe(target)
@@ -36,7 +37,7 @@ export function SectionFadeIn({ children, delayMs }: SectionFadeInProps) {
     }
   }, [])
 
-  const style = delayMs != null ? { transitionDelay: `${delayMs}ms` } : undefined
+  const style = typeof delayMs === 'number' ? { transitionDelay: `${delayMs}ms` } : undefined
 
   return (
     <div
@@ -49,5 +50,3 @@ export function SectionFadeIn({ children, delayMs }: SectionFadeInProps) {
     </div>
   )
 }
-
-

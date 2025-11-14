@@ -1,3 +1,4 @@
+import { SectionFadeIn } from '@/components/section-fade-in'
 import { Card } from '@/components/ui/card'
 import { Activity, Car, CheckCircle2, Sparkles, Zap } from 'lucide-react'
 
@@ -61,23 +62,26 @@ function GoalCard({ Icon, title, done }: GoalCardProps) {
 
 export function HomeGoals() {
   return (
-    <section className="bg-background border-t border-border/40 py-12 sm:py-16">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="text-center">
-          <div className="mb-4 inline-block">
-            <span className="text-sm font-semibold uppercase tracking-wider text-primary">The Plan</span>
-          </div>
-          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Goals</h2>
-          <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">The milestones we&apos;re working toward.</p>
-        </div>
-
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {GOALS.map((goal, index) => (
-            <div key={index} className="overflow-visible">
-              <GoalCard Icon={goal.Icon} title={goal.title} done={goal.done} />
+    <section className="px-6 py-10 sm:px-10 sm:py-12">
+      <div className="mx-auto w-full">
+        <SectionFadeIn delayMs={80}>
+          <div className="text-center">
+            <div className="mb-4 inline-block">
+              <span className="text-sm font-semibold uppercase tracking-wider text-primary">The Plan</span>
             </div>
-          ))}
-        </div>
+            <h2 className="font-display text-balance text-3xl font-bold tracking-tight sm:text-4xl">Goals</h2>
+            <p className="mt-4 mx-auto max-w-2xl text-pretty text-muted-foreground">
+              The milestones we&apos;re working toward.
+            </p>
+          </div>
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {GOALS.map((goal, index) => (
+              <div key={index} className="overflow-visible">
+                <GoalCard Icon={goal.Icon} title={goal.title} done={goal.done} />
+              </div>
+            ))}
+          </div>
+        </SectionFadeIn>
       </div>
     </section>
   )
