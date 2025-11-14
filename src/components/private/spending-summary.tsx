@@ -3,7 +3,7 @@ import { SectionCard } from './section-card'
 
 export function SpendingSummary({
   totalSpent,
-  budget,
+  budget: _budget,
   totalSpentCents,
   budgetCents,
 }: {
@@ -47,11 +47,8 @@ export function SpendingSummary({
             </div>
           </div>
         </div>
-        <div className="text-sm text-muted-foreground">
-          {formatCurrency(budgetCents)} Budgeted
-        </div>
+        <div className="text-sm text-muted-foreground">{formatCurrency(budgetCents)} Budgeted</div>
       </div>
     </SectionCard>
   )
 }
-

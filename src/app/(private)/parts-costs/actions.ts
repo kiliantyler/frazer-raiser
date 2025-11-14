@@ -41,7 +41,7 @@ export async function createPartAction(formData: FormData) {
   revalidatePath('/parts-costs')
 }
 
-export async function markInstalledAction(formData: FormData) {
+async function markInstalledAction(formData: FormData) {
   const partId = String(formData.get('partId') ?? '')
   if (!partId) return
   const { user } = await withAuth({ ensureSignedIn: true })
@@ -50,7 +50,7 @@ export async function markInstalledAction(formData: FormData) {
   revalidatePath('/parts-costs')
 }
 
-export async function markOrderedAction(formData: FormData) {
+async function markOrderedAction(formData: FormData) {
   const partId = String(formData.get('partId') ?? '')
   if (!partId) return
   const { user } = await withAuth({ ensureSignedIn: true })

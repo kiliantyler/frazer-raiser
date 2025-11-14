@@ -1,6 +1,5 @@
 'use client'
 
-import { Navigation } from '@/components/navigation'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -22,7 +21,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-  SidebarTrigger,
 } from '@/components/ui/sidebar'
 import type { CurrentUser } from '@/lib/auth'
 import { signOut } from '@workos-inc/authkit-nextjs'
@@ -39,12 +37,20 @@ import {
   Users,
   Wrench,
 } from 'lucide-react'
-import Link from 'next/link'
-import { useCallback, useMemo } from 'react'
 import type { Route } from 'next'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useCallback, useMemo } from 'react'
 
-function SidebarNavLink({ href, children, icon: Icon }: { href: string; children: React.ReactNode; icon: React.ComponentType<{ className?: string }> }) {
+function SidebarNavLink({
+  href,
+  children,
+  icon: Icon,
+}: {
+  href: string
+  children: React.ReactNode
+  icon: React.ComponentType<{ className?: string }>
+}) {
   const pathname = usePathname()
   const isActive = pathname === href || (href !== '/dashboard' && pathname.startsWith(href))
   const tooltipText = typeof children === 'string' ? children : String(children)
@@ -200,4 +206,3 @@ export function PrivateSidebar({ user }: { user: CurrentUser }) {
     </Sidebar>
   )
 }
-

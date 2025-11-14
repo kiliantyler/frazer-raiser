@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import type { Route } from 'next'
 import Link from 'next/link'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 export function SectionCard({
   title,
@@ -18,7 +19,7 @@ export function SectionCard({
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <CardTitle className="text-lg font-semibold">{title}</CardTitle>
         {viewAllHref && (
-          <Link href={viewAllHref} className="text-sm text-muted-foreground hover:text-foreground">
+          <Link href={viewAllHref as Route} className="text-sm text-muted-foreground hover:text-foreground">
             View All
           </Link>
         )}
@@ -27,4 +28,3 @@ export function SectionCard({
     </Card>
   )
 }
-

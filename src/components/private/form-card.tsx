@@ -1,15 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
-export function FormCard({
-  title,
-  children,
-  className,
-}: {
-  title: string
-  children: ReactNode
-  className?: string
-}) {
+export function FormCard({ title, children, className }: { title: string; children: ReactNode; className?: string }) {
   return (
     <Card className={className}>
       <CardHeader>
@@ -19,4 +11,3 @@ export function FormCard({
     </Card>
   )
 }
-

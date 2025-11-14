@@ -1,5 +1,5 @@
 import { formatTimeAgo } from '@/lib/utils/format'
-import { LucideIcon } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 export function ActivityItem({
   description,
@@ -22,4 +22,3 @@ export function ActivityItem({
     </div>
   )
 }
-

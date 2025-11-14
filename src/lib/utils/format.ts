@@ -67,4 +67,3 @@ export function normalizeExternalUrl(url: string | undefined): `https://${string
   }
   return `https://${url}` as `https://${string}`
 }
-

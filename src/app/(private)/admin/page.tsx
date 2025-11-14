@@ -33,17 +33,14 @@ export default async function AdminPage() {
     redirect('/dashboard')
   }
 
-  const [users, tasksTodo, tasksInProgress, tasksBlocked, tasksDone, parts, suppliers, publishedUpdates] =
-    await Promise.all([
-      fetchQuery(api.users.list, {}),
-      fetchQuery(api.tasks.listByStatus, { status: 'todo' }),
-      fetchQuery(api.tasks.listByStatus, { status: 'in_progress' }),
-      fetchQuery(api.tasks.listByStatus, { status: 'blocked' }),
-      fetchQuery(api.tasks.listByStatus, { status: 'done' }),
-      fetchQuery(api.parts.list, {}),
-      fetchQuery(api.suppliers.list, {}),
-      fetchQuery(api.updates.listPublic, {}),
-    ])
+  const [users, tasksTodo, tasksInProgress, tasksBlocked, tasksDone, publishedUpdates] = await Promise.all([
+    fetchQuery(api.users.list, {}),
+    fetchQuery(api.tasks.listByStatus, { status: 'todo' }),
+    fetchQuery(api.tasks.listByStatus, { status: 'in_progress' }),
+    fetchQuery(api.tasks.listByStatus, { status: 'blocked' }),
+    fetchQuery(api.tasks.listByStatus, { status: 'done' }),
+    fetchQuery(api.updates.listPublic, {}),
+  ])
 
   const totalTasks =
     (tasksTodo as Array<unknown>).length +
@@ -54,8 +51,6 @@ export default async function AdminPage() {
   const totalUsers = (users as AppUser[]).length
   const totalAdmins = (users as AppUser[]).filter(u => u.role === 'ADMIN').length
 
-  const totalParts = (parts as Array<unknown>).length
-  const totalSuppliers = (suppliers as Array<unknown>).length
   const totalPublishedUpdates = (publishedUpdates as Array<unknown>).length
 
   return (
@@ -130,5 +125,3 @@ export default async function AdminPage() {
     </div>
   )
 }
-
-

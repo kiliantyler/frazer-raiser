@@ -5,8 +5,8 @@ import { PageHeader } from '@/components/private/page-header'
 import { SectionCard } from '@/components/private/section-card'
 import { SpendingSummary } from '@/components/private/spending-summary'
 import { TaskItem } from '@/components/private/task-item'
-import { api } from '@convex/_generated/api'
 import { getActivityIcon } from '@/lib/utils/activity-icon'
+import { api } from '@convex/_generated/api'
 import { withAuth } from '@workos-inc/authkit-nextjs'
 import { fetchQuery } from 'convex/nextjs'
 
@@ -47,12 +47,7 @@ export default async function DashboardPage() {
               <EmptyState message="No upcoming tasks" />
             ) : (
               upcomingTasks.map((task, index) => (
-                <TaskItem
-                  key={task._id}
-                  title={task.title}
-                  dueDate={task.dueDate}
-                  highlighted={index === 0}
-                />
+                <TaskItem key={task._id} title={task.title} dueDate={task.dueDate} highlighted={index === 0} />
               ))
             )}
           </div>

@@ -10,4 +10,3 @@ export function getActivityIcon(description: string): LucideIcon {
   }
   return Clock
 }
-

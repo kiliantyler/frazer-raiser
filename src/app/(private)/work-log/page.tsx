@@ -1,8 +1,8 @@
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { EmptyState } from '@/components/private/empty-state'
 import { FormCard } from '@/components/private/form-card'
 import { PageHeader } from '@/components/private/page-header'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { formatCurrency } from '@/lib/utils/format'
 import { api } from '@convex/_generated/api'
 import { withAuth } from '@workos-inc/authkit-nextjs'
@@ -25,7 +25,12 @@ export default async function WorkLogPage() {
         <form action={addWorkLogAction} className="grid gap-3 sm:grid-cols-[1fr_auto_auto_auto]">
           <Input name="description" placeholder="Description" aria-label="Description" />
           <Input name="hours" type="number" step="0.25" placeholder="Hours" aria-label="Hours" />
-          <Input name="costDeltaCents" type="number" placeholder="Cost delta (cents)" aria-label="Cost change in cents" />
+          <Input
+            name="costDeltaCents"
+            type="number"
+            placeholder="Cost delta (cents)"
+            aria-label="Cost change in cents"
+          />
           <Button type="submit">Add</Button>
         </form>
       </FormCard>

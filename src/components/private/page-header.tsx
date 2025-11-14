@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 export function PageHeader({
   title,
@@ -19,4 +19,3 @@ export function PageHeader({
     </div>
   )
 }
-

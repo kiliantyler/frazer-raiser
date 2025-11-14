@@ -20,4 +20,3 @@ export function StatCard({
     </Card>
   )
 }
-

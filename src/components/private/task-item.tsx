@@ -1,14 +1,6 @@
 import { formatDueDate } from '@/lib/utils/format'
 
-export function TaskItem({
-  title,
-  dueDate,
-  highlighted,
-}: {
-  title: string
-  dueDate: number
-  highlighted?: boolean
-}) {
+export function TaskItem({ title, dueDate, highlighted }: { title: string; dueDate: number; highlighted?: boolean }) {
   return (
     <div className={`rounded-md p-3 ${highlighted ? 'bg-muted/50' : ''}`}>
       <div className="flex items-start justify-between">
@@ -20,4 +12,3 @@ export function TaskItem({
     </div>
   )
 }
-
