@@ -2,9 +2,11 @@
 
 import { EmptyState } from '@/components/private/empty-state'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Pencil } from 'lucide-react'
+import Link from 'next/link'
 import { PublishUpdateDialog } from './publish-update-dialog'
-import { UpdateDialog } from './update-dialog'
 
 type Update = {
   _id: string
@@ -51,7 +53,11 @@ export function UpdatesTable({ updates }: { updates: Array<Update> }) {
             </TableCell>
             <TableCell className="text-right">
               <div className="flex justify-end gap-1">
-                <UpdateDialog mode="edit" update={update} />
+                <Button variant="ghost" size="icon" asChild aria-label="Edit update">
+                  <Link href={`/journal/${update._id}/edit`}>
+                    <Pencil className="size-4" />
+                  </Link>
+                </Button>
                 <PublishUpdateDialog update={update} />
               </div>
             </TableCell>

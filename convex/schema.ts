@@ -62,6 +62,7 @@ export default defineSchema({
     title: v.string(),
     slug: v.string(),
     content: v.string(),
+    contentHtml: v.optional(v.string()),
     publishStatus: v.union(v.literal('draft'), v.literal('published')),
     createdAt: v.number(),
     publishedAt: v.optional(v.number()),

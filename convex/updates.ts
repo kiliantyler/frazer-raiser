@@ -3,11 +3,22 @@ import { mutation, query } from './_generated/server'
 
 const PublishStatus = v.union(v.literal('draft'), v.literal('published'))
 
+// Helper function to strip HTML tags and create plain text
+function stripHtml(html: string): string {
+  return html
+    .replaceAll(/<[^>]*>/g, '') // Remove HTML tags
+    .replaceAll('&nbsp;', ' ') // Replace &nbsp; with space
+    .replaceAll(/&[^;]+;/g, '') // Remove other HTML entities
+    .replaceAll(/\s+/g, ' ') // Collapse whitespace
+    .trim()
+}
+
 export const createDraft = mutation({
   args: {
     title: v.string(),
     slug: v.string(),
     content: v.string(),
+    contentHtml: v.optional(v.string()),
     authorId: v.id('users'),
     imageIds: v.optional(v.array(v.id('images'))),
     tags: v.optional(v.array(v.string())),
@@ -15,10 +26,14 @@ export const createDraft = mutation({
   returns: v.id('updates'),
   handler: async (ctx, args) => {
     const now = Date.now()
+    // If contentHtml is provided, derive plain text content from it
+    // Otherwise use the provided content (for backward compatibility)
+    const plainContent = args.contentHtml ? stripHtml(args.contentHtml) : args.content
     return await ctx.db.insert('updates', {
       title: args.title,
       slug: args.slug,
-      content: args.content,
+      content: plainContent,
+      contentHtml: args.contentHtml,
       publishStatus: 'draft',
       createdAt: now,
       publishedAt: undefined,
@@ -35,15 +50,24 @@ export const updateDraft = mutation({
     title: v.optional(v.string()),
     slug: v.optional(v.string()),
     content: v.optional(v.string()),
+    contentHtml: v.optional(v.string()),
     imageIds: v.optional(v.array(v.id('images'))),
     tags: v.optional(v.array(v.string())),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const { updateId, ...patch } = args
+    const { updateId, contentHtml, ...patch } = args
     const row = await ctx.db.get(updateId)
     if (!row) return null
-    await ctx.db.patch(updateId, { ...patch })
+
+    // If contentHtml is provided, derive plain text content from it
+    const updatePatch: Record<string, unknown> = { ...patch }
+    if (contentHtml !== undefined) {
+      updatePatch.contentHtml = contentHtml
+      updatePatch.content = stripHtml(contentHtml)
+    }
+
+    await ctx.db.patch(updateId, updatePatch)
     return null
   },
 })
@@ -106,6 +130,7 @@ export const getBySlug = query({
       title: v.string(),
       slug: v.string(),
       content: v.string(),
+      contentHtml: v.optional(v.string()),
       publishStatus: PublishStatus,
       createdAt: v.number(),
       publishedAt: v.optional(v.number()),
@@ -130,6 +155,7 @@ export const getBySlug = query({
       title: doc.title,
       slug: doc.slug,
       content: doc.content,
+      contentHtml: doc.contentHtml,
       publishStatus: doc.publishStatus,
       createdAt: doc.createdAt,
       publishedAt: doc.publishedAt,
@@ -175,19 +201,26 @@ export const listPublicForTimeline = query({
       return bDate - aDate
     })
 
-    // Helper to strip markdown and create excerpt
-    const createExcerpt = (content: string, maxLength = 200): string => {
-      // Remove markdown headers, links, images, bold, italic, code blocks
-      let text = content
-        .replaceAll(/^#{1,6}\s+/gm, '') // Headers
-        .replaceAll(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Links
-        .replaceAll(/!\[([^\]]*)\]\([^)]+\)/g, '') // Images
-        .replaceAll(/\*\*([^*]+)\*\*/g, '$1') // Bold
-        .replaceAll(/\*([^*]+)\*/g, '$1') // Italic
-        .replaceAll(/`([^`]+)`/g, '$1') // Inline code
-        .replaceAll(/```[\s\S]*?```/g, '') // Code blocks
-        .replaceAll(/\n+/g, ' ') // Newlines to spaces
-        .trim()
+    // Helper to strip markdown or HTML and create excerpt
+    const createExcerpt = (update: { content: string; contentHtml?: string }, maxLength = 200): string => {
+      let text: string
+
+      // If contentHtml exists, strip HTML to plain text
+      if (update.contentHtml) {
+        text = stripHtml(update.contentHtml)
+      } else {
+        // Otherwise, strip markdown
+        text = update.content
+          .replaceAll(/^#{1,6}\s+/gm, '') // Headers
+          .replaceAll(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Links
+          .replaceAll(/!\[([^\]]*)\]\([^)]+\)/g, '') // Images
+          .replaceAll(/\*\*([^*]+)\*\*/g, '$1') // Bold
+          .replaceAll(/\*([^*]+)\*/g, '$1') // Italic
+          .replaceAll(/`([^`]+)`/g, '$1') // Inline code
+          .replaceAll(/```[\s\S]*?```/g, '') // Code blocks
+          .replaceAll(/\n+/g, ' ') // Newlines to spaces
+          .trim()
+      }
 
       if (text.length <= maxLength) return text
       return text.slice(0, maxLength).trim() + '...'
@@ -211,7 +244,7 @@ export const listPublicForTimeline = query({
           }
         }
 
-        const excerpt = createExcerpt(update.content)
+        const excerpt = createExcerpt(update)
 
         return {
           _id: update._id,
@@ -267,6 +300,7 @@ export const getById = query({
       title: v.string(),
       slug: v.string(),
       content: v.string(),
+      contentHtml: v.optional(v.string()),
       publishStatus: PublishStatus,
       createdAt: v.number(),
       publishedAt: v.optional(v.number()),
@@ -282,6 +316,7 @@ export const getById = query({
       title: update.title,
       slug: update.slug,
       content: update.content,
+      contentHtml: update.contentHtml,
       publishStatus: update.publishStatus,
       createdAt: update.createdAt,
       publishedAt: update.publishedAt,
