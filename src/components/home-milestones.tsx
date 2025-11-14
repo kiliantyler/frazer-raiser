@@ -3,7 +3,7 @@ import { MilestoneCard } from './milestone-card'
 
 export function HomeMilestones() {
   return (
-    <section className="bg-background py-20 sm:py-28">
+    <section className="bg-background py-12 sm:py-16">
       <div className="mx-auto max-w-7xl px-6">
         <div className="text-center">
           <div className="mb-4 inline-block">
@@ -15,7 +15,7 @@ export function HomeMilestones() {
           </p>
         </div>
 
-        <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <MilestoneCard
             Icon={Search}
             title="Discovery & Teardown"

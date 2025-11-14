@@ -3,9 +3,9 @@ import { FeatureCard } from './feature-card'
 
 export function HomeFeatures() {
   return (
-    <section aria-label="Explore more" className="bg-muted/30 py-20 sm:py-28">
+    <section aria-label="Explore more" className="bg-muted/30 py-12 sm:py-16">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="mb-12 text-center">
+        <div className="mb-8 text-center">
           <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Follow the build</h2>
           <p className="mt-4 text-muted-foreground">
             I&apos;m documenting every step—the wins, the mistakes, and everything in between.

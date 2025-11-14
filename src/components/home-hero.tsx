@@ -9,7 +9,7 @@ export function HomeHero() {
         <div className="absolute inset-0 bg-[url('/kaiser.jpg')] bg-cover bg-center bg-no-repeat" />
         <div className="absolute inset-0 bg-linear-to-b from-black/85 via-black/75 to-black/85" />
       </div>
-      <div className="mx-auto max-w-7xl px-6 py-32 sm:py-40 lg:py-48">
+      <div className="mx-auto max-w-7xl px-6 py-16 sm:py-24 lg:py-32">
         <div className="max-w-3xl relative">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/30 bg-black/40 px-4 py-1.5 text-xs font-medium text-white shadow-lg backdrop-blur-md">
             <Sparkles className="size-3.5" aria-hidden="true" />
@@ -42,7 +42,7 @@ export function HomeHero() {
       </div>
       <div
         aria-hidden="true"
-        className="absolute bottom-0 left-0 right-0 h-24 bg-linear-to-t from-background to-transparent"
+        className="absolute bottom-0 left-0 right-0 h-16 bg-linear-to-t from-background to-transparent"
       />
     </section>
   )

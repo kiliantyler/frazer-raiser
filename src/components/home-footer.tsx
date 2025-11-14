@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export function HomeFooter() {
   return (
-    <footer className="border-t border-border/50 bg-muted/30 py-12">
+    <footer className="border-t border-border/50 bg-muted/30 py-6">
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
           <Button asChild size="sm" className="w-full sm:w-auto" aria-label="Login">

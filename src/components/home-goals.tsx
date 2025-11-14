@@ -61,7 +61,7 @@ function GoalCard({ Icon, title, done }: GoalCardProps) {
 
 export function HomeGoals() {
   return (
-    <section className="bg-background py-20 sm:py-28">
+    <section className="bg-background border-t border-border/40 py-12 sm:py-16">
       <div className="mx-auto max-w-7xl px-6">
         <div className="text-center">
           <div className="mb-4 inline-block">
@@ -71,7 +71,7 @@ export function HomeGoals() {
           <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">The milestones we&apos;re working toward.</p>
         </div>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {GOALS.map((goal, index) => (
             <div key={index} className="overflow-visible">
               <GoalCard Icon={goal.Icon} title={goal.title} done={goal.done} />

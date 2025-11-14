@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 export function HomeStory() {
   return (
-    <section className="bg-background py-24 sm:py-32">
+    <section className="bg-background py-12 sm:py-16">
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 md:grid-cols-2 md:gap-16">
         <div className="space-y-6">
           <div className="inline-block">
