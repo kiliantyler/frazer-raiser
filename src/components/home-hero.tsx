@@ -1,6 +1,6 @@
 import { ScrollIndicator } from '@/components/scroll-indicator'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
 export function HomeHero() {
@@ -12,10 +12,6 @@ export function HomeHero() {
       </div>
       <div className="mx-auto flex w-full max-w-7xl px-6 py-16 sm:py-24 lg:py-32">
         <div className="relative max-w-3xl">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/30 bg-black/40 px-4 py-1.5 text-xs font-medium text-white shadow-lg backdrop-blur-md">
-            <Sparkles className="size-3.5" aria-hidden="true" />
-            <span>Wrenching in progress</span>
-          </div>
           <h1 className="font-display text-balance text-5xl font-bold tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] sm:text-6xl md:text-7xl lg:text-8xl">
             Raising a Frazer
           </h1>

@@ -30,8 +30,8 @@ export function HomeStory() {
             </div>
           </div>
           <div className="mx-auto w-full max-w-xl">
-            <Card className="group relative overflow-hidden border-border/40 bg-card/60 shadow-xl transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5">
-              <CardContent className="p-4">
+            <Card className="group relative overflow-hidden border-border/40 bg-card/60 shadow-xl transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 p-0">
+              <CardContent className="p-0">
                 <div className="relative aspect-4/3 overflow-hidden rounded-lg">
                   <Image
                     src="/frazer-badge.jpg"

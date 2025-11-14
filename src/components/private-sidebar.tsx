@@ -85,7 +85,7 @@ export function PrivateSidebar({ user }: { user: CurrentUser }) {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <div className="flex items-center gap-3 px-2 py-2">
+        <Link href="/" className="flex items-center gap-3 px-2 py-2 hover:opacity-80 transition-opacity">
           <div
             className="h-6 w-6 bg-primary shrink-0"
             style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }}
@@ -95,7 +95,7 @@ export function PrivateSidebar({ user }: { user: CurrentUser }) {
             <span className="font-serif text-lg font-semibold truncate">Frazer Raiser</span>
             <span className="text-xs text-muted-foreground truncate">Dashboard</span>
           </div>
-        </div>
+        </Link>
       </SidebarHeader>
 
       <SidebarContent>
