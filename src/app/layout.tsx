@@ -1,3 +1,4 @@
+import { ConvexProvider } from '@/providers/convex-provider'
 import { PostHogClientProvider } from '@/providers/posthog-provider'
 import '@/styles/globals.css'
 import { type Metadata } from 'next'
@@ -15,7 +16,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" className={`dark ${displayFont.variable} ${bodyFont.variable}`}>
       <body>
         <Suspense fallback={null}>
-          <PostHogClientProvider>{children}</PostHogClientProvider>
+          <ConvexProvider>
+            <PostHogClientProvider>{children}</PostHogClientProvider>
+          </ConvexProvider>
         </Suspense>
       </body>
     </html>

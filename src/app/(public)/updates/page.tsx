@@ -1,27 +1,38 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { api } from '@convex/_generated/api'
+import { fetchQuery } from 'convex/nextjs'
 import Link from 'next/link'
 
+function formatDate(timestamp: number): string {
+  return new Date(timestamp).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+}
+
 export default async function PublicUpdatesPage() {
-  // Placeholder static list; will fetch from Convex `updates.listPublic`
-  const items = [] as Array<{ slug: string; title: string; publishedAt?: number }>
+  const items = await fetchQuery(api.updates.listPublic, {})
+
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
       <h1 className="font-serif text-3xl">Updates</h1>
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+      <p className="mt-2 text-muted-foreground">Latest journal entries and project updates.</p>
+      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {items.length === 0 ? (
-          <p className="text-muted-foreground">No updates yet.</p>
+          <p className="col-span-full text-muted-foreground">No updates yet.</p>
         ) : (
           items.map(item => (
-            <Card key={item.slug}>
-              <CardHeader>
-                <CardTitle className="font-serif text-xl">
-                  <Link href={{ pathname: '/updates/[slug]', query: { slug: item.slug } }}>{item.title}</Link>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-xs text-muted-foreground">
-                {item.publishedAt ? new Date(item.publishedAt).toLocaleDateString() : null}
-              </CardContent>
-            </Card>
+            <Link key={item._id} href={`/updates/${item.slug}`}>
+              <Card className="h-full transition-all duration-300 hover:border-border hover:shadow-lg">
+                <CardHeader>
+                  <CardTitle className="font-serif text-xl transition-colors hover:text-primary">
+                    {item.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    {item.publishedAt ? formatDate(item.publishedAt) : formatDate(item.createdAt)}
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
           ))
         )}
       </div>

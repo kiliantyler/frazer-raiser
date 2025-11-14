@@ -31,6 +31,7 @@
     "@t3-oss/env-nextjs": "0.13.8",
     "@uploadthing/react": "7.3.3",
     "@workos-inc/authkit-nextjs": "2.11.0",
+    "@workos-inc/node": "7.73.0",
     "babel-plugin-react-compiler": "1.0.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
@@ -41,6 +42,7 @@
     "posthog-js": "1.292.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
+    "react-markdown": "10.1.0",
     "tailwind-merge": "3.4.0",
     "uploadthing": "7.7.4",
     "zod": "4.1.12"

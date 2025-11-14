@@ -26,6 +26,7 @@ import type { CurrentUser } from '@/lib/auth'
 import { signOut } from '@workos-inc/authkit-nextjs'
 import {
   Bell,
+  BookOpen,
   ClipboardList,
   Images,
   LayoutDashboard,
@@ -121,6 +122,9 @@ export function PrivateSidebar({ user }: { user: CurrentUser }) {
               <SidebarNavLink href="/internal-gallery" icon={Images}>
                 Internal Gallery
               </SidebarNavLink>
+              <SidebarNavLink href="/journal" icon={BookOpen}>
+                Journal Updates
+              </SidebarNavLink>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -178,7 +182,7 @@ export function PrivateSidebar({ user }: { user: CurrentUser }) {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/dashboard" className="flex items-center gap-2" aria-label="Go to profile dashboard">
+                  <Link href={'/profile' as Route} className="flex items-center gap-2" aria-label="Go to profile page">
                     <User className="h-4 w-4" />
                     Profile
                   </Link>

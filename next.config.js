@@ -10,6 +10,14 @@ const config = {
   typedRoutes: true,
   reactCompiler: true,
   cacheComponents: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'utfs.io',
+      },
+    ],
+  },
   experimental: {
     turbopackFileSystemCacheForDev: true,
   },

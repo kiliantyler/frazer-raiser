@@ -54,6 +54,29 @@ export const linkToEntity = mutation({
   },
 })
 
+export const getById = query({
+  args: { imageId: v.id('images') },
+  returns: v.union(
+    v.object({
+      _id: v.id('images'),
+      url: v.string(),
+      width: v.number(),
+      height: v.number(),
+    }),
+    v.null(),
+  ),
+  handler: async (ctx, args) => {
+    const img = await ctx.db.get(args.imageId)
+    if (!img) return null
+    return {
+      _id: img._id,
+      url: img.url,
+      width: img.width,
+      height: img.height,
+    }
+  },
+})
+
 export const listPublic = query({
   args: {},
   returns: v.array(

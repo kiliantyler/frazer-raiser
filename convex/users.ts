@@ -112,3 +112,38 @@ export const updateRole = mutation({
     return null
   },
 })
+
+export const updateProfile = mutation({
+  args: {
+    userId: v.id('users'),
+    name: v.optional(v.string()),
+    email: v.optional(v.string()),
+    avatarUrl: v.optional(v.string()),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const user = await ctx.db.get(args.userId)
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    const updates: {
+      name?: string
+      email?: string
+      avatarUrl?: string
+    } = {}
+
+    if (args.name !== undefined) {
+      updates.name = args.name
+    }
+    if (args.email !== undefined) {
+      updates.email = args.email
+    }
+    if (args.avatarUrl !== undefined) {
+      updates.avatarUrl = args.avatarUrl
+    }
+
+    await ctx.db.patch(args.userId, updates)
+    return null
+  },
+})

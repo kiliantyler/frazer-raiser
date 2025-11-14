@@ -14,12 +14,13 @@ export default async function DashboardPage() {
   // Access request data first to ensure deterministic rendering
   await withAuth({ ensureSignedIn: true })
 
-  const [upcomingTasks, parts, recentActivity, latestImages, settings] = await Promise.all([
+  const [upcomingTasks, parts, recentActivity, latestImages, settings, recentUpdates] = await Promise.all([
     fetchQuery(api.tasks.listUpcoming, { limit: 4 }),
     fetchQuery(api.parts.list, {}),
     fetchQuery(api.worklog.listRecent, { limit: 3 }),
     fetchQuery(api.images.listLatest, { limit: 4, visibility: 'private' }),
     fetchQuery(api.settings.get, {}),
+    fetchQuery(api.updates.listPublicForTimeline, {}),
   ])
 
   const totalSpentCents = parts.reduce((sum, p) => sum + p.priceCents, 0)
@@ -76,6 +77,29 @@ export default async function DashboardPage() {
 
         <SectionCard title="Latest Photos" viewAllHref="/internal-gallery">
           <ImageGrid images={latestImages} />
+        </SectionCard>
+
+        <SectionCard title="Journal Updates" viewAllHref="/journal">
+          <div className="space-y-3">
+            {recentUpdates.length === 0 ? (
+              <EmptyState message="No journal entries yet" />
+            ) : (
+              recentUpdates.slice(0, 3).map(update => (
+                <div key={update._id} className="flex items-start justify-between gap-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{update.title}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {new Date(update.publishedAt).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}
+                    </p>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </SectionCard>
       </div>
     </div>
