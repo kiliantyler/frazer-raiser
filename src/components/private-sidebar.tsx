@@ -26,7 +26,19 @@ import {
 } from '@/components/ui/sidebar'
 import type { CurrentUser } from '@/lib/auth'
 import { signOut } from '@workos-inc/authkit-nextjs'
-import { Bell, ClipboardList, LayoutDashboard, LogOut, Package, Settings, User, Users, Wrench } from 'lucide-react'
+import {
+  Bell,
+  ClipboardList,
+  Images,
+  LayoutDashboard,
+  LogOut,
+  Package,
+  Settings,
+  Shield,
+  User,
+  Users,
+  Wrench,
+} from 'lucide-react'
 import Link from 'next/link'
 import { useCallback, useMemo } from 'react'
 import type { Route } from 'next'
@@ -99,6 +111,25 @@ export function PrivateSidebar({ user }: { user: CurrentUser }) {
               </SidebarNavLink>
               <SidebarNavLink href="/work-log" icon={ClipboardList}>
                 Work Log
+              </SidebarNavLink>
+              <SidebarNavLink href="/internal-gallery" icon={Images}>
+                Internal Gallery
+              </SidebarNavLink>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Admin</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarNavLink href="/admin" icon={Shield}>
+                Admin
+              </SidebarNavLink>
+              <SidebarNavLink href="/collaborators" icon={Users}>
+                Collaborators
+              </SidebarNavLink>
+              <SidebarNavLink href="/settings" icon={Settings}>
+                Settings
               </SidebarNavLink>
             </SidebarMenu>
           </SidebarGroupContent>
