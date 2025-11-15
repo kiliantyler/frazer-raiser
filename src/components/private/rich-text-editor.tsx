@@ -2,26 +2,49 @@
 
 import type { FrazerFileRouter } from '@/app/api/uploadthing/core'
 import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import Highlight from '@tiptap/extension-highlight'
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
+import { Table } from '@tiptap/extension-table'
+import TableCell from '@tiptap/extension-table-cell'
+import TableHeader from '@tiptap/extension-table-header'
+import TableRow from '@tiptap/extension-table-row'
+import TextAlign from '@tiptap/extension-text-align'
 import Underline from '@tiptap/extension-underline'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { UploadButton } from '@uploadthing/react'
 import {
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
   Bold,
   Code,
   Heading1,
   Heading2,
   Heading3,
+  Highlighter,
   Image as ImageIcon,
   Italic,
   Link as LinkIcon,
   List,
   ListOrdered,
+  Minus,
   Quote,
+  Redo2,
   RemoveFormatting,
+  Strikethrough,
+  Table as TableIcon,
   Underline as UnderlineIcon,
+  Undo2,
 } from 'lucide-react'
 import * as React from 'react'
 
@@ -35,6 +58,10 @@ type RichTextEditorProps = {
 export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichTextEditorProps) {
   const [html, setHtml] = React.useState(initialContentHtml ?? '<p></p>')
   const [isUploadingImage, setIsUploadingImage] = React.useState(false)
+  const [isEditorFocused, setIsEditorFocused] = React.useState(false)
+  const [isEditorEmpty, setIsEditorEmpty] = React.useState(
+    !initialContentHtml || initialContentHtml.trim().length === 0,
+  )
 
   const editor = useEditor({
     extensions: [
@@ -42,6 +69,9 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
         heading: {
           levels: [1, 2, 3],
         },
+      }),
+      Highlight.configure({
+        multicolor: false,
       }),
       Underline,
       Link.configure({
@@ -55,12 +85,22 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
         inline: true,
         allowBase64: false,
       }),
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+      }),
+      Table.configure({
+        resizable: false,
+      }),
+      TableRow,
+      TableHeader,
+      TableCell,
     ],
     content: initialContentHtml ?? '<p></p>',
     immediatelyRender: false,
     onUpdate: ({ editor }) => {
       const newHtml = editor.getHTML()
       setHtml(newHtml)
+      setIsEditorEmpty(editor.getText().trim().length === 0)
       onChange?.(newHtml)
     },
     editorProps: {
@@ -72,6 +112,30 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
   })
 
   React.useEffect(() => {
+    if (!editor) {
+      return
+    }
+
+    setIsEditorEmpty(editor.getText().trim().length === 0)
+
+    const handleFocus = () => {
+      setIsEditorFocused(true)
+    }
+
+    const handleBlur = () => {
+      setIsEditorFocused(false)
+    }
+
+    editor.on('focus', handleFocus)
+    editor.on('blur', handleBlur)
+
+    return () => {
+      editor.off('focus', handleFocus)
+      editor.off('blur', handleBlur)
+    }
+  }, [editor])
+
+  React.useEffect(() => {
     if (editor && initialContentHtml && editor.getHTML() !== initialContentHtml) {
       editor.commands.setContent(initialContentHtml)
     }
@@ -80,7 +144,18 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
   const handleImageUpload = (res: Array<{ url?: string }>) => {
     setIsUploadingImage(false)
     if (res?.[0]?.url && editor) {
-      editor.chain().focus().setImage({ src: res[0].url }).run()
+      const imageUrl = res[0].url
+      const altPrompt = globalThis.window.prompt('Describe the image (alt text):') ?? ''
+      const alt = altPrompt.trim()
+
+      editor
+        .chain()
+        .focus()
+        .setImage({
+          src: imageUrl,
+          alt,
+        })
+        .run()
     }
   }
 
@@ -95,14 +170,23 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
   const handleLinkToggle = () => {
     if (!editor) return
 
-    if (editor.isActive('link')) {
-      editor.chain().focus().unsetLink().run()
-    } else {
-      const url = globalThis.window.prompt('Enter URL:')
-      if (url) {
-        editor.chain().focus().setLink({ href: url }).run()
-      }
+    const previousHref = editor.getAttributes('link').href as string | undefined
+    const url = globalThis.window.prompt('Enter URL (leave blank to remove the link):', previousHref ?? '')
+
+    if (url === null) {
+      return
     }
+
+    const trimmedUrl = url.trim()
+
+    if (!trimmedUrl) {
+      if (editor.isActive('link')) {
+        editor.chain().focus().unsetLink().run()
+      }
+      return
+    }
+
+    editor.chain().focus().extendMarkRange('link').setLink({ href: trimmedUrl }).run()
   }
 
   if (!editor) {
@@ -113,6 +197,23 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
     <div className="space-y-2">
       <input type="hidden" id={id} name={name} value={html} />
       <div className="flex flex-wrap gap-1 rounded-md border border-input bg-background p-2">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          onClick={() => editor.chain().focus().undo().run()}
+          aria-label="Undo">
+          <Undo2 className="size-4" />
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          onClick={() => editor.chain().focus().redo().run()}
+          aria-label="Redo">
+          <Redo2 className="size-4" />
+        </Button>
+        <div className="mx-1 h-6 w-px bg-border" />
         <Button
           type="button"
           variant={editor.isActive('heading', { level: 1 }) ? 'default' : 'ghost'}
@@ -162,6 +263,22 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
           aria-label="Underline">
           <UnderlineIcon className="size-4" />
         </Button>
+        <Button
+          type="button"
+          variant={editor.isActive('strike') ? 'default' : 'ghost'}
+          size="icon-sm"
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          aria-label="Strikethrough">
+          <Strikethrough className="size-4" />
+        </Button>
+        <Button
+          type="button"
+          variant={editor.isActive('highlight') ? 'default' : 'ghost'}
+          size="icon-sm"
+          onClick={() => editor.chain().focus().toggleHighlight().run()}
+          aria-label="Highlight">
+          <Highlighter className="size-4" />
+        </Button>
         <div className="mx-1 h-6 w-px bg-border" />
         <Button
           type="button"
@@ -190,6 +307,39 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
         <div className="mx-1 h-6 w-px bg-border" />
         <Button
           type="button"
+          variant={editor.isActive({ textAlign: 'left' }) ? 'default' : 'ghost'}
+          size="icon-sm"
+          onClick={() => editor.chain().focus().setTextAlign('left').run()}
+          aria-label="Align left">
+          <AlignLeft className="size-4" />
+        </Button>
+        <Button
+          type="button"
+          variant={editor.isActive({ textAlign: 'center' }) ? 'default' : 'ghost'}
+          size="icon-sm"
+          onClick={() => editor.chain().focus().setTextAlign('center').run()}
+          aria-label="Align center">
+          <AlignCenter className="size-4" />
+        </Button>
+        <Button
+          type="button"
+          variant={editor.isActive({ textAlign: 'right' }) ? 'default' : 'ghost'}
+          size="icon-sm"
+          onClick={() => editor.chain().focus().setTextAlign('right').run()}
+          aria-label="Align right">
+          <AlignRight className="size-4" />
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          onClick={() => editor.chain().focus().setHorizontalRule().run()}
+          aria-label="Horizontal rule">
+          <Minus className="size-4" />
+        </Button>
+        <div className="mx-1 h-6 w-px bg-border" />
+        <Button
+          type="button"
           variant={editor.isActive('code') ? 'default' : 'ghost'}
           size="icon-sm"
           onClick={() => editor.chain().focus().toggleCode().run()}
@@ -204,6 +354,49 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
           aria-label="Code block">
           <Code className="size-4" />
         </Button>
+        <div className="mx-1 h-6 w-px bg-border" />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button type="button" variant="ghost" size="icon-sm" aria-label="Table options">
+              <TableIcon className="size-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuLabel>Table</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() =>
+                editor
+                  .chain()
+                  .focus()
+                  .insertTable({
+                    rows: 3,
+                    cols: 3,
+                    withHeaderRow: true,
+                  })
+                  .run()
+              }>
+              Insert 3×3 table
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => editor.chain().focus().addRowAfter().run()}
+              disabled={!editor.can().addRowAfter()}>
+              Add row below
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => editor.chain().focus().addColumnAfter().run()}
+              disabled={!editor.can().addColumnAfter()}>
+              Add column right
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => editor.chain().focus().deleteTable().run()}
+              disabled={!editor.can().deleteTable()}>
+              Delete table
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <div className="mx-1 h-6 w-px bg-border" />
         <Button
           type="button"
@@ -240,7 +433,12 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
           <RemoveFormatting className="size-4" />
         </Button>
       </div>
-      <div className="rounded-md border border-input bg-background">
+      <div className="relative rounded-md border border-input bg-background">
+        {isEditorEmpty && !isEditorFocused ? (
+          <p className="pointer-events-none absolute left-4 top-3 text-sm text-muted-foreground/70">
+            Write your update...
+          </p>
+        ) : null}
         <EditorContent editor={editor} />
       </div>
       <p className="text-xs text-muted-foreground">Rich text editor with formatting options</p>

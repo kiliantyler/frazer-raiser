@@ -2,6 +2,7 @@ import { api } from '@convex/_generated/api'
 import { fetchQuery } from 'convex/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
+import { connection } from 'next/server'
 
 function formatDate(timestamp: number): string {
   const date = new Date(timestamp)
@@ -9,6 +10,10 @@ function formatDate(timestamp: number): string {
 }
 
 export default async function TimelinePage() {
+  // Mark this route as dynamic for Next.js 16 so that libraries using randomness
+  // internally (like Convex's client) don't trip the prerender-random check.
+  await connection()
+
   const entries = await fetchQuery(api.updates.listPublicForTimeline, {})
 
   return (
@@ -66,12 +71,11 @@ export default async function TimelinePage() {
                       </h2>
 
                       {entry.heroImage && (
-                        <div className="mb-4 aspect-video overflow-hidden rounded-md">
+                        <div className="relative mb-4 aspect-video overflow-hidden rounded-md">
                           <Image
                             src={entry.heroImage.url}
                             alt={entry.title}
-                            width={entry.heroImage.width}
-                            height={entry.heroImage.height}
+                            fill
                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                             sizes="(max-width: 768px) 100vw, 600px"
                           />

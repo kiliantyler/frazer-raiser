@@ -2,12 +2,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { api } from '@convex/_generated/api'
 import { fetchQuery } from 'convex/nextjs'
 import Link from 'next/link'
+import { connection } from 'next/server'
 
 function formatDate(timestamp: number): string {
   return new Date(timestamp).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
 }
 
 export default async function PublicUpdatesPage() {
+  // Mark this route as dynamic for Next.js 16 so that libraries using randomness
+  // internally (like Convex's client) don't trip the prerender-random check.
+  await connection()
+
   const items = await fetchQuery(api.updates.listPublic, {})
 
   return (

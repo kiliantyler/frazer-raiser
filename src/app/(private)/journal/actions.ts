@@ -8,7 +8,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import sanitizeHtml from 'sanitize-html'
 
-// Sanitize HTML configuration - conservative set of allowed tags and attributes
+// Sanitize HTML configuration - keep in sync with the public updates renderer
 const sanitizeOptions = {
   allowedTags: [
     'p',
@@ -16,12 +16,13 @@ const sanitizeOptions = {
     'strong',
     'em',
     'u',
+    's',
+    'del',
+    'mark',
+    'span',
     'h1',
     'h2',
     'h3',
-    'h4',
-    'h5',
-    'h6',
     'ul',
     'ol',
     'li',
@@ -29,11 +30,23 @@ const sanitizeOptions = {
     'code',
     'pre',
     'a',
+    'hr',
+    'table',
+    'thead',
+    'tbody',
+    'tr',
+    'th',
+    'td',
     'img',
   ],
   allowedAttributes: {
     a: ['href', 'target', 'rel'],
     img: ['src', 'alt', 'width', 'height'],
+  },
+  allowedStyles: {
+    '*': {
+      'text-align': [/^left$/, /^right$/, /^center$/, /^justify$/],
+    },
   },
   allowedSchemes: ['http', 'https', 'mailto'],
   allowedSchemesByTag: {
@@ -58,10 +71,18 @@ export async function createUpdateAction(formData: FormData) {
   const contentHtml = sanitizeHtml(contentHtmlRaw, sanitizeOptions)
 
   const imageIdRaw = String(formData.get('imageId') ?? '').trim()
-  const imageIds: Id<'images'>[] = []
+
+  // Debug logging
+  console.log('[createUpdateAction] FormData entries:', Array.from(formData.entries()))
   if (imageIdRaw) {
-    imageIds.push(imageIdRaw as unknown as Id<'images'>)
+    console.log('[createUpdateAction] imageIdRaw:', imageIdRaw)
+  } else {
+    console.log('[createUpdateAction] No imageId found in form data')
   }
+
+  const imageIds: Id<'images'>[] | undefined = imageIdRaw ? [imageIdRaw as unknown as Id<'images'>] : undefined
+
+  console.log('[createUpdateAction] Calling createDraft with imageIds:', imageIds)
 
   const updateId = await fetchMutation(api.updates.createDraft, {
     title,
@@ -72,6 +93,8 @@ export async function createUpdateAction(formData: FormData) {
     imageIds,
     tags: undefined,
   })
+
+  console.log('[createUpdateAction] Created update with ID:', updateId, 'imageIds were:', imageIds)
 
   // Link image to update if provided
   if (imageIdRaw) {
@@ -105,24 +128,53 @@ export async function updateUpdateAction(formData: FormData) {
   // Sanitize HTML content
   const contentHtml = sanitizeHtml(contentHtmlRaw, sanitizeOptions)
 
+  // Get existing update to preserve imageIds if no new image is provided
+  const existingUpdate = await fetchQuery(api.updates.getById, { updateId })
+
   const imageIdRaw = String(formData.get('imageId') ?? '').trim()
-  const imageIds: Id<'images'>[] = []
+
+  // Debug logging
+  console.log('[updateUpdateAction] FormData entries:', Array.from(formData.entries()))
   if (imageIdRaw) {
-    imageIds.push(imageIdRaw as unknown as Id<'images'>)
+    console.log('[updateUpdateAction] imageIdRaw:', imageIdRaw)
+  } else {
+    console.log('[updateUpdateAction] No imageId found in form data')
+    if (existingUpdate) {
+      console.log('[updateUpdateAction] Existing imageIds:', existingUpdate.imageIds)
+    }
   }
+
+  let imageIds: Id<'images'>[] | undefined
+
+  if (imageIdRaw) {
+    // New image provided - use it
+    imageIds = [imageIdRaw as unknown as Id<'images'>]
+  } else if (existingUpdate && existingUpdate.imageIds.length > 0) {
+    // No new image, but preserve existing imageIds
+    imageIds = existingUpdate.imageIds
+  } else {
+    // No image at all
+    imageIds = undefined
+  }
+
+  console.log('[updateUpdateAction] Calling updateDraft with imageIds:', imageIds)
 
   await fetchMutation(api.updates.updateDraft, {
     updateId,
     title,
     slug,
     contentHtml,
-    imageIds: imageIds.length > 0 ? imageIds : undefined,
+    imageIds,
   })
 
-  // Link image to update if provided
-  if (imageIdRaw) {
+  console.log('[updateUpdateAction] Updated update with ID:', updateId, 'imageIds were:', imageIds)
+
+  // Always link image to update if we have an imageId (either new or existing)
+  // This ensures the association is maintained even if imageIds field has issues
+  const imageIdToLink = imageIdRaw || existingUpdate?.imageIds[0]
+  if (imageIdToLink) {
     await fetchMutation(api.images.linkToEntity, {
-      imageId: imageIdRaw as unknown as Id<'images'>,
+      imageId: imageIdToLink as unknown as Id<'images'>,
       refType: 'update',
       refId: updateId,
     })

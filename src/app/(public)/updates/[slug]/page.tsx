@@ -47,12 +47,11 @@ export default async function UpdateDetailPage({ params }: Props) {
         </header>
 
         {heroImage && (
-          <div className="mb-8 aspect-video overflow-hidden rounded-lg">
+          <div className="relative mb-8 aspect-video overflow-hidden rounded-lg">
             <Image
               src={heroImage.url}
               alt={update.title}
-              width={heroImage.width}
-              height={heroImage.height}
+              fill
               className="h-full w-full object-cover"
               sizes="(max-width: 768px) 100vw, 800px"
               priority
@@ -71,12 +70,13 @@ export default async function UpdateDetailPage({ params }: Props) {
                     'strong',
                     'em',
                     'u',
+                    's',
+                    'del',
+                    'mark',
+                    'span',
                     'h1',
                     'h2',
                     'h3',
-                    'h4',
-                    'h5',
-                    'h6',
                     'ul',
                     'ol',
                     'li',
@@ -84,11 +84,23 @@ export default async function UpdateDetailPage({ params }: Props) {
                     'code',
                     'pre',
                     'a',
+                    'hr',
+                    'table',
+                    'thead',
+                    'tbody',
+                    'tr',
+                    'th',
+                    'td',
                     'img',
                   ],
                   allowedAttributes: {
                     a: ['href', 'target', 'rel'],
                     img: ['src', 'alt', 'width', 'height'],
+                  },
+                  allowedStyles: {
+                    '*': {
+                      'text-align': [/^left$/, /^right$/, /^center$/, /^justify$/],
+                    },
                   },
                   allowedSchemes: ['http', 'https', 'mailto'],
                   allowedSchemesByTag: {
@@ -96,7 +108,7 @@ export default async function UpdateDetailPage({ params }: Props) {
                   },
                 }),
               }}
-              className="[&_h1]:font-serif [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:mb-4 [&_h1]:mt-8 [&_h2]:font-serif [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mb-3 [&_h2]:mt-6 [&_h3]:font-serif [&_h3]:text-xl [&_h3]:font-bold [&_h3]:mb-2 [&_h3]:mt-4 [&_p]:mb-4 [&_p]:leading-relaxed [&_p]:text-muted-foreground [&_ul]:mb-4 [&_ul]:ml-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:text-muted-foreground [&_ol]:mb-4 [&_ol]:ml-6 [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:text-muted-foreground [&_li]:leading-relaxed [&_blockquote]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground [&_code]:rounded [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-sm [&_code]:font-mono [&_pre]:mb-4 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bg-muted [&_pre]:p-4 [&_a]:text-primary [&_a]:underline [&_a:hover]:text-primary/80 [&_img]:my-4 [&_img]:rounded-lg"
+              className="[&_h1]:font-serif [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:mb-4 [&_h1]:mt-8 [&_h2]:font-serif [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mb-3 [&_h2]:mt-6 [&_h3]:font-serif [&_h3]:text-xl [&_h3]:font-bold [&_h3]:mb-2 [&_h3]:mt-4 [&_p]:mb-4 [&_p]:leading-relaxed [&_p]:text-muted-foreground [&_ul]:mb-4 [&_ul]:ml-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:text-muted-foreground [&_ol]:mb-4 [&_ol]:ml-6 [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:text-muted-foreground [&_li]:leading-relaxed [&_blockquote]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground [&_code]:rounded [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-sm [&_code]:font-mono [&_pre]:mb-4 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bg-muted [&_pre]:p-4 [&_a]:text-primary [&_a]:underline [&_a:hover]:text-primary/80 [&_img]:my-4 [&_img]:rounded-lg [&_table]:w-full [&_table]:border-collapse [&_th]:border [&_th]:border-border [&_th]:bg-muted [&_th]:px-3 [&_th]:py-2 [&_td]:border [&_td]:border-border [&_td]:px-3 [&_td]:py-2"
             />
           ) : (
             <ReactMarkdown

@@ -1,4 +1,6 @@
 import { v } from 'convex/values'
+import type { Id } from './_generated/dataModel'
+import type { QueryCtx } from './_generated/server'
 import { mutation, query } from './_generated/server'
 
 const PublishStatus = v.union(v.literal('draft'), v.literal('published'))
@@ -11,6 +13,28 @@ function stripHtml(html: string): string {
     .replaceAll(/&[^;]+;/g, '') // Remove other HTML entities
     .replaceAll(/\s+/g, ' ') // Collapse whitespace
     .trim()
+}
+
+async function resolveUpdateImageIds(
+  ctx: QueryCtx,
+  updateId: Id<'updates'>,
+  existingImageIds: Array<Id<'images'>>,
+): Promise<Array<Id<'images'>>> {
+  if (existingImageIds.length > 0) {
+    return existingImageIds
+  }
+
+  const images = await ctx.db
+    .query('images')
+    .withIndex('by_entityType', q => q.eq('entityRef.type', 'update'))
+    .filter(q => q.eq(q.field('entityRef.id'), updateId))
+    .collect()
+
+  if (images.length === 0) {
+    return existingImageIds
+  }
+
+  return images.map((img: { _id: Id<'images'> }) => img._id)
 }
 
 export const createDraft = mutation({
@@ -29,7 +53,9 @@ export const createDraft = mutation({
     // If contentHtml is provided, derive plain text content from it
     // Otherwise use the provided content (for backward compatibility)
     const plainContent = args.contentHtml ? stripHtml(args.contentHtml) : args.content
-    return await ctx.db.insert('updates', {
+    const imageIdsToSave = args.imageIds ?? []
+    console.log('[createDraft] Received imageIds:', args.imageIds, 'Will save:', imageIdsToSave)
+    const updateId = await ctx.db.insert('updates', {
       title: args.title,
       slug: args.slug,
       content: plainContent,
@@ -38,9 +64,11 @@ export const createDraft = mutation({
       createdAt: now,
       publishedAt: undefined,
       authorId: args.authorId,
-      imageIds: args.imageIds ?? [],
+      imageIds: imageIdsToSave,
       tags: args.tags,
     })
+    console.log('[createDraft] Created update:', updateId, 'with imageIds:', imageIdsToSave)
+    return updateId
   },
 })
 
@@ -56,7 +84,7 @@ export const updateDraft = mutation({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const { updateId, contentHtml, ...patch } = args
+    const { updateId, contentHtml, imageIds, ...patch } = args
     const row = await ctx.db.get(updateId)
     if (!row) return null
 
@@ -67,7 +95,21 @@ export const updateDraft = mutation({
       updatePatch.content = stripHtml(contentHtml)
     }
 
+    // Explicitly handle imageIds - only include if provided
+    if (imageIds === undefined) {
+      console.log('[updateDraft] imageIds is undefined, preserving existing value')
+    } else {
+      updatePatch.imageIds = imageIds
+      console.log('[updateDraft] Updating imageIds to:', imageIds)
+    }
+
+    console.log('[updateDraft] Patch object:', updatePatch)
     await ctx.db.patch(updateId, updatePatch)
+
+    // Verify what was saved
+    const updated = await ctx.db.get(updateId)
+    console.log('[updateDraft] After patch, update.imageIds:', updated?.imageIds)
+
     return null
   },
 })
@@ -149,6 +191,7 @@ export const getBySlug = query({
     if (!doc) {
       return null
     }
+    const imageIds = await resolveUpdateImageIds(ctx, doc._id as Id<'updates'>, doc.imageIds)
     return {
       _id: doc._id,
       _creationTime: doc._creationTime,
@@ -160,7 +203,7 @@ export const getBySlug = query({
       createdAt: doc.createdAt,
       publishedAt: doc.publishedAt,
       authorId: doc.authorId,
-      imageIds: doc.imageIds,
+      imageIds,
       tags: doc.tags,
     }
   },
@@ -229,8 +272,9 @@ export const listPublicForTimeline = query({
     // Resolve hero images and create excerpts
     const results = await Promise.all(
       rows.map(async update => {
-        // Get first image as hero image
-        const heroImageId = update.imageIds[0]
+        const imageIds = await resolveUpdateImageIds(ctx, update._id as Id<'updates'>, update.imageIds)
+
+        const heroImageId = imageIds[0]
         let heroImage = null
         if (heroImageId) {
           const img = await ctx.db.get(heroImageId)
@@ -280,15 +324,20 @@ export const listAllForAdmin = query({
     const rows = await ctx.db.query('updates').collect()
     // Sort by createdAt, newest first
     rows.sort((a, b) => b.createdAt - a.createdAt)
-    return rows.map(u => ({
-      _id: u._id,
-      title: u.title,
-      slug: u.slug,
-      publishStatus: u.publishStatus,
-      createdAt: u.createdAt,
-      publishedAt: u.publishedAt,
-      imageIds: u.imageIds,
-    }))
+    return Promise.all(
+      rows.map(async u => {
+        const imageIds = await resolveUpdateImageIds(ctx, u._id as Id<'updates'>, u.imageIds)
+        return {
+          _id: u._id,
+          title: u.title,
+          slug: u.slug,
+          publishStatus: u.publishStatus,
+          createdAt: u.createdAt,
+          publishedAt: u.publishedAt,
+          imageIds,
+        }
+      }),
+    )
   },
 })
 
@@ -311,6 +360,7 @@ export const getById = query({
   handler: async (ctx, args) => {
     const update = await ctx.db.get(args.updateId)
     if (!update) return null
+    const imageIds = await resolveUpdateImageIds(ctx, update._id as Id<'updates'>, update.imageIds)
     return {
       _id: update._id,
       title: update.title,
@@ -320,7 +370,7 @@ export const getById = query({
       publishStatus: update.publishStatus,
       createdAt: update.createdAt,
       publishedAt: update.publishedAt,
-      imageIds: update.imageIds,
+      imageIds,
     }
   },
 })

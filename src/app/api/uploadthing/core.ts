@@ -31,17 +31,21 @@ export const frazerFileRouter = {
     .onUploadComplete(async ({ metadata, file }) => {
       // Create image record in Convex (non-blocking - don't fail upload if this fails)
       let imageId: string | undefined
+      // Handle both ufsUrl and url properties from uploadthing file object
+      const fileWithUrl = file as { ufsUrl?: string; url?: string; key: string; size: number; type?: string | null }
+      const fileUrl = fileWithUrl.ufsUrl ?? fileWithUrl.url ?? ''
       try {
         imageId = await fetchMutation(api.images.createOnUpload, {
-          utKey: file.key,
-          url: file.url,
+          utKey: fileWithUrl.key,
+          url: fileUrl,
           width: 0,
           height: 0,
-          size: file.size,
-          mime: file.type ?? 'image/jpeg',
+          size: fileWithUrl.size,
+          mime: fileWithUrl.type ?? 'image/jpeg',
           uploaderWorkosUserId: metadata.workosUserId,
           visibility: 'private',
         })
+        console.log('[UploadThing] Created image record with imageId:', imageId)
       } catch (error) {
         // Log error but don't fail the upload
         console.error('[UploadThing] Failed to create image record in Convex:', error)
@@ -54,9 +58,12 @@ export const frazerFileRouter = {
       }
       // Always return success with the file URL
       // imageId will be included if Convex call succeeded
-      const result: { url: string; imageId?: string } = { url: file.url }
+      const result: { url: string; imageId?: string } = { url: fileUrl }
       if (imageId) {
         result.imageId = imageId
+        console.log('[UploadThing] Returning result with imageId:', imageId)
+      } else {
+        console.warn('[UploadThing] No imageId to return - Convex mutation may have failed')
       }
       return result
     }),
