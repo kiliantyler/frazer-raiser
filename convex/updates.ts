@@ -46,6 +46,7 @@ export const createDraft = mutation({
     authorId: v.id('users'),
     imageIds: v.optional(v.array(v.id('images'))),
     tags: v.optional(v.array(v.string())),
+    eventDate: v.optional(v.number()),
   },
   returns: v.id('updates'),
   handler: async (ctx, args) => {
@@ -63,6 +64,7 @@ export const createDraft = mutation({
       publishStatus: 'draft',
       createdAt: now,
       publishedAt: undefined,
+      eventDate: args.eventDate,
       authorId: args.authorId,
       imageIds: imageIdsToSave,
       tags: args.tags,
@@ -81,6 +83,7 @@ export const updateDraft = mutation({
     contentHtml: v.optional(v.string()),
     imageIds: v.optional(v.array(v.id('images'))),
     tags: v.optional(v.array(v.string())),
+    eventDate: v.optional(v.number()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -136,6 +139,17 @@ export const unpublish = mutation({
   },
 })
 
+export const deleteUpdate = mutation({
+  args: { updateId: v.id('updates') },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const row = await ctx.db.get(args.updateId)
+    if (!row) return null
+    await ctx.db.delete(args.updateId)
+    return null
+  },
+})
+
 export const listPublic = query({
   args: {},
   returns: v.array(
@@ -145,6 +159,7 @@ export const listPublic = query({
       slug: v.string(),
       createdAt: v.number(),
       publishedAt: v.optional(v.number()),
+      eventDate: v.optional(v.number()),
     }),
   ),
   handler: async ctx => {
@@ -159,6 +174,7 @@ export const listPublic = query({
       slug: u.slug,
       createdAt: u.createdAt,
       publishedAt: u.publishedAt,
+      eventDate: u.eventDate,
     }))
   },
 })
@@ -176,6 +192,7 @@ export const getBySlug = query({
       publishStatus: PublishStatus,
       createdAt: v.number(),
       publishedAt: v.optional(v.number()),
+      eventDate: v.optional(v.number()),
       authorId: v.id('users'),
       imageIds: v.array(v.id('images')),
       tags: v.optional(v.array(v.string())),
@@ -202,6 +219,7 @@ export const getBySlug = query({
       publishStatus: doc.publishStatus,
       createdAt: doc.createdAt,
       publishedAt: doc.publishedAt,
+      eventDate: doc.eventDate,
       authorId: doc.authorId,
       imageIds,
       tags: doc.tags,
@@ -220,6 +238,7 @@ export const listPublicForTimeline = query({
       excerpt: v.string(),
       publishedAt: v.number(),
       createdAt: v.number(),
+      eventDate: v.optional(v.number()),
       heroImage: v.union(
         v.object({
           _id: v.id('images'),
@@ -237,10 +256,10 @@ export const listPublicForTimeline = query({
       .filter(q => q.eq(q.field('publishStatus'), 'published'))
       .collect()
 
-    // Sort by publishedAt (or createdAt fallback), newest first
+    // Sort by eventDate (or publishedAt/createdAt fallback), newest first
     rows.sort((a, b) => {
-      const aDate = a.publishedAt ?? a.createdAt
-      const bDate = b.publishedAt ?? b.createdAt
+      const aDate = a.eventDate ?? a.publishedAt ?? a.createdAt
+      const bDate = b.eventDate ?? b.publishedAt ?? b.createdAt
       return bDate - aDate
     })
 
@@ -296,8 +315,9 @@ export const listPublicForTimeline = query({
           slug: update.slug,
           content: update.content,
           excerpt,
-          publishedAt: update.publishedAt ?? update.createdAt,
+          publishedAt: update.eventDate ?? update.publishedAt ?? update.createdAt,
           createdAt: update.createdAt,
+          eventDate: update.eventDate,
           heroImage,
         }
       }),
@@ -317,13 +337,18 @@ export const listAllForAdmin = query({
       publishStatus: PublishStatus,
       createdAt: v.number(),
       publishedAt: v.optional(v.number()),
+      eventDate: v.optional(v.number()),
       imageIds: v.array(v.id('images')),
     }),
   ),
   handler: async ctx => {
     const rows = await ctx.db.query('updates').collect()
-    // Sort by createdAt, newest first
-    rows.sort((a, b) => b.createdAt - a.createdAt)
+    // Sort by display date (eventDate ?? publishedAt ?? createdAt), newest first
+    rows.sort((a, b) => {
+      const aDate = a.eventDate ?? a.publishedAt ?? a.createdAt
+      const bDate = b.eventDate ?? b.publishedAt ?? b.createdAt
+      return bDate - aDate
+    })
     return Promise.all(
       rows.map(async u => {
         const imageIds = await resolveUpdateImageIds(ctx, u._id as Id<'updates'>, u.imageIds)
@@ -334,6 +359,7 @@ export const listAllForAdmin = query({
           publishStatus: u.publishStatus,
           createdAt: u.createdAt,
           publishedAt: u.publishedAt,
+          eventDate: u.eventDate,
           imageIds,
         }
       }),
@@ -353,6 +379,7 @@ export const getById = query({
       publishStatus: PublishStatus,
       createdAt: v.number(),
       publishedAt: v.optional(v.number()),
+      eventDate: v.optional(v.number()),
       imageIds: v.array(v.id('images')),
     }),
     v.null(),
@@ -370,6 +397,7 @@ export const getById = query({
       publishStatus: update.publishStatus,
       createdAt: update.createdAt,
       publishedAt: update.publishedAt,
+      eventDate: update.eventDate,
       imageIds,
     }
   },

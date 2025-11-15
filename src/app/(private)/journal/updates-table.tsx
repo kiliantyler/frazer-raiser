@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Pencil } from 'lucide-react'
 import Link from 'next/link'
+import { DeleteUpdateDialog } from './delete-update-dialog'
 import { PublishUpdateDialog } from './publish-update-dialog'
 
 type Update = {
@@ -15,6 +16,7 @@ type Update = {
   publishStatus: 'draft' | 'published'
   createdAt: number
   publishedAt?: number
+  eventDate?: number
   imageIds: string[]
 }
 
@@ -34,35 +36,37 @@ export function UpdatesTable({ updates }: { updates: Array<Update> }) {
           <TableHead>Title</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Created</TableHead>
-          <TableHead>Published</TableHead>
+          <TableHead>Display Date</TableHead>
           <TableHead className="text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {updates.map(update => (
-          <TableRow key={update._id}>
-            <TableCell className="font-medium">{update.title}</TableCell>
-            <TableCell>
-              <Badge variant={update.publishStatus === 'published' ? 'default' : 'secondary'}>
-                {update.publishStatus}
-              </Badge>
-            </TableCell>
-            <TableCell className="text-sm text-muted-foreground">{formatDate(update.createdAt)}</TableCell>
-            <TableCell className="text-sm text-muted-foreground">
-              {update.publishedAt ? formatDate(update.publishedAt) : '—'}
-            </TableCell>
-            <TableCell className="text-right">
-              <div className="flex justify-end gap-1">
-                <Button variant="ghost" size="icon" asChild aria-label="Edit update">
-                  <Link href={`/journal/${update._id}/edit`}>
-                    <Pencil className="size-4" />
-                  </Link>
-                </Button>
-                <PublishUpdateDialog update={update} />
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
+        {updates.map(update => {
+          const displayDate = update.eventDate ?? update.publishedAt ?? update.createdAt
+          return (
+            <TableRow key={update._id}>
+              <TableCell className="font-medium">{update.title}</TableCell>
+              <TableCell>
+                <Badge variant={update.publishStatus === 'published' ? 'default' : 'secondary'}>
+                  {update.publishStatus}
+                </Badge>
+              </TableCell>
+              <TableCell className="text-sm text-muted-foreground">{formatDate(update.createdAt)}</TableCell>
+              <TableCell className="text-sm text-muted-foreground">{formatDate(displayDate)}</TableCell>
+              <TableCell className="text-right">
+                <div className="flex justify-end gap-1">
+                  <Button variant="ghost" size="icon" asChild aria-label="Edit update">
+                    <Link href={`/journal/${update._id}/edit`}>
+                      <Pencil className="size-4" />
+                    </Link>
+                  </Button>
+                  <DeleteUpdateDialog updateId={update._id} />
+                  <PublishUpdateDialog update={update} />
+                </div>
+              </TableCell>
+            </TableRow>
+          )
+        })}
       </TableBody>
     </Table>
   )

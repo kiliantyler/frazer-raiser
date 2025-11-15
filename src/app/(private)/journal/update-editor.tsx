@@ -3,6 +3,7 @@
 import type { FrazerFileRouter } from '@/app/api/uploadthing/core'
 import { RichTextEditor } from '@/components/private/rich-text-editor'
 import { Button } from '@/components/ui/button'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { api } from '@convex/_generated/api'
@@ -23,6 +24,7 @@ type Update = {
   publishStatus: 'draft' | 'published'
   createdAt: number
   publishedAt?: number
+  eventDate?: number
   imageIds: string[]
 }
 
@@ -56,6 +58,13 @@ export function UpdateEditor({ mode, updateId, initialUpdate }: UpdateEditorProp
   const [imageUrl, setImageUrl] = React.useState<string | null>(null)
   const [isUploading, setIsUploading] = React.useState(false)
 
+  // Convert timestamp to Date object for DatePicker
+  const timestampToDate = (timestamp?: number): Date | undefined => {
+    return timestamp ? new Date(timestamp) : undefined
+  }
+
+  const [eventDate, setEventDate] = React.useState<Date | undefined>(timestampToDate(initialUpdate?.eventDate))
+
   // Use a ref to store imageId so it's always current when form submits
   const imageIdRef = React.useRef<string | null>(initialUpdate?.imageIds[0] ?? null)
 
@@ -75,6 +84,7 @@ export function UpdateEditor({ mode, updateId, initialUpdate }: UpdateEditorProp
       // Sync imageId from fullUpdate - use the first imageId if available
       // This ensures we're using the latest data from the database
       setImageId(fullUpdate.imageIds[0] ?? null)
+      setEventDate(timestampToDate(fullUpdate.eventDate))
     }
   }, [fullUpdate])
 
@@ -334,6 +344,14 @@ export function UpdateEditor({ mode, updateId, initialUpdate }: UpdateEditorProp
             placeholder="the-engine-roars-to-life"
           />
           <p className="text-xs text-muted-foreground">URL-friendly identifier for this entry</p>
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="eventDate">Date This Happened (optional)</Label>
+          <DatePicker value={eventDate} onChange={setEventDate} name="eventDate" placeholder="Select date" />
+          <p className="text-xs text-muted-foreground">
+            The date when this event occurred. If not set, the publication date will be used.
+          </p>
         </div>
 
         <div className="grid gap-2">

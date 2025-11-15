@@ -34,15 +34,15 @@ export default async function UpdateDetailPage({ params }: Props) {
     }
   }
 
-  const publishedDate = update.publishedAt ?? update.createdAt
+  const displayDate = update.eventDate ?? update.publishedAt ?? update.createdAt
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-12">
       <article>
         <header className="mb-8">
           <h1 className="font-serif text-3xl font-bold sm:text-4xl">{update.title}</h1>
-          <time dateTime={new Date(publishedDate).toISOString()} className="mt-2 block text-sm text-muted-foreground">
-            {formatDate(publishedDate)}
+          <time dateTime={new Date(displayDate).toISOString()} className="mt-2 block text-sm text-muted-foreground">
+            {formatDate(displayDate)}
           </time>
         </header>
 

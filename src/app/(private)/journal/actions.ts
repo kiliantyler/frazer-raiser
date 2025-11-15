@@ -82,6 +82,10 @@ export async function createUpdateAction(formData: FormData) {
 
   const imageIds: Id<'images'>[] | undefined = imageIdRaw ? [imageIdRaw as unknown as Id<'images'>] : undefined
 
+  // Parse eventDate from form data (YYYY-MM-DD format)
+  const eventDateRaw = String(formData.get('eventDate') ?? '').trim()
+  const eventDate = eventDateRaw ? new Date(eventDateRaw + 'T00:00:00').getTime() : undefined
+
   console.log('[createUpdateAction] Calling createDraft with imageIds:', imageIds)
 
   const updateId = await fetchMutation(api.updates.createDraft, {
@@ -92,6 +96,7 @@ export async function createUpdateAction(formData: FormData) {
     authorId: me._id,
     imageIds,
     tags: undefined,
+    eventDate,
   })
 
   console.log('[createUpdateAction] Created update with ID:', updateId, 'imageIds were:', imageIds)
@@ -157,6 +162,10 @@ export async function updateUpdateAction(formData: FormData) {
     imageIds = undefined
   }
 
+  // Parse eventDate from form data (YYYY-MM-DD format)
+  const eventDateRaw = String(formData.get('eventDate') ?? '').trim()
+  const eventDate = eventDateRaw ? new Date(eventDateRaw + 'T00:00:00').getTime() : undefined
+
   console.log('[updateUpdateAction] Calling updateDraft with imageIds:', imageIds)
 
   await fetchMutation(api.updates.updateDraft, {
@@ -165,6 +174,7 @@ export async function updateUpdateAction(formData: FormData) {
     slug,
     contentHtml,
     imageIds,
+    eventDate,
   })
 
   console.log('[updateUpdateAction] Updated update with ID:', updateId, 'imageIds were:', imageIds)
@@ -211,6 +221,23 @@ export async function unpublishUpdateAction(formData: FormData) {
   if (!user) return
 
   await fetchMutation(api.updates.unpublish, {
+    updateId: updateIdRaw as unknown as Id<'updates'>,
+  })
+
+  revalidatePath('/journal')
+  revalidatePath('/timeline')
+  revalidatePath('/updates')
+  redirect('/journal')
+}
+
+export async function deleteUpdateAction(formData: FormData) {
+  const updateIdRaw = String(formData.get('updateId') ?? '').trim()
+  if (!updateIdRaw) return
+
+  const { user } = await withAuth({ ensureSignedIn: true })
+  if (!user) return
+
+  await fetchMutation(api.updates.deleteUpdate, {
     updateId: updateIdRaw as unknown as Id<'updates'>,
   })
 

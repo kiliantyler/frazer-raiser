@@ -33,7 +33,11 @@ export default async function PublicUpdatesPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    {item.publishedAt ? formatDate(item.publishedAt) : formatDate(item.createdAt)}
+                    {item.eventDate
+                      ? formatDate(item.eventDate)
+                      : item.publishedAt
+                        ? formatDate(item.publishedAt)
+                        : formatDate(item.createdAt)}
                   </p>
                 </CardContent>
               </Card>

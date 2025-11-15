@@ -66,6 +66,7 @@ export default defineSchema({
     publishStatus: v.union(v.literal('draft'), v.literal('published')),
     createdAt: v.number(),
     publishedAt: v.optional(v.number()),
+    eventDate: v.optional(v.number()),
     authorId: v.id('users'),
     imageIds: v.array(v.id('images')),
     tags: v.optional(v.array(v.string())),

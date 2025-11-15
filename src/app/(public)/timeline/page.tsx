@@ -36,7 +36,8 @@ export default async function TimelinePage() {
 
           <div className="space-y-12">
             {entries.map(entry => {
-              const dateStr = formatDate(entry.publishedAt)
+              const displayDate = entry.eventDate ?? entry.publishedAt
+              const dateStr = formatDate(displayDate)
               const [month, day, year] = dateStr.split(' ')
 
               return (
