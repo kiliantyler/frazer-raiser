@@ -1,4 +1,4 @@
-import { PrivateSidebar } from '@/components/private-sidebar'
+import { PrivateSidebar } from '@/components/private/private-sidebar'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { getCurrentUserOrNull } from '@/lib/auth'
 import { withAuth } from '@workos-inc/authkit-nextjs'

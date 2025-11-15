@@ -1,4 +1,4 @@
-import { SectionFadeIn } from '@/components/section-fade-in'
+import { SectionFadeIn } from '@/components/shared/section-fade-in'
 import { Cog, Image as ImageIcon, Newspaper } from 'lucide-react'
 import { FeatureCard } from './feature-card'
 

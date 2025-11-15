@@ -1,4 +1,4 @@
-import { SectionFadeIn } from '@/components/section-fade-in'
+import { SectionFadeIn } from '@/components/shared/section-fade-in'
 import { Card } from '@/components/ui/card'
 import { Activity, Car, CheckCircle2, Sparkles, Zap } from 'lucide-react'
 

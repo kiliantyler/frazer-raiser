@@ -1,4 +1,4 @@
-import { SectionFadeIn } from '@/components/section-fade-in'
+import { SectionFadeIn } from '@/components/shared/section-fade-in'
 import { Card, CardContent } from '@/components/ui/card'
 import Image from 'next/image'
 
