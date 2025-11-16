@@ -2,8 +2,20 @@ import { UpdatesViewToggle } from '@/components/public/updates-view-toggle'
 import { SectionFadeIn } from '@/components/shared/section-fade-in'
 import { api } from '@convex/_generated/api'
 import { fetchQuery } from 'convex/nextjs'
+import { Rss } from 'lucide-react'
+import type { Metadata } from 'next'
+import Link from 'next/link'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
+import { UpdatesViewControls } from './updates-view-controls'
+
+export const metadata: Metadata = {
+  alternates: {
+    types: {
+      'application/rss+xml': '/api/rss',
+    },
+  },
+}
 
 export default async function PublicUpdatesPage() {
   // Mark this route as dynamic for Next.js 16 so that libraries using randomness
@@ -13,7 +25,18 @@ export default async function PublicUpdatesPage() {
   const items = await fetchQuery(api.updates.listPublicForTimeline, {})
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-12">
+    <main className="relative mx-auto max-w-5xl px-6 py-12">
+      <div className="absolute right-6 top-12 flex items-center gap-3">
+        <UpdatesViewControls />
+        <Link
+          href="/api/rss"
+          className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+          aria-label="Subscribe to RSS feed"
+          title="RSS Feed">
+          <Rss className="size-3.5" />
+          <span className="hidden sm:inline">RSS</span>
+        </Link>
+      </div>
       <section aria-label="Project journal updates">
         <div className="mb-10 text-center sm:mb-12">
           <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-muted-foreground sm:text-xs">

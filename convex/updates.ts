@@ -422,3 +422,52 @@ export const getById = query({
     }
   },
 })
+
+export const listPublicForRss = query({
+  args: {},
+  returns: v.array(
+    v.object({
+      _id: v.id('updates'),
+      title: v.string(),
+      slug: v.string(),
+      content: v.string(),
+      contentHtml: v.optional(v.string()),
+      publishedAt: v.number(),
+      createdAt: v.number(),
+      eventDate: v.optional(v.number()),
+      authorName: v.string(),
+    }),
+  ),
+  handler: async ctx => {
+    const rows = await ctx.db
+      .query('updates')
+      .filter(q => q.eq(q.field('publishStatus'), 'published'))
+      .collect()
+
+    // Sort by eventDate (or publishedAt/createdAt fallback), newest first
+    rows.sort((a, b) => {
+      const aDate = a.eventDate ?? a.publishedAt ?? a.createdAt
+      const bDate = b.eventDate ?? b.publishedAt ?? b.createdAt
+      return bDate - aDate
+    })
+
+    const results = await Promise.all(
+      rows.map(async update => {
+        const author = await ctx.db.get(update.authorId as Id<'users'>)
+        return {
+          _id: update._id,
+          title: update.title,
+          slug: update.slug,
+          content: update.content,
+          contentHtml: update.contentHtml,
+          publishedAt: update.eventDate ?? update.publishedAt ?? update.createdAt,
+          createdAt: update.createdAt,
+          eventDate: update.eventDate,
+          authorName: author?.name ?? 'Unknown author',
+        }
+      }),
+    )
+
+    return results
+  },
+})
