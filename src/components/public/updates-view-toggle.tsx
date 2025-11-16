@@ -5,27 +5,9 @@ import type { Route } from 'next'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { GridUpdatesList } from './updates-grid'
-import { TimelineUpdatesList } from './updates-timeline'
+import { TimelineUpdatesList, type TimelineUpdate } from './updates-timeline'
 
-type UpdateItem = {
-  _id: string
-  title: string
-  slug: string
-  excerpt: string
-  publishedAt: number
-  createdAt: number
-  eventDate?: number
-  authorName: string
-  authorAvatarUrl?: string
-  heroImage: {
-    _id: string
-    url: string
-    width: number
-    height: number
-  } | null
-}
-
-export function UpdatesViewToggle({ items }: { items: Array<UpdateItem> }) {
+export function UpdatesViewToggle({ items }: { items: Array<TimelineUpdate> }) {
   const searchParams = useSearchParams()
   const router = useRouter()
   const viewParam = searchParams.get('view')

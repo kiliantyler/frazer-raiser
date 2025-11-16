@@ -1,30 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
-
-type GridUpdate = {
-  _id: string
-  title: string
-  slug: string
-  excerpt: string
-  publishedAt: number
-  createdAt: number
-  eventDate?: number
-  authorName: string
-  authorAvatarUrl?: string
-  heroImage: {
-    _id: string
-    url: string
-    width: number
-    height: number
-  } | null
-}
+import { type TimelineUpdate } from './updates-timeline'
 
 function formatDate(timestamp: number): string {
   return new Date(timestamp).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
 }
 
-export function GridUpdatesList({ items }: { items: Array<GridUpdate> }) {
+export function GridUpdatesList({ items }: { items: Array<TimelineUpdate> }) {
   if (items.length === 0) {
     return (
       <div className="py-10 text-center sm:py-12">
