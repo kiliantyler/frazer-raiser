@@ -1,4 +1,3 @@
-import { PageHeader } from '@/components/private/page-header'
 import { api } from '@convex/_generated/api'
 import type { Id } from '@convex/_generated/dataModel'
 import { withAuth } from '@workos-inc/authkit-nextjs'
@@ -19,10 +18,5 @@ export default async function EditUpdatePage({ params }: Props) {
     return notFound()
   }
 
-  return (
-    <section className="space-y-6">
-      <PageHeader title="Edit Journal Entry" />
-      <UpdateEditor mode="edit" updateId={updateId} initialUpdate={update} />
-    </section>
-  )
+  return <UpdateEditor mode="edit" updateId={updateId} initialUpdate={update} />
 }

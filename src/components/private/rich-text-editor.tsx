@@ -3,6 +3,14 @@
 import type { FrazerFileRouter } from '@/app/api/uploadthing/core'
 import { Button } from '@/components/ui/button'
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -10,8 +18,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import Highlight from '@tiptap/extension-highlight'
-import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
 import { Table } from '@tiptap/extension-table'
 import TableCell from '@tiptap/extension-table-cell'
@@ -47,6 +56,7 @@ import {
   Undo2,
 } from 'lucide-react'
 import * as React from 'react'
+import { ImageResize } from './image-resize-extension'
 
 type RichTextEditorProps = {
   id: string
@@ -62,6 +72,15 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
   const [isEditorEmpty, setIsEditorEmpty] = React.useState(
     !initialContentHtml || initialContentHtml.trim().length === 0,
   )
+  const [isLinkDialogOpen, setIsLinkDialogOpen] = React.useState(false)
+  const [linkUrl, setLinkUrl] = React.useState('')
+  const [isImageAltDialogOpen, setIsImageAltDialogOpen] = React.useState(false)
+  const [imageAltText, setImageAltText] = React.useState('')
+  const [pendingImageUrl, setPendingImageUrl] = React.useState<string | null>(null)
+
+  // Use a ref to track if we've initialized the editor to prevent unnecessary updates
+  const isInitializedRef = React.useRef(false)
+  const initialContentRef = React.useRef(initialContentHtml)
 
   const editor = useEditor({
     extensions: [
@@ -81,7 +100,7 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
           rel: 'noopener noreferrer',
         },
       }),
-      Image.configure({
+      ImageResize.configure({
         inline: true,
         allowBase64: false,
       }),
@@ -105,8 +124,7 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
     },
     editorProps: {
       attributes: {
-        class:
-          'prose prose-invert max-w-none min-h-[300px] px-4 py-3 focus:outline-none prose-headings:font-serif prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-1',
+        class: 'prose-editor-content min-h-[600px] focus:outline-none',
       },
     },
   })
@@ -126,18 +144,42 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
       setIsEditorFocused(false)
     }
 
+    const handleSelectionUpdate = () => {
+      // Toolbar is always visible now
+    }
+
     editor.on('focus', handleFocus)
     editor.on('blur', handleBlur)
+    editor.on('selectionUpdate', handleSelectionUpdate)
 
     return () => {
       editor.off('focus', handleFocus)
       editor.off('blur', handleBlur)
+      editor.off('selectionUpdate', handleSelectionUpdate)
     }
   }, [editor])
 
+  // Only update content if initialContentHtml actually changed and editor is initialized
   React.useEffect(() => {
-    if (editor && initialContentHtml && editor.getHTML() !== initialContentHtml) {
-      editor.commands.setContent(initialContentHtml)
+    if (!editor) {
+      return
+    }
+
+    // On first mount, mark as initialized
+    if (!isInitializedRef.current) {
+      isInitializedRef.current = true
+      initialContentRef.current = initialContentHtml
+      return
+    }
+
+    // Only update if the content actually changed from what we last set
+    if (initialContentHtml !== initialContentRef.current) {
+      const currentHtml = editor.getHTML()
+      // Only update if different to prevent flickering
+      if (currentHtml !== initialContentHtml) {
+        editor.commands.setContent(initialContentHtml ?? '<p></p>', { emitUpdate: false })
+        initialContentRef.current = initialContentHtml
+      }
     }
   }, [editor, initialContentHtml])
 
@@ -145,18 +187,31 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
     setIsUploadingImage(false)
     if (res?.[0]?.url && editor) {
       const imageUrl = res[0].url
-      const altPrompt = globalThis.window.prompt('Describe the image (alt text):') ?? ''
-      const alt = altPrompt.trim()
+      setPendingImageUrl(imageUrl)
+      setIsImageAltDialogOpen(true)
+    }
+  }
 
+  const handleImageAltSubmit = () => {
+    if (pendingImageUrl && editor) {
       editor
         .chain()
         .focus()
         .setImage({
-          src: imageUrl,
-          alt,
+          src: pendingImageUrl,
+          alt: imageAltText.trim(),
         })
         .run()
+      setIsImageAltDialogOpen(false)
+      setImageAltText('')
+      setPendingImageUrl(null)
     }
+  }
+
+  const handleImageAltCancel = () => {
+    setIsImageAltDialogOpen(false)
+    setImageAltText('')
+    setPendingImageUrl(null)
   }
 
   const handleImageUploadError = () => {
@@ -171,22 +226,32 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
     if (!editor) return
 
     const previousHref = editor.getAttributes('link').href as string | undefined
-    const url = globalThis.window.prompt('Enter URL (leave blank to remove the link):', previousHref ?? '')
+    setLinkUrl(previousHref ?? '')
+    setIsLinkDialogOpen(true)
+  }
 
-    if (url === null) {
-      return
-    }
+  const handleLinkSubmit = () => {
+    if (!editor) return
 
-    const trimmedUrl = url.trim()
+    const trimmedUrl = linkUrl.trim()
 
     if (!trimmedUrl) {
       if (editor.isActive('link')) {
         editor.chain().focus().unsetLink().run()
       }
+      setIsLinkDialogOpen(false)
+      setLinkUrl('')
       return
     }
 
     editor.chain().focus().extendMarkRange('link').setLink({ href: trimmedUrl }).run()
+    setIsLinkDialogOpen(false)
+    setLinkUrl('')
+  }
+
+  const handleLinkCancel = () => {
+    setIsLinkDialogOpen(false)
+    setLinkUrl('')
   }
 
   if (!editor) {
@@ -194,9 +259,9 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
   }
 
   return (
-    <div className="space-y-2">
+    <div className="w-full">
       <input type="hidden" id={id} name={name} value={html} />
-      <div className="flex flex-wrap gap-1 rounded-md border border-input bg-background p-2">
+      <div className="sticky top-0 z-20 mb-6 flex flex-wrap gap-1 rounded-lg border-2 border-primary/30 bg-card/95 backdrop-blur supports-backdrop-filter:bg-card/90 px-4 py-3 shadow-lg">
         <Button
           type="button"
           variant="ghost"
@@ -406,7 +471,7 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
           aria-label="Link">
           <LinkIcon className="size-4" />
         </Button>
-        <div className="relative inline-block">
+        <div className="relative inline-block w-8 h-8 rich-text-editor-upload-wrapper">
           <UploadButton<FrazerFileRouter, 'imageUploader'>
             endpoint="imageUploader"
             onClientUploadComplete={handleImageUpload}
@@ -414,12 +479,12 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
             onUploadBegin={handleImageUploadBegin}
             appearance={{
               button: isUploadingImage
-                ? 'bg-muted text-muted-foreground cursor-not-allowed h-8 w-8 rounded-md text-sm font-medium p-0 border-0 flex items-center justify-center'
-                : 'bg-transparent hover:bg-accent h-8 w-8 rounded-md text-sm font-medium p-0 border-0 flex items-center justify-center',
+                ? 'bg-muted text-muted-foreground cursor-not-allowed h-8 w-8 rounded-md p-0 border-0 flex items-center justify-center'
+                : 'bg-transparent hover:bg-accent h-8 w-8 rounded-md p-0 border-0 flex items-center justify-center',
               allowedContent: 'hidden',
             }}
           />
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-10">
             <ImageIcon className="size-4" />
           </div>
         </div>
@@ -433,15 +498,90 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
           <RemoveFormatting className="size-4" />
         </Button>
       </div>
-      <div className="relative rounded-md border border-input bg-background">
+      <div className="relative w-full h-full px-6 py-4">
         {isEditorEmpty && !isEditorFocused ? (
-          <p className="pointer-events-none absolute left-4 top-3 text-sm text-muted-foreground/70">
-            Write your update...
-          </p>
+          <p className="pointer-events-none absolute left-6 top-4 text-lg text-muted-foreground/50">Start writing...</p>
         ) : null}
         <EditorContent editor={editor} />
       </div>
-      <p className="text-xs text-muted-foreground">Rich text editor with formatting options</p>
+
+      <Dialog open={isLinkDialogOpen} onOpenChange={setIsLinkDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Link</DialogTitle>
+            <DialogDescription>Enter the URL for the link. Leave blank to remove an existing link.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="link-url">URL</Label>
+              <Input
+                id="link-url"
+                type="url"
+                placeholder="https://example.com"
+                value={linkUrl}
+                onChange={e => setLinkUrl(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    handleLinkSubmit()
+                  }
+                  if (e.key === 'Escape') {
+                    e.preventDefault()
+                    handleLinkCancel()
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={handleLinkCancel}>
+              Cancel
+            </Button>
+            <Button type="button" onClick={handleLinkSubmit}>
+              Apply
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isImageAltDialogOpen} onOpenChange={setIsImageAltDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Image</DialogTitle>
+            <DialogDescription>Describe the image for accessibility (alt text).</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="image-alt">Alt Text</Label>
+              <Input
+                id="image-alt"
+                type="text"
+                placeholder="A description of the image"
+                value={imageAltText}
+                onChange={e => setImageAltText(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    handleImageAltSubmit()
+                  }
+                  if (e.key === 'Escape') {
+                    e.preventDefault()
+                    handleImageAltCancel()
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={handleImageAltCancel}>
+              Cancel
+            </Button>
+            <Button type="button" onClick={handleImageAltSubmit}>
+              Add Image
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

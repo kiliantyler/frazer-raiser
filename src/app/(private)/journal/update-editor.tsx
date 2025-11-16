@@ -10,10 +10,10 @@ import { api } from '@convex/_generated/api'
 import type { Id } from '@convex/_generated/dataModel'
 import { UploadButton } from '@uploadthing/react'
 import { useConvex, useQuery } from 'convex/react'
-import { ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import * as React from 'react'
+import { createPortal } from 'react-dom'
 import { createUpdateAction, updateUpdateAction } from './actions'
 
 type Update = {
@@ -52,8 +52,9 @@ type UpdateEditorProps =
 export function UpdateEditor({ mode, updateId, initialUpdate }: UpdateEditorProps) {
   const router = useRouter()
   const convex = useConvex()
+  const [mounted, setMounted] = React.useState(false)
   const [title, setTitle] = React.useState(initialUpdate?.title ?? '')
-  const [slug, setSlug] = React.useState(initialUpdate?.slug ?? '')
+  const [slug] = React.useState(initialUpdate?.slug ?? '')
   const [imageId, setImageId] = React.useState<string | null>(initialUpdate?.imageIds[0] ?? null)
   const [imageUrl, setImageUrl] = React.useState<string | null>(null)
   const [isUploading, setIsUploading] = React.useState(false)
@@ -80,7 +81,6 @@ export function UpdateEditor({ mode, updateId, initialUpdate }: UpdateEditorProp
   React.useEffect(() => {
     if (fullUpdate) {
       setTitle(fullUpdate.title)
-      setSlug(fullUpdate.slug)
       // Sync imageId from fullUpdate - use the first imageId if available
       // This ensures we're using the latest data from the database
       setImageId(fullUpdate.imageIds[0] ?? null)
@@ -98,18 +98,9 @@ export function UpdateEditor({ mode, updateId, initialUpdate }: UpdateEditorProp
     }
   }, [heroImage, imageId])
 
-  React.useEffect(() => {
-    if (mode === 'create' && title && !slug) {
-      setSlug(slugify(title))
-    }
-  }, [title, slug, mode])
-
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value
     setTitle(newTitle)
-    if (mode === 'create') {
-      setSlug(slugify(newTitle))
-    }
   }
 
   const handleUploadComplete = async (res: unknown) => {
@@ -299,6 +290,10 @@ export function UpdateEditor({ mode, updateId, initialUpdate }: UpdateEditorProp
     // Always set imageId in form data (even if empty)
     formData.set('imageId', imageIdToUse)
 
+    // Set slug - auto-generated from title if creating, or use existing if editing
+    const slugToUse = mode === 'create' ? slugify(title) : slug
+    formData.set('slug', slugToUse)
+
     if (imageIdToUse) {
       console.log('[UpdateEditor] Submitting form with imageId:', imageIdToUse)
     } else {
@@ -313,98 +308,103 @@ export function UpdateEditor({ mode, updateId, initialUpdate }: UpdateEditorProp
     await action(formData)
   }
 
-  return (
-    <div className="space-y-6">
-      <form onSubmit={handleFormSubmit} className="space-y-6">
-        {mode === 'edit' && updateId ? <input type="hidden" name="updateId" value={updateId} /> : null}
-        {/* Always render imageId input, even if empty, to ensure it's included in form data */}
-        <input type="hidden" name="imageId" value={imageId || ''} />
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
 
-        <div className="grid gap-2">
-          <Label htmlFor="title">Title</Label>
-          <Input
-            id="title"
-            name="title"
-            value={title}
-            onChange={handleTitleChange}
-            required
-            placeholder="The Engine Roars to Life"
-            className="text-lg"
-          />
-        </div>
+  const headerContainer = mounted ? document.getElementById('journal-editor-header-content') : null
 
-        <div className="grid gap-2">
-          <Label htmlFor="slug">Slug</Label>
-          <Input
-            id="slug"
-            name="slug"
-            value={slug}
-            onChange={e => setSlug(e.target.value)}
-            required
-            placeholder="the-engine-roars-to-life"
-          />
-          <p className="text-xs text-muted-foreground">URL-friendly identifier for this entry</p>
-        </div>
-
-        <div className="grid gap-2">
-          <Label htmlFor="eventDate">Date This Happened (optional)</Label>
+  const headerContent = headerContainer ? (
+    <div className="flex flex-1 items-center justify-between gap-4 px-4 w-full">
+      <div className="flex-1 min-w-0">
+        <Input
+          id="title"
+          name="title"
+          value={title}
+          onChange={handleTitleChange}
+          required
+          placeholder="Page title..."
+          className="text-xl font-bold border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 px-0 py-1 h-auto w-full text-foreground placeholder:text-muted-foreground/50"
+        />
+      </div>
+      <div className="flex items-center gap-3 text-sm">
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-muted/50 rounded-md border border-border/50">
+          <Label htmlFor="eventDate" className="text-xs font-medium text-muted-foreground">
+            Date:
+          </Label>
           <DatePicker value={eventDate} onChange={setEventDate} name="eventDate" placeholder="Select date" />
-          <p className="text-xs text-muted-foreground">
-            The date when this event occurred. If not set, the publication date will be used.
-          </p>
         </div>
-
-        <div className="grid gap-2">
-          <Label htmlFor="contentHtml">Content</Label>
-          <RichTextEditor id="contentHtml" name="contentHtml" initialContentHtml={currentContentHtml} />
-        </div>
-
-        <div className="grid gap-2">
-          <Label>Hero Image (optional)</Label>
-          {imageUrl ? (
-            <div className="space-y-2">
-              <div className="relative aspect-video w-full max-w-2xl overflow-hidden rounded-md border">
-                <Image src={imageUrl} alt="Hero image" fill className="object-cover" />
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setImageId(null)
-                  setImageUrl(null)
-                }}>
-                Remove image
-              </Button>
-            </div>
-          ) : (
-            <div>
-              <UploadButton<FrazerFileRouter, 'imageUploader'>
-                endpoint="imageUploader"
-                onClientUploadComplete={handleUploadComplete}
-                onUploadError={handleUploadError}
-                onUploadBegin={handleUploadBegin}
-                appearance={{
-                  button: isUploading
-                    ? 'bg-muted text-muted-foreground cursor-not-allowed h-9 px-4 py-2 rounded-md text-sm font-medium'
-                    : 'bg-primary text-primary-foreground h-9 px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90',
-                  allowedContent: 'text-muted-foreground text-xs',
-                }}
-              />
-            </div>
-          )}
-        </div>
-
-        <div className="flex items-center gap-4">
-          <Button type="submit" disabled={isUploading} size="lg">
-            {mode === 'edit' ? 'Save changes' : 'Create draft'}
+        <div className="flex items-center gap-2">
+          <Button type="submit" form="editor-form" disabled={isUploading} size="sm">
+            {mode === 'edit' ? 'Save' : 'Create'}
           </Button>
-          <Button type="button" variant="outline" onClick={() => router.push('/journal')} disabled={isUploading}>
-            <ArrowLeft className="mr-2 size-4" />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => router.push('/journal')}
+            disabled={isUploading}>
             Cancel
           </Button>
         </div>
-      </form>
+      </div>
     </div>
+  ) : null
+
+  return (
+    <>
+      {mounted && headerContainer && createPortal(headerContent, headerContainer)}
+      <div className="absolute inset-0 top-16 bottom-0 left-0 right-0 flex flex-col">
+        <form id="editor-form" onSubmit={handleFormSubmit} className="flex flex-col h-full">
+          {mode === 'edit' && updateId ? <input type="hidden" name="updateId" value={updateId} /> : null}
+          {/* Always render imageId input, even if empty, to ensure it's included in form data */}
+          <input type="hidden" name="imageId" value={imageId || ''} />
+          <input type="hidden" name="title" value={title} />
+          <input type="hidden" name="eventDate" value={eventDate?.toISOString() || ''} />
+
+          {/* Full-page editor area - no box, just the editor */}
+          <div className="flex-1 overflow-auto min-h-0">
+            <RichTextEditor id="contentHtml" name="contentHtml" initialContentHtml={currentContentHtml} />
+          </div>
+
+          {/* Hero Image section - fixed at bottom */}
+          <div className="flex-shrink-0 border-t border-border bg-background px-6 py-2">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-medium">Hero Image (optional)</Label>
+              {imageUrl ? (
+                <div className="flex items-center gap-4">
+                  <div className="relative h-16 w-24 overflow-hidden rounded-md border">
+                    <Image src={imageUrl} alt="Hero image" fill className="object-cover" />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setImageId(null)
+                      setImageUrl(null)
+                    }}>
+                    Remove
+                  </Button>
+                </div>
+              ) : (
+                <UploadButton<FrazerFileRouter, 'imageUploader'>
+                  endpoint="imageUploader"
+                  onClientUploadComplete={handleUploadComplete}
+                  onUploadError={handleUploadError}
+                  onUploadBegin={handleUploadBegin}
+                  appearance={{
+                    button: isUploading
+                      ? 'bg-muted text-muted-foreground cursor-not-allowed h-8 px-3 py-1.5 rounded-md text-sm font-medium'
+                      : 'bg-primary text-primary-foreground h-8 px-3 py-1.5 rounded-md text-sm font-medium hover:bg-primary/90',
+                    allowedContent: 'text-muted-foreground text-xs',
+                  }}
+                />
+              )}
+            </div>
+          </div>
+        </form>
+      </div>
+    </>
   )
 }

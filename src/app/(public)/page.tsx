@@ -1,6 +1,5 @@
 import { AnimateOnView } from '@/components/home/animate-on-view'
 import { HomeFeatures } from '@/components/home/home-features'
-import { HomeFooter } from '@/components/home/home-footer'
 import { HomeGoals } from '@/components/home/home-goals'
 import { HomeHero } from '@/components/home/home-hero'
 import { HomeMilestones } from '@/components/home/home-milestones'
@@ -36,7 +35,6 @@ export default function HomePage() {
           </div>
         </ChromeCard>
       </section>
-      <HomeFooter />
     </main>
   )
 }
