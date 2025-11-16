@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { api } from '@convex/_generated/api'
 import { fetchQuery } from 'convex/nextjs'
 import type { Route } from 'next'
@@ -44,6 +45,26 @@ export default async function UpdateDetailPage({ params }: Props) {
           <time dateTime={new Date(displayDate).toISOString()} className="mt-2 block text-sm text-muted-foreground">
             {formatDate(displayDate)}
           </time>
+          <div className="mt-4 flex items-center gap-3">
+            <Avatar className="size-9" aria-label={`Author avatar for ${update.authorName}`}>
+              {update.authorAvatarUrl ? (
+                <AvatarImage src={update.authorAvatarUrl} alt={update.authorName} />
+              ) : (
+                <AvatarFallback>
+                  {update.authorName
+                    .split(' ')
+                    .map(part => part[0])
+                    .join('')
+                    .slice(0, 2)
+                    .toUpperCase() || '?'}
+                </AvatarFallback>
+              )}
+            </Avatar>
+            <div className="flex flex-col">
+              <span className="text-sm font-medium text-foreground">{update.authorName}</span>
+              <span className="text-xs text-muted-foreground">Entry author</span>
+            </div>
+          </div>
         </header>
 
         {heroImage && (

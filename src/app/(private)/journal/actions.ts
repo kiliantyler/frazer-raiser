@@ -111,7 +111,6 @@ export async function createUpdateAction(formData: FormData) {
   }
 
   revalidatePath('/journal')
-  revalidatePath('/timeline')
   revalidatePath('/updates')
   redirect('/journal')
 }
@@ -191,7 +190,6 @@ export async function updateUpdateAction(formData: FormData) {
   }
 
   revalidatePath('/journal')
-  revalidatePath('/timeline')
   revalidatePath('/updates')
   redirect('/journal')
 }
@@ -208,7 +206,6 @@ export async function publishUpdateAction(formData: FormData) {
   })
 
   revalidatePath('/journal')
-  revalidatePath('/timeline')
   revalidatePath('/updates')
   redirect('/journal')
 }
@@ -225,7 +222,6 @@ export async function unpublishUpdateAction(formData: FormData) {
   })
 
   revalidatePath('/journal')
-  revalidatePath('/timeline')
   revalidatePath('/updates')
   redirect('/journal')
 }
@@ -242,7 +238,6 @@ export async function deleteUpdateAction(formData: FormData) {
   })
 
   revalidatePath('/journal')
-  revalidatePath('/timeline')
   revalidatePath('/updates')
   redirect('/journal')
 }

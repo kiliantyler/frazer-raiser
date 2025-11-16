@@ -160,6 +160,8 @@ export const listPublic = query({
       createdAt: v.number(),
       publishedAt: v.optional(v.number()),
       eventDate: v.optional(v.number()),
+      authorName: v.string(),
+      authorAvatarUrl: v.optional(v.string()),
     }),
   ),
   handler: async ctx => {
@@ -168,14 +170,21 @@ export const listPublic = query({
       .filter(q => q.eq(q.field('publishStatus'), 'published'))
       .collect()
     rows.sort((a, b) => b.createdAt - a.createdAt)
-    return rows.map(u => ({
-      _id: u._id,
-      title: u.title,
-      slug: u.slug,
-      createdAt: u.createdAt,
-      publishedAt: u.publishedAt,
-      eventDate: u.eventDate,
-    }))
+    return Promise.all(
+      rows.map(async u => {
+        const author = await ctx.db.get(u.authorId as Id<'users'>)
+        return {
+          _id: u._id,
+          title: u.title,
+          slug: u.slug,
+          createdAt: u.createdAt,
+          publishedAt: u.publishedAt,
+          eventDate: u.eventDate,
+          authorName: author?.name ?? 'Unknown author',
+          authorAvatarUrl: author?.avatarUrl,
+        }
+      }),
+    )
   },
 })
 
@@ -194,6 +203,8 @@ export const getBySlug = query({
       publishedAt: v.optional(v.number()),
       eventDate: v.optional(v.number()),
       authorId: v.id('users'),
+      authorName: v.string(),
+      authorAvatarUrl: v.optional(v.string()),
       imageIds: v.array(v.id('images')),
       tags: v.optional(v.array(v.string())),
     }),
@@ -209,6 +220,7 @@ export const getBySlug = query({
       return null
     }
     const imageIds = await resolveUpdateImageIds(ctx, doc._id as Id<'updates'>, doc.imageIds)
+    const author = await ctx.db.get(doc.authorId as Id<'users'>)
     return {
       _id: doc._id,
       _creationTime: doc._creationTime,
@@ -221,6 +233,8 @@ export const getBySlug = query({
       publishedAt: doc.publishedAt,
       eventDate: doc.eventDate,
       authorId: doc.authorId,
+      authorName: author?.name ?? 'Unknown author',
+      authorAvatarUrl: author?.avatarUrl,
       imageIds,
       tags: doc.tags,
     }
@@ -239,6 +253,8 @@ export const listPublicForTimeline = query({
       publishedAt: v.number(),
       createdAt: v.number(),
       eventDate: v.optional(v.number()),
+      authorName: v.string(),
+      authorAvatarUrl: v.optional(v.string()),
       heroImage: v.union(
         v.object({
           _id: v.id('images'),
@@ -307,6 +323,8 @@ export const listPublicForTimeline = query({
           }
         }
 
+        const author = await ctx.db.get(update.authorId as Id<'users'>)
+
         const excerpt = createExcerpt(update)
 
         return {
@@ -318,6 +336,8 @@ export const listPublicForTimeline = query({
           publishedAt: update.eventDate ?? update.publishedAt ?? update.createdAt,
           createdAt: update.createdAt,
           eventDate: update.eventDate,
+          authorName: author?.name ?? 'Unknown author',
+          authorAvatarUrl: author?.avatarUrl,
           heroImage,
         }
       }),

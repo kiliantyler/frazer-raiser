@@ -20,9 +20,9 @@ export function HomeHero() {
             stuck bolts, and small wins, you&apos;ll probably enjoy following along.
           </p>
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <Button asChild size="lg" className="h-12 px-8 text-base shadow-lg" aria-label="Explore the timeline">
-              <Link href="/timeline" className="inline-flex items-center gap-2">
-                See the timeline
+            <Button asChild size="lg" className="h-12 px-8 text-base shadow-lg" aria-label="Explore the updates">
+              <Link href="/updates" className="inline-flex items-center gap-2">
+                See the updates
                 <ArrowRight className="size-4" aria-hidden="true" />
               </Link>
             </Button>

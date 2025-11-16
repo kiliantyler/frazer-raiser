@@ -5,7 +5,6 @@ function isPublicPath(pathname: string): boolean {
   if (pathname === '/') return true
   if (pathname.startsWith('/updates')) return true
   if (pathname === '/gallery') return true
-  if (pathname === '/timeline') return true
   if (pathname === '/contact') return true
   if (pathname === '/about') return true
   if (pathname === '/login/callback') return true

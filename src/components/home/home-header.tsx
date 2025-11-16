@@ -56,7 +56,6 @@ export function HomeHeader() {
           <div className="group/nav absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center gap-1 rounded-full border border-border/50 bg-card/50 px-2 py-1.5 shadow-sm backdrop-blur-sm">
             <NavLink href="/about">About</NavLink>
             <NavLink href="/gallery">Gallery</NavLink>
-            <NavLink href="/timeline">Timeline</NavLink>
             <NavLink href="/updates">Updates</NavLink>
           </div>
           <div className="w-[120px]" />
@@ -65,7 +64,6 @@ export function HomeHeader() {
         <div className="flex items-center justify-center gap-4 pb-4 md:hidden">
           <MobileNavLink href="/about">About</MobileNavLink>
           <MobileNavLink href="/gallery">Gallery</MobileNavLink>
-          <MobileNavLink href="/timeline">Timeline</MobileNavLink>
           <MobileNavLink href="/updates">Updates</MobileNavLink>
         </div>
       </nav>
