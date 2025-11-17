@@ -6,12 +6,9 @@ export function HomeMilestones() {
     <section className="px-6 py-10 sm:px-10 sm:py-12">
       <div className="mx-auto w-full">
         <div className="text-center">
-          <div className="mb-4 inline-block">
-            <span className="text-sm font-semibold uppercase tracking-wider text-primary">Process</span>
-          </div>
-          <h2 className="font-display text-balance text-3xl font-bold tracking-tight sm:text-4xl">Milestones</h2>
+          <h2 className="text-3xl font-semibold uppercase text-primary font-frazer tracking-widest">Milestones</h2>
           <p className="mt-4 mx-auto max-w-2xl text-pretty text-muted-foreground">
-            From the first teardown bolts to final polish—these are the big steps.
+            The major phases of the restoration process, from discovery to completion.
           </p>
         </div>
 

@@ -12,7 +12,7 @@ export default function AboutPage() {
     <main className="min-h-screen bg-background text-foreground">
       <section
         aria-label="About the Frazer restoration project"
-        className="mx-auto max-w-5xl px-6 py-10 sm:py-14 lg:py-16">
+        className="mx-auto max-w-5xl px-6 pt-20 pb-10 sm:pt-24 sm:pb-14">
         <div className="mb-8 text-center sm:mb-10">
           <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-muted-foreground sm:text-xs">
             About the project

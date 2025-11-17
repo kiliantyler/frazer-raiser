@@ -1,6 +1,6 @@
 import { SectionFadeIn } from '@/components/shared/section-fade-in'
 import { Card } from '@/components/ui/card'
-import { Activity, Car, CheckCircle2, Sparkles, Zap } from 'lucide-react'
+import { Activity, BrushCleaning, Car, Home, Sparkles } from 'lucide-react'
 
 interface GoalCardProps {
   Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
@@ -9,8 +9,9 @@ interface GoalCardProps {
 }
 // Easy to update: just change `done: false` to `done: true` for completed goals
 const GOALS = [
-  { Icon: Zap, title: 'First Start', done: false },
-  { Icon: Activity, title: 'First Run', done: false },
+  { Icon: Home, title: 'Bring It Home', done: true },
+  { Icon: BrushCleaning, title: 'Cleaned out', done: false },
+  { Icon: Activity, title: 'First Start', done: false },
   { Icon: Car, title: 'First Drive', done: false },
   { Icon: Sparkles, title: 'First Car Show', done: false },
 ]
@@ -18,7 +19,7 @@ const GOALS = [
 function GoalCard({ Icon, title, done }: GoalCardProps) {
   return (
     <Card
-      className={`group relative border-border/40 bg-card/50 p-6 text-center shadow-sm transition-all duration-300 ${
+      className={`group relative flex h-full w-full flex-col border-border/40 bg-card/50 p-6 text-center shadow-sm transition-all duration-300 ${
         done
           ? 'overflow-hidden border-primary/30 bg-primary/5'
           : 'overflow-hidden hover:border-primary/30 hover:bg-card/70 hover:shadow-md'
@@ -44,14 +45,10 @@ function GoalCard({ Icon, title, done }: GoalCardProps) {
             ? 'bg-primary/20 text-primary ring-2 ring-primary/20'
             : 'bg-primary/10 text-primary ring-2 ring-primary/10 group-hover:scale-110 group-hover:bg-primary/15 group-hover:ring-primary/20'
         }`}>
-        {done ? (
-          <CheckCircle2 className="size-6" aria-hidden="true" />
-        ) : (
-          <Icon className="size-6 transition-transform duration-300 group-hover:scale-110" aria-hidden="true" />
-        )}
+        <Icon className="size-6 transition-transform duration-300 group-hover:scale-110" aria-hidden="true" />
       </div>
       <h3
-        className={`mt-5 font-display text-lg font-semibold transition-colors ${
+        className={`mt-5 flex-1 font-display text-lg font-semibold transition-colors ${
           done ? 'text-muted-foreground line-through' : 'group-hover:text-primary'
         }`}>
         {title}
@@ -67,16 +64,15 @@ export function HomeGoals() {
         <SectionFadeIn delayMs={80}>
           <div className="text-center">
             <div className="mb-4 inline-block">
-              <span className="text-sm font-semibold uppercase tracking-wider text-primary">The Plan</span>
+              <h2 className="text-3xl font-semibold uppercase text-primary font-frazer tracking-widest">The Plan</h2>
             </div>
-            <h2 className="font-display text-balance text-3xl font-bold tracking-tight sm:text-4xl">Goals</h2>
             <p className="mt-4 mx-auto max-w-2xl text-pretty text-muted-foreground">
-              The milestones we&apos;re working toward.
+              Our key objectives and what we&apos;re aiming to accomplish with this restoration.
             </p>
           </div>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
             {GOALS.map((goal, index) => (
-              <div key={index} className="overflow-visible">
+              <div key={index} className="flex overflow-visible">
                 <GoalCard Icon={goal.Icon} title={goal.title} done={goal.done} />
               </div>
             ))}

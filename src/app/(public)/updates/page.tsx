@@ -19,8 +19,8 @@ export default async function PublicUpdatesPage() {
   const items = await getUpdates()
 
   return (
-    <main className="relative mx-auto max-w-5xl px-6 py-12">
-      <div className="absolute right-6 top-12 flex items-center gap-3">
+    <main className="relative mx-auto max-w-5xl px-6 pt-20 pb-12 sm:pt-24">
+      <div className="absolute right-6 top-20 flex items-center gap-3 sm:top-24">
         <UpdatesViewControls />
         <Link
           href="/api/rss"

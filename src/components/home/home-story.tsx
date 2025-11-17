@@ -9,11 +9,8 @@ export function HomeStory() {
         <div className="grid gap-10 md:grid-cols-2 md:items-center">
           <div className="space-y-6">
             <div className="inline-block">
-              <span className="text-sm font-semibold uppercase tracking-wider text-primary">The Story</span>
+              <h2 className="text-3xl font-semibold uppercase text-primary font-frazer tracking-widest">The Story</h2>
             </div>
-            <h2 className="font-display text-balance text-4xl font-bold tracking-tight sm:text-5xl">
-              How this started
-            </h2>
             <div className="space-y-4 text-base leading-relaxed text-pretty text-muted-foreground sm:text-lg">
               <p>
                 A friend gifted me a 1948 Frazer that had been tucked away in a barn for about twenty years. My dad and
