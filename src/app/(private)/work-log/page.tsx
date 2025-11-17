@@ -9,13 +9,19 @@ import { withAuth } from '@workos-inc/authkit-nextjs'
 import { fetchQuery } from 'convex/nextjs'
 import { addWorkLogAction } from './actions'
 
+type WorkLogItem = { _id: string; date: number; hours: number; description: string; costDeltaCents?: number }
+
+async function getWorkLogByDateRange(from: number, to: number) {
+  'use cache'
+  return await fetchQuery(api.worklog.listByDateRange, { from, to })
+}
+
 export default async function WorkLogPage() {
   // Read request data before any non-deterministic operations (Date.now) to satisfy Next RSC constraint
   await withAuth({ ensureSignedIn: true })
   const now = Date.now()
   const thirtyDays = 1000 * 60 * 60 * 24 * 30
-  type WorkLogItem = { _id: string; date: number; hours: number; description: string; costDeltaCents?: number }
-  const items = (await fetchQuery(api.worklog.listByDateRange, { from: now - thirtyDays, to: now })) as WorkLogItem[]
+  const items = (await getWorkLogByDateRange(now - thirtyDays, now)) as WorkLogItem[]
   const totalHours = items.reduce((sum: number, it: WorkLogItem) => sum + it.hours, 0)
   const totalCostDelta = items.reduce((sum: number, it: WorkLogItem) => sum + (it.costDeltaCents ?? 0), 0)
   return (

@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { api } from '@convex/_generated/api'
+import type { Id } from '@convex/_generated/dataModel'
 import { fetchQuery } from 'convex/nextjs'
 import type { Route } from 'next'
 import Image from 'next/image'
@@ -14,26 +15,38 @@ function formatDate(timestamp: number): string {
   return new Date(timestamp).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
 }
 
+async function getUpdateBySlug(slug: string) {
+  'use cache'
+  return await fetchQuery(api.updates.getBySlug, { slug })
+}
+
+async function getImageById(imageId: Id<'images'>) {
+  'use cache'
+  return await fetchQuery(api.images.getById, { imageId })
+}
+
+async function getHeroImage(imageIds: Array<Id<'images'>>) {
+  'use cache'
+  if (imageIds.length === 0) {
+    return null
+  }
+  const imageId = imageIds[0]
+  if (!imageId) {
+    return null
+  }
+  return await getImageById(imageId)
+}
+
 export default async function UpdateDetailPage({ params }: Props) {
   const { slug } = await params
   if (!slug) return notFound()
 
-  const update = await fetchQuery(api.updates.getBySlug, { slug })
+  const update = await getUpdateBySlug(slug)
   if (!update || update.publishStatus !== 'published') {
     return notFound()
   }
 
-  // Fetch hero image if available
-  let heroImage = null
-  if (update.imageIds.length > 0) {
-    const imageId = update.imageIds[0]
-    if (imageId) {
-      const image = await fetchQuery(api.images.getById, { imageId })
-      if (image) {
-        heroImage = image
-      }
-    }
-  }
+  const heroImage = await getHeroImage(update.imageIds)
 
   const displayDate = update.eventDate ?? update.publishedAt ?? update.createdAt
 

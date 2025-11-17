@@ -7,24 +7,33 @@ import { fetchQuery } from 'convex/nextjs'
 import { PartDialog } from './part-dialog'
 import { PartsTable } from './parts-table'
 
+type PartListItem = {
+  _id: string
+  name: string
+  vendor?: string
+  status?: 'ordered' | 'shipped' | 'received' | 'installed' | 'cancelled'
+  priceCents: number
+  purchasedOn?: number
+  installedOn?: number
+  linkedTaskId?: string
+}
+
+type Supplier = { _id: string; name: string; websiteUrl?: string }
+
+async function getParts() {
+  'use cache'
+  return await fetchQuery(api.parts.list, {})
+}
+
+async function getSuppliers() {
+  'use cache'
+  return await fetchQuery(api.suppliers.list, {})
+}
+
 export default async function PartsCostsPage() {
   // Read request data before any non-deterministic libs (Convex) to satisfy Next RSC constraint
   await withAuth({ ensureSignedIn: true })
-  type PartListItem = {
-    _id: string
-    name: string
-    vendor?: string
-    status?: 'ordered' | 'shipped' | 'received' | 'installed' | 'cancelled'
-    priceCents: number
-    purchasedOn?: number
-    installedOn?: number
-    linkedTaskId?: string
-  }
-  type Supplier = { _id: string; name: string; websiteUrl?: string }
-  const [parts, suppliers] = (await Promise.all([
-    fetchQuery(api.parts.list, {}),
-    fetchQuery(api.suppliers.list, {}),
-  ])) as [PartListItem[], Supplier[]]
+  const [parts, suppliers] = (await Promise.all([getParts(), getSuppliers()])) as [PartListItem[], Supplier[]]
   const totalCents = parts.reduce((sum: number, p: PartListItem) => sum + (p.priceCents ?? 0), 0)
   const totalParts = parts.length
   const averageCents = totalParts > 0 ? Math.round(totalCents / totalParts) : 0

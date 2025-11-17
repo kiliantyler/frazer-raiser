@@ -9,22 +9,30 @@ import { fetchQuery } from 'convex/nextjs'
 import { redirect } from 'next/navigation'
 import { updateBudgetAction } from './actions'
 
+async function getUserByWorkosUserId(workosUserId: string) {
+  'use cache'
+  return await fetchQuery(api.users.getByWorkosUserId, { workosUserId })
+}
+
+async function getSettings() {
+  'use cache'
+  return await fetchQuery(api.settings.get, {})
+}
+
 export default async function SettingsPage() {
   const { user } = await withAuth({ ensureSignedIn: true })
   if (!user) {
     redirect('/')
   }
 
-  const me = await fetchQuery(api.users.getByWorkosUserId, {
-    workosUserId: user.id,
-  })
+  const me = await getUserByWorkosUserId(user.id)
 
   if (!me) {
     redirect('/')
   }
 
   const isAdmin = me.role === 'ADMIN'
-  const settings = await fetchQuery(api.settings.get, {})
+  const settings = await getSettings()
   const budgetDollars = settings.budgetCents / 100
 
   return (

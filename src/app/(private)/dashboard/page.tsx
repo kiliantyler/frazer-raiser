@@ -10,17 +10,47 @@ import { api } from '@convex/_generated/api'
 import { withAuth } from '@workos-inc/authkit-nextjs'
 import { fetchQuery } from 'convex/nextjs'
 
+async function getUpcomingTasks(limit: number) {
+  'use cache'
+  return await fetchQuery(api.tasks.listUpcoming, { limit })
+}
+
+async function getParts() {
+  'use cache'
+  return await fetchQuery(api.parts.list, {})
+}
+
+async function getRecentActivity(limit: number) {
+  'use cache'
+  return await fetchQuery(api.worklog.listRecent, { limit })
+}
+
+async function getLatestImages(limit: number, visibility: 'private' | 'public') {
+  'use cache'
+  return await fetchQuery(api.images.listLatest, { limit, visibility })
+}
+
+async function getSettings() {
+  'use cache'
+  return await fetchQuery(api.settings.get, {})
+}
+
+async function getRecentUpdates() {
+  'use cache'
+  return await fetchQuery(api.updates.listPublicForTimeline, {})
+}
+
 export default async function DashboardPage() {
   // Access request data first to ensure deterministic rendering
   await withAuth({ ensureSignedIn: true })
 
   const [upcomingTasks, parts, recentActivity, latestImages, settings, recentUpdates] = await Promise.all([
-    fetchQuery(api.tasks.listUpcoming, { limit: 4 }),
-    fetchQuery(api.parts.list, {}),
-    fetchQuery(api.worklog.listRecent, { limit: 3 }),
-    fetchQuery(api.images.listLatest, { limit: 4, visibility: 'private' }),
-    fetchQuery(api.settings.get, {}),
-    fetchQuery(api.updates.listPublicForTimeline, {}),
+    getUpcomingTasks(4),
+    getParts(),
+    getRecentActivity(3),
+    getLatestImages(4, 'private'),
+    getSettings(),
+    getRecentUpdates(),
   ])
 
   const totalSpentCents = parts.reduce((sum, p) => sum + p.priceCents, 0)

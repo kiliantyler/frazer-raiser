@@ -15,11 +15,21 @@ type Collaborator = {
   role: 'ADMIN' | 'COLLABORATOR' | 'VIEWER'
 }
 
+async function getUserByWorkosUserId(workosUserId: string) {
+  'use cache'
+  return await fetchQuery(api.users.getByWorkosUserId, { workosUserId })
+}
+
+async function getUsers() {
+  'use cache'
+  return await fetchQuery(api.users.list, {})
+}
+
 export default async function CollaboratorsPage() {
   const { user } = await withAuth({ ensureSignedIn: true })
-  const me = user ? await fetchQuery(api.users.getByWorkosUserId, { workosUserId: user.id }) : null
+  const me = user ? await getUserByWorkosUserId(user.id) : null
   const canAdmin = me?.role === 'ADMIN'
-  const users = (await fetchQuery(api.users.list, {})) as Collaborator[]
+  const users = (await getUsers()) as Collaborator[]
   return (
     <section className="space-y-6">
       <PageHeader title="Collaborators" />

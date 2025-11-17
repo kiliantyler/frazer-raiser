@@ -7,15 +7,18 @@ import { redirect } from 'next/navigation'
 import { updateProfileAction } from './actions'
 import { ProfileForm } from './profile-form'
 
+async function getUserByWorkosUserId(workosUserId: string) {
+  'use cache'
+  return await fetchQuery(api.users.getByWorkosUserId, { workosUserId })
+}
+
 export default async function ProfilePage() {
   const { user } = await withAuth({ ensureSignedIn: true })
   if (!user) {
     redirect('/')
   }
 
-  const me = await fetchQuery(api.users.getByWorkosUserId, {
-    workosUserId: user.id,
-  })
+  const me = await getUserByWorkosUserId(user.id)
 
   if (!me) {
     redirect('/')

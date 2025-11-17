@@ -19,27 +19,45 @@ type AppUser = {
   role: Role
 }
 
+async function getUserByWorkosUserId(workosUserId: string) {
+  'use cache'
+  return await fetchQuery(api.users.getByWorkosUserId, { workosUserId })
+}
+
+async function getUsers() {
+  'use cache'
+  return await fetchQuery(api.users.list, {})
+}
+
+async function getTasksByStatus(status: 'todo' | 'in_progress' | 'blocked' | 'done') {
+  'use cache'
+  return await fetchQuery(api.tasks.listByStatus, { status })
+}
+
+async function getPublishedUpdates() {
+  'use cache'
+  return await fetchQuery(api.updates.listPublic, {})
+}
+
 export default async function AdminPage() {
   const { user } = await withAuth({ ensureSignedIn: true })
   if (!user) {
     redirect('/')
   }
 
-  const me = (await fetchQuery(api.users.getByWorkosUserId, {
-    workosUserId: user.id,
-  })) as AppUser | null
+  const me = (await getUserByWorkosUserId(user.id)) as AppUser | null
 
   if (!me || me.role !== 'ADMIN') {
     redirect('/dashboard')
   }
 
   const [users, tasksTodo, tasksInProgress, tasksBlocked, tasksDone, publishedUpdates] = await Promise.all([
-    fetchQuery(api.users.list, {}),
-    fetchQuery(api.tasks.listByStatus, { status: 'todo' }),
-    fetchQuery(api.tasks.listByStatus, { status: 'in_progress' }),
-    fetchQuery(api.tasks.listByStatus, { status: 'blocked' }),
-    fetchQuery(api.tasks.listByStatus, { status: 'done' }),
-    fetchQuery(api.updates.listPublic, {}),
+    getUsers(),
+    getTasksByStatus('todo'),
+    getTasksByStatus('in_progress'),
+    getTasksByStatus('blocked'),
+    getTasksByStatus('done'),
+    getPublishedUpdates(),
   ])
 
   const totalTasks =

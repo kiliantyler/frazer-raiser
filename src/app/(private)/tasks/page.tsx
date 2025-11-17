@@ -16,6 +16,11 @@ type TaskListItem = {
   priority: 'low' | 'medium' | 'high'
 }
 
+async function getTasksByStatus(status: 'todo' | 'in_progress' | 'blocked' | 'done') {
+  'use cache'
+  return await fetchQuery(api.tasks.listByStatus, { status })
+}
+
 async function TasksByStatus({
   status,
   title,
@@ -23,7 +28,7 @@ async function TasksByStatus({
   status: 'todo' | 'in_progress' | 'blocked' | 'done'
   title: string
 }) {
-  const tasks = (await fetchQuery(api.tasks.listByStatus, { status })) as TaskListItem[]
+  const tasks = (await getTasksByStatus(status)) as TaskListItem[]
   return (
     <div className="space-y-3">
       <h3 className="font-serif text-lg">{title}</h3>

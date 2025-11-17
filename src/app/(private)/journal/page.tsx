@@ -7,10 +7,15 @@ import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { UpdatesTable } from './updates-table'
 
+async function getAllUpdatesForAdmin() {
+  'use cache'
+  return await fetchQuery(api.updates.listAllForAdmin, {})
+}
+
 export default async function UpdatesPage() {
   await withAuth({ ensureSignedIn: true })
 
-  const updates = await fetchQuery(api.updates.listAllForAdmin, {})
+  const updates = await getAllUpdatesForAdmin()
 
   return (
     <section className="space-y-6">

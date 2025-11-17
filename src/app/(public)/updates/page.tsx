@@ -5,7 +5,6 @@ import { fetchQuery } from 'convex/nextjs'
 import { Rss } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { connection } from 'next/server'
 import { Suspense } from 'react'
 import { UpdatesViewControls } from './updates-view-controls'
 
@@ -17,12 +16,13 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function PublicUpdatesPage() {
-  // Mark this route as dynamic for Next.js 16 so that libraries using randomness
-  // internally (like Convex's client) don't trip the prerender-random check.
-  await connection()
+async function getUpdates() {
+  'use cache'
+  return await fetchQuery(api.updates.listPublicForTimeline, {})
+}
 
-  const items = await fetchQuery(api.updates.listPublicForTimeline, {})
+export default async function PublicUpdatesPage() {
+  const items = await getUpdates()
 
   return (
     <main className="relative mx-auto max-w-5xl px-6 py-12">
