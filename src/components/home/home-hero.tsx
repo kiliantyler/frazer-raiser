@@ -13,7 +13,7 @@ export function HomeHero() {
       <div className="mx-auto flex w-full max-w-7xl px-6 py-16 sm:py-24 lg:py-32">
         <div className="relative max-w-3xl">
           <h1 className="font-display text-balance text-5xl font-bold tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] sm:text-6xl md:text-7xl lg:text-8xl">
-            Raising a Frazer
+            Raising a <span className="font-frazer tracking-widest">Frazer</span>
           </h1>
           <p className="mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)] sm:text-xl">
             We&apos;re bringing a 1948 Frazer back to the road after decades asleep. If you&apos;re into old metal,

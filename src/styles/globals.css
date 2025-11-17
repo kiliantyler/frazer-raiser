@@ -140,6 +140,10 @@
   font-family: var(--font-display), ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
 }
 
+.font-frazer {
+  font-family: var(--font-frazer), ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+}
+
 @keyframes fade-up-soft {
   from {
     opacity: 0;

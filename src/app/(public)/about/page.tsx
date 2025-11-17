@@ -55,7 +55,7 @@ function AboutIntroSection() {
 function KaiserFrazerSection() {
   return (
     <section className="mt-6 space-y-3">
-      <h2 className="text-base font-semibold tracking-wide text-primary">Kaiser-Frazer in brief</h2>
+      <h2 className="text-base font-semibold font-frazer tracking-widest text-primary">Kaiser-Frazer in brief</h2>
       <p>
         Kaiser-Frazer was one of the few serious post-war challengers to the Big Three. Industrialist Henry J. Kaiser
         teamed up with auto executive Joseph W. Frazer in 1945 to form the Kaiser-Frazer Corporation, building cars in a
@@ -76,7 +76,7 @@ function KaiserFrazerSection() {
 function FrazerDesignSection() {
   return (
     <section className="mt-6 space-y-3">
-      <h2 className="text-base font-semibold tracking-wide text-primary">What made the Frazer special</h2>
+      <h2 className="text-base font-semibold font-frazer tracking-widest text-primary">What made the Frazer special</h2>
       <p>
         The 1948 Frazer was a full-size sedan riding on a wheelbase of around 115 inches and weighing just over 3,300
         pounds. Designed by Howard &quot;Dutch&quot; Darrin, it was recognized for its clean, modern lines and even
@@ -94,7 +94,7 @@ function FrazerDesignSection() {
 function FrazerMechanicalSection() {
   return (
     <section className="mt-6 space-y-3">
-      <h2 className="text-base font-semibold tracking-wide text-primary">Under the skin</h2>
+      <h2 className="text-base font-semibold text-primary font-frazer tracking-widest">Under the skin</h2>
       <p>
         Mechanically, the Frazer was straightforward and durable, which is part of what makes it restorable today. In
         broad strokes:
@@ -116,7 +116,7 @@ function FrazerMechanicalSection() {
 function MyFrazerSection() {
   return (
     <section className="mt-6 space-y-3">
-      <h2 className="text-base font-semibold tracking-wide text-primary">This particular car</h2>
+      <h2 className="text-base font-semibold text-primary font-frazer tracking-widest">This particular car</h2>
       <p>
         My Frazer spent roughly twenty years tucked away in a barn, originally a project car belonging to a
         friend&apos;s father who never got the chance to dig into it. When it was gifted to me, it came with an implied

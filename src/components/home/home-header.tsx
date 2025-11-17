@@ -41,15 +41,15 @@ function MobileNavLink({ href, children }: { href: string; children: React.React
 
 export function HomeHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/90 shadow-lg">
+    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/95 backdrop-blur-xl supports-backdrop-filter:bg-background/90 shadow-lg">
       <nav aria-label="Primary" className="mx-auto max-w-7xl px-6">
         <div className="relative flex items-center justify-between py-6">
           <Link href="/" className="flex items-center gap-2.5 transition-all duration-500 hover:opacity-80 group">
             <span
               aria-hidden="true"
-              className="inline-block size-4 rounded-sm bg-primary shadow-md transition-all duration-500 group-hover:scale-110 group-hover:rotate-12 group-hover:shadow-lg"
+              className="inline-block size-5 rounded-sm bg-primary shadow-md transition-all duration-500 group-hover:scale-110 group-hover:rotate-12 group-hover:shadow-lg"
             />
-            <span className="text-lg font-bold tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text transition-all duration-500 group-hover:from-primary group-hover:via-primary/90 group-hover:to-primary/80">
+            <span className="text-2xl font-bold tracking-widest bg-linear-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text transition-all duration-500 group-hover:from-primary group-hover:via-primary/90 group-hover:to-primary/80 font-frazer">
               Frazer Raiser
             </span>
           </Link>
