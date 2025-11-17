@@ -1,18 +1,13 @@
 'use client'
 
+import { createSupplierAction, updateSupplierAction } from '@/app/(private)/suppliers/actions'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import type { Supplier } from '@/types/suppliers'
 import { Pencil, Plus } from 'lucide-react'
 import * as React from 'react'
-import { createSupplierAction, updateSupplierAction } from './actions'
-
-type Supplier = {
-  _id: string
-  name: string
-  websiteUrl?: string
-}
 
 export function SupplierDialog({ mode, supplier }: { mode: 'create' | 'edit'; supplier?: Supplier }) {
   const [open, setOpen] = React.useState(false)

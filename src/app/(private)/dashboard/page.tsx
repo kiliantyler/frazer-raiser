@@ -1,44 +1,21 @@
 import { ActivityItem } from '@/components/private/activity-item'
 import { EmptyState } from '@/components/private/empty-state'
 import { ImageGrid } from '@/components/private/image-grid'
+import { JournalUpdatesPreview } from '@/components/private/journal-updates-preview'
 import { PageHeader } from '@/components/private/page-header'
 import { SectionCard } from '@/components/private/section-card'
 import { SpendingSummary } from '@/components/private/spending-summary'
 import { TaskItem } from '@/components/private/task-item'
+import {
+  getLatestImages,
+  getParts,
+  getRecentActivity,
+  getRecentUpdates,
+  getSettings,
+  getUpcomingTasks,
+} from '@/lib/data/dashboard'
 import { getActivityIcon } from '@/lib/utils/activity-icon'
-import { api } from '@convex/_generated/api'
 import { withAuth } from '@workos-inc/authkit-nextjs'
-import { fetchQuery } from 'convex/nextjs'
-
-async function getUpcomingTasks(limit: number) {
-  'use cache'
-  return await fetchQuery(api.tasks.listUpcoming, { limit })
-}
-
-async function getParts() {
-  'use cache'
-  return await fetchQuery(api.parts.list, {})
-}
-
-async function getRecentActivity(limit: number) {
-  'use cache'
-  return await fetchQuery(api.worklog.listRecent, { limit })
-}
-
-async function getLatestImages(limit: number, visibility: 'private' | 'public') {
-  'use cache'
-  return await fetchQuery(api.images.listLatest, { limit, visibility })
-}
-
-async function getSettings() {
-  'use cache'
-  return await fetchQuery(api.settings.get, {})
-}
-
-async function getRecentUpdates() {
-  'use cache'
-  return await fetchQuery(api.updates.listPublicForTimeline, {})
-}
 
 export default async function DashboardPage() {
   // Access request data first to ensure deterministic rendering
@@ -110,26 +87,7 @@ export default async function DashboardPage() {
         </SectionCard>
 
         <SectionCard title="Journal Updates" viewAllHref="/journal">
-          <div className="space-y-3">
-            {recentUpdates.length === 0 ? (
-              <EmptyState message="No journal entries yet" />
-            ) : (
-              recentUpdates.slice(0, 3).map(update => (
-                <div key={update._id} className="flex items-start justify-between gap-2">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{update.title}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(update.publishedAt).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                      })}
-                    </p>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
+          <JournalUpdatesPreview updates={recentUpdates} />
         </SectionCard>
       </div>
     </div>

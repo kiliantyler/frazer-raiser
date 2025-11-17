@@ -1,11 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { formatLongDate, getAuthorInitials } from '@/lib/utils/format'
 import Link from 'next/link'
 import { type TimelineUpdate } from './updates-timeline'
-
-function formatDate(timestamp: number): string {
-  return new Date(timestamp).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-}
 
 export function GridUpdatesList({ items }: { items: Array<TimelineUpdate> }) {
   if (items.length === 0) {
@@ -22,18 +19,12 @@ export function GridUpdatesList({ items }: { items: Array<TimelineUpdate> }) {
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {items.map(item => {
         const displayDate = item.eventDate
-          ? formatDate(item.eventDate)
+          ? formatLongDate(item.eventDate)
           : item.publishedAt
-            ? formatDate(item.publishedAt)
-            : formatDate(item.createdAt)
+            ? formatLongDate(item.publishedAt)
+            : formatLongDate(item.createdAt)
 
-        const authorInitials =
-          item.authorName
-            .split(' ')
-            .map(part => part[0])
-            .join('')
-            .slice(0, 2)
-            .toUpperCase() || '?'
+        const authorInitials = getAuthorInitials(item.authorName)
 
         return (
           <Link

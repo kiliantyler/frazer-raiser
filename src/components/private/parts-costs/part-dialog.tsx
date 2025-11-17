@@ -1,24 +1,15 @@
 'use client'
 
+import { createPartAction, updatePartAction } from '@/app/(private)/parts-costs/actions'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import type { Part } from '@/types/parts'
+import type { Supplier } from '@/types/suppliers'
 import { Pencil, Plus } from 'lucide-react'
 import * as React from 'react'
-import { createPartAction, updatePartAction } from './actions'
-
-type Supplier = { _id: string; name: string; websiteUrl?: string }
-type Part = {
-  _id: string
-  name: string
-  supplierId?: string
-  partNumber?: string
-  sourceUrl?: string
-  priceCents: number
-  purchasedOn?: number
-}
 
 export function PartDialog({
   mode,

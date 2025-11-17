@@ -1,9 +1,9 @@
+import { UpdateEditor } from '@/components/private/journal/update-editor'
 import { api } from '@convex/_generated/api'
 import type { Id } from '@convex/_generated/dataModel'
 import { withAuth } from '@workos-inc/authkit-nextjs'
 import { fetchQuery } from 'convex/nextjs'
 import { notFound } from 'next/navigation'
-import { UpdateEditor } from '../../update-editor'
 
 type Props = { params: Promise<{ id: string }> }
 

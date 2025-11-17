@@ -1,6 +1,6 @@
 'use client'
 
-import { Badge } from '@/components/ui/badge'
+import { setPartStatusAction } from '@/app/(private)/parts-costs/actions'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import {
@@ -14,50 +14,16 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { formatCurrency } from '@/lib/utils/format'
+import { getPartStatus } from '@/lib/utils/parts'
+import type { PartListItem, StatusFilter } from '@/types/parts'
+import type { Supplier } from '@/types/suppliers'
 import { Search as SearchIcon } from 'lucide-react'
 import type { Route } from 'next'
 import Link from 'next/link'
 import * as React from 'react'
-import { setPartStatusAction } from './actions'
 import { DeletePartDialog } from './delete-part-dialog'
 import { PartDialog } from './part-dialog'
-
-type PartListItem = {
-  _id: string
-  name: string
-  vendor?: string
-  supplierName?: string
-  supplierId?: string
-  partNumber?: string
-  status?: 'ordered' | 'shipped' | 'received' | 'installed' | 'cancelled'
-  priceCents: number
-  purchasedOn?: number
-  installedOn?: number
-  sourceUrl?: string
-  linkedTaskId?: string
-}
-
-type StatusFilter = 'all' | 'ordered' | 'shipped' | 'received' | 'installed' | 'cancelled'
-
-function getStatus(part: PartListItem): StatusFilter {
-  // Backward compatibility for older parts with no status
-  return (part.status ?? (part.installedOn ? 'installed' : 'ordered')) as StatusFilter
-}
-
-function StatusBadge({ status }: { status: StatusFilter }) {
-  const safeStatus = (status ?? 'ordered') as Exclude<StatusFilter, 'all'>
-  const variants: Record<Exclude<StatusFilter, 'all'>, string> = {
-    ordered: 'bg-sky-700/90 text-white border-sky-800',
-    shipped: 'bg-amber-600/90 text-white border-amber-700',
-    received: 'bg-indigo-600/90 text-white border-indigo-700',
-    installed: 'bg-emerald-600/90 text-white border-emerald-700',
-    cancelled: 'bg-zinc-600/90 text-white border-zinc-700',
-  }
-  const label = safeStatus.charAt(0).toUpperCase() + safeStatus.slice(1)
-  return <Badge className={variants[safeStatus]}>{label}</Badge>
-}
-
-type Supplier = { _id: string; name: string }
+import { StatusBadge } from './status-badge'
 
 export function PartsTable({ parts, suppliers }: { parts: Array<PartListItem>; suppliers: Array<Supplier> }) {
   const [query, setQuery] = React.useState('')
@@ -76,7 +42,7 @@ export function PartsTable({ parts, suppliers }: { parts: Array<PartListItem>; s
           return name.includes(q) || vendor.includes(q) || supplier.includes(q) || pn.includes(q)
         })
       : parts
-    const byStatus = status === 'all' ? byText : byText.filter(p => getStatus(p) === status)
+    const byStatus = status === 'all' ? byText : byText.filter(p => getPartStatus(p) === status)
     return byStatus
   }, [parts, query, status])
 
@@ -158,7 +124,7 @@ export function PartsTable({ parts, suppliers }: { parts: Array<PartListItem>; s
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button aria-label="Change status">
-                      <StatusBadge status={getStatus(p)} />
+                      <StatusBadge status={getPartStatus(p)} />
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start">

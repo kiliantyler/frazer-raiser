@@ -1,5 +1,6 @@
 'use client'
 
+import { publishUpdateAction, unpublishUpdateAction } from '@/app/(private)/journal/actions'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -10,18 +11,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import type { Update } from '@/types/updates'
 import * as React from 'react'
-import { publishUpdateAction, unpublishUpdateAction } from './actions'
-
-type Update = {
-  _id: string
-  title: string
-  slug: string
-  publishStatus: 'draft' | 'published'
-  createdAt: number
-  publishedAt?: number
-  imageIds: string[]
-}
 
 export function PublishUpdateDialog({ update }: { update: Update }) {
   const [open, setOpen] = React.useState(false)

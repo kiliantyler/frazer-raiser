@@ -67,3 +67,31 @@ export function normalizeExternalUrl(url: string | undefined): `https://${string
   }
   return `https://${url}` as `https://${string}`
 }
+
+export function formatLongDate(timestamp: number): string {
+  return new Date(timestamp).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+}
+
+export function getAuthorInitials(authorName: string): string {
+  return (
+    authorName
+      .split(' ')
+      .map(part => part[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase() || '?'
+  )
+}
+
+export function formatShortDate(timestamp: number): string {
+  return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replaceAll(/[^\w\s-]/g, '')
+    .replaceAll(/[\s_-]+/g, '-')
+    .replaceAll(/^-+|-+$/g, '')
+}

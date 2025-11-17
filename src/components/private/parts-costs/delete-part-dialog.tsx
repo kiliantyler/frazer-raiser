@@ -1,5 +1,6 @@
 'use client'
 
+import { deletePartAction } from '@/app/(private)/parts-costs/actions'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -12,7 +13,6 @@ import {
 } from '@/components/ui/dialog'
 import { Trash2 } from 'lucide-react'
 import * as React from 'react'
-import { deletePartAction } from './actions'
 
 export function DeletePartDialog({ partId }: { partId: string }) {
   const [open, setOpen] = React.useState(false)

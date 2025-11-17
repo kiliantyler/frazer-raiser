@@ -4,25 +4,12 @@ import { EmptyState } from '@/components/private/empty-state'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { formatShortDate } from '@/lib/utils/format'
+import type { Update } from '@/types/updates'
 import { Pencil } from 'lucide-react'
 import Link from 'next/link'
 import { DeleteUpdateDialog } from './delete-update-dialog'
 import { PublishUpdateDialog } from './publish-update-dialog'
-
-type Update = {
-  _id: string
-  title: string
-  slug: string
-  publishStatus: 'draft' | 'published'
-  createdAt: number
-  publishedAt?: number
-  eventDate?: number
-  imageIds: string[]
-}
-
-function formatDate(timestamp: number): string {
-  return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-}
 
 export function UpdatesTable({ updates }: { updates: Array<Update> }) {
   if (updates.length === 0) {
@@ -51,8 +38,8 @@ export function UpdatesTable({ updates }: { updates: Array<Update> }) {
                   {update.publishStatus}
                 </Badge>
               </TableCell>
-              <TableCell className="text-sm text-muted-foreground">{formatDate(update.createdAt)}</TableCell>
-              <TableCell className="text-sm text-muted-foreground">{formatDate(displayDate)}</TableCell>
+              <TableCell className="text-sm text-muted-foreground">{formatShortDate(update.createdAt)}</TableCell>
+              <TableCell className="text-sm text-muted-foreground">{formatShortDate(displayDate)}</TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-1">
                   <Button variant="ghost" size="icon" asChild aria-label="Edit update">

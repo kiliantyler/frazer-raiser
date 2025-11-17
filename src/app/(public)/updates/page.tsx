@@ -1,12 +1,11 @@
 import { UpdatesViewToggle } from '@/components/public/updates-view-toggle'
+import { UpdatesViewControls } from '@/components/public/updates/updates-view-controls'
 import { SectionFadeIn } from '@/components/shared/section-fade-in'
-import { api } from '@convex/_generated/api'
-import { fetchQuery } from 'convex/nextjs'
+import { getUpdates } from '@/lib/data/updates'
 import { Rss } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Suspense } from 'react'
-import { UpdatesViewControls } from './updates-view-controls'
 
 export const metadata: Metadata = {
   alternates: {
@@ -14,11 +13,6 @@ export const metadata: Metadata = {
       'application/rss+xml': '/api/rss',
     },
   },
-}
-
-async function getUpdates() {
-  'use cache'
-  return await fetchQuery(api.updates.listPublicForTimeline, {})
 }
 
 export default async function PublicUpdatesPage() {

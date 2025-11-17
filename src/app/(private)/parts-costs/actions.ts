@@ -1,5 +1,6 @@
 'use server'
 
+import type { PartStatus } from '@/types/parts'
 import { api } from '@convex/_generated/api'
 import type { Id } from '@convex/_generated/dataModel'
 import { withAuth } from '@workos-inc/authkit-nextjs'
@@ -88,7 +89,7 @@ export async function setPartStatusAction(formData: FormData) {
   if (!user) return
   await fetchMutation(api.parts.setStatus, {
     partId: partIdRaw as unknown as Id<'parts'>,
-    status: status as unknown as 'ordered' | 'shipped' | 'received' | 'installed' | 'cancelled',
+    status: status as unknown as PartStatus,
   })
   revalidatePath('/parts-costs')
 }

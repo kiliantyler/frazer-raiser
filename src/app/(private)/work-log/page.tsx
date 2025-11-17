@@ -1,20 +1,10 @@
-import { EmptyState } from '@/components/private/empty-state'
-import { FormCard } from '@/components/private/form-card'
 import { PageHeader } from '@/components/private/page-header'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { WorkLogForm } from '@/components/private/work-log/work-log-form'
+import { WorkLogList } from '@/components/private/work-log/work-log-list'
+import { getWorkLogByDateRange } from '@/lib/data/work-log'
 import { formatCurrency } from '@/lib/utils/format'
-import { api } from '@convex/_generated/api'
+import type { WorkLogItem } from '@/types/work-log'
 import { withAuth } from '@workos-inc/authkit-nextjs'
-import { fetchQuery } from 'convex/nextjs'
-import { addWorkLogAction } from './actions'
-
-type WorkLogItem = { _id: string; date: number; hours: number; description: string; costDeltaCents?: number }
-
-async function getWorkLogByDateRange(from: number, to: number) {
-  'use cache'
-  return await fetchQuery(api.worklog.listByDateRange, { from, to })
-}
 
 export default async function WorkLogPage() {
   // Read request data before any non-deterministic operations (Date.now) to satisfy Next RSC constraint
@@ -27,34 +17,11 @@ export default async function WorkLogPage() {
   return (
     <section className="space-y-6">
       <PageHeader title="Work Log" />
-      <FormCard title="Add Work Log Entry">
-        <form action={addWorkLogAction} className="grid gap-3 sm:grid-cols-[1fr_auto_auto_auto]">
-          <Input name="description" placeholder="Description" aria-label="Description" />
-          <Input name="hours" type="number" step="0.25" placeholder="Hours" aria-label="Hours" />
-          <Input
-            name="costDeltaCents"
-            type="number"
-            placeholder="Cost delta (cents)"
-            aria-label="Cost change in cents"
-          />
-          <Button type="submit">Add</Button>
-        </form>
-      </FormCard>
+      <WorkLogForm />
       <div className="text-sm text-muted-foreground">
         Last 30 days: {totalHours.toFixed(1)} hours • {formatCurrency(totalCostDelta)}
       </div>
-      {items.length === 0 ? (
-        <EmptyState message="No work log entries yet" />
-      ) : (
-        <ul className="space-y-2">
-          {items.map((it: WorkLogItem) => (
-            <li key={String(it._id)} className="text-sm">
-              {new Date(it.date).toLocaleDateString()} — {it.description} • {it.hours}h{' '}
-              {it.costDeltaCents ? `• ${formatCurrency(it.costDeltaCents)}` : ''}
-            </li>
-          ))}
-        </ul>
-      )}
+      <WorkLogList items={items} />
     </section>
   )
 }

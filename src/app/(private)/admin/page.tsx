@@ -1,43 +1,10 @@
-import { EmptyState } from '@/components/private/empty-state'
+import { AdminSections } from '@/components/private/admin/admin-sections'
+import { AdminStats } from '@/components/private/admin/admin-stats'
 import { PageHeader } from '@/components/private/page-header'
-import { SectionCard } from '@/components/private/section-card'
-import { StatCard } from '@/components/private/stat-card'
-import { Button } from '@/components/ui/button'
-import { api } from '@convex/_generated/api'
+import { getPublishedUpdates, getTasksByStatus, getUserByWorkosUserId, getUsers } from '@/lib/data/admin'
+import type { AppUser } from '@/types/users'
 import { withAuth } from '@workos-inc/authkit-nextjs'
-import { fetchQuery } from 'convex/nextjs'
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
-
-type Role = 'ADMIN' | 'COLLABORATOR' | 'VIEWER'
-
-type AppUser = {
-  _id: string
-  email: string
-  name: string
-  avatarUrl?: string
-  role: Role
-}
-
-async function getUserByWorkosUserId(workosUserId: string) {
-  'use cache'
-  return await fetchQuery(api.users.getByWorkosUserId, { workosUserId })
-}
-
-async function getUsers() {
-  'use cache'
-  return await fetchQuery(api.users.list, {})
-}
-
-async function getTasksByStatus(status: 'todo' | 'in_progress' | 'blocked' | 'done') {
-  'use cache'
-  return await fetchQuery(api.tasks.listByStatus, { status })
-}
-
-async function getPublishedUpdates() {
-  'use cache'
-  return await fetchQuery(api.updates.listPublic, {})
-}
 
 export default async function AdminPage() {
   const { user } = await withAuth({ ensureSignedIn: true })
@@ -78,68 +45,14 @@ export default async function AdminPage() {
         description="Administer collaborators, content, and key project data from a single place."
       />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="Collaborators" value={totalUsers} />
-        <StatCard title="Admins" value={totalAdmins} valueClassName="text-emerald-500" />
-        <StatCard title="Tasks" value={totalTasks} />
-        <StatCard title="Published Updates" value={totalPublishedUpdates} />
-      </div>
+      <AdminStats
+        totalUsers={totalUsers}
+        totalAdmins={totalAdmins}
+        totalTasks={totalTasks}
+        totalPublishedUpdates={totalPublishedUpdates}
+      />
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <SectionCard title="People & Access" viewAllHref="/collaborators">
-          <p className="text-sm text-muted-foreground">
-            Manage who can access the private dashboard and adjust collaborator roles across the project.
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Button asChild size="sm" variant="outline" aria-label="Manage collaborators and roles">
-              <Link href="/collaborators">Manage collaborators</Link>
-            </Button>
-          </div>
-        </SectionCard>
-
-        <SectionCard title="Project Data">
-          <p className="text-sm text-muted-foreground">
-            Quickly jump to the core data powering the project: tasks, parts, suppliers, and work logs.
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Button asChild size="sm" variant="outline" aria-label="Go to tasks management">
-              <Link href="/tasks">Tasks</Link>
-            </Button>
-            <Button asChild size="sm" variant="outline" aria-label="Go to parts and costs management">
-              <Link href="/parts-costs">Parts &amp; costs</Link>
-            </Button>
-            <Button asChild size="sm" variant="outline" aria-label="Go to suppliers management">
-              <Link href="/suppliers">Suppliers</Link>
-            </Button>
-            <Button asChild size="sm" variant="outline" aria-label="Go to work log">
-              <Link href="/work-log">Work log</Link>
-            </Button>
-          </div>
-        </SectionCard>
-
-        <SectionCard title="Media & Story" viewAllHref="/internal-gallery" className="md:col-span-2">
-          <p className="text-sm text-muted-foreground">
-            Curate the project story and visuals that appear on the public site and internal dashboards.
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Button asChild size="sm" variant="outline" aria-label="Go to internal gallery">
-              <Link href="/internal-gallery">Internal gallery</Link>
-            </Button>
-            <Button asChild size="sm" variant="outline" aria-label="View public updates">
-              <Link href="/updates">Public updates</Link>
-            </Button>
-          </div>
-        </SectionCard>
-
-        <SectionCard title="Site Settings" viewAllHref="/settings" className="md:col-span-2">
-          <p className="text-sm text-muted-foreground">
-            Configure high-level settings for the private dashboard and integrations.
-          </p>
-          <div className="mt-4">
-            <EmptyState message="Most configuration lives in code today. Use settings for runtime tweaks." />
-          </div>
-        </SectionCard>
-      </div>
+      <AdminSections />
     </div>
   )
 }

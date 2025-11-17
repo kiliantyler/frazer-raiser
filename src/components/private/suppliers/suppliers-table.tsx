@@ -3,16 +3,11 @@
 import { EmptyState } from '@/components/private/empty-state'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { normalizeExternalUrl } from '@/lib/utils/format'
+import type { Supplier } from '@/types/suppliers'
 import type { Route } from 'next'
 import Link from 'next/link'
 import { DeleteSupplierDialog } from './delete-supplier-dialog'
 import { SupplierDialog } from './supplier-dialog'
-
-type Supplier = {
-  _id: string
-  name: string
-  websiteUrl?: string
-}
 
 export function SuppliersTable({ suppliers }: { suppliers: Array<Supplier> }) {
   if (suppliers.length === 0) {

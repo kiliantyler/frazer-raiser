@@ -1,16 +1,9 @@
 import { PageHeader } from '@/components/private/page-header'
-import { api } from '@convex/_generated/api'
+import { SupplierDialog } from '@/components/private/suppliers/supplier-dialog'
+import { SuppliersTable } from '@/components/private/suppliers/suppliers-table'
+import { getSuppliers } from '@/lib/data/suppliers'
+import type { Supplier } from '@/types/suppliers'
 import { withAuth } from '@workos-inc/authkit-nextjs'
-import { fetchQuery } from 'convex/nextjs'
-import { SupplierDialog } from './supplier-dialog'
-import { SuppliersTable } from './suppliers-table'
-
-type Supplier = { _id: string; name: string; websiteUrl?: string }
-
-async function getSuppliers() {
-  'use cache'
-  return await fetchQuery(api.suppliers.list, {})
-}
 
 export default async function SuppliersPage() {
   // Read request data before any non-deterministic libs (Convex) to satisfy Next RSC constraint

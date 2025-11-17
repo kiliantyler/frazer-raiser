@@ -1,19 +1,7 @@
+import { escapeXml, formatRssDate } from '@/lib/utils/rss'
 import { api } from '@convex/_generated/api'
 import { fetchQuery } from 'convex/nextjs'
 import { connection, NextResponse } from 'next/server'
-
-function escapeXml(unsafe: string): string {
-  return unsafe
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&apos;')
-}
-
-function formatRssDate(timestamp: number): string {
-  return new Date(timestamp).toUTCString()
-}
 
 export async function GET(request: Request) {
   await connection()

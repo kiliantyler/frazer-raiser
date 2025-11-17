@@ -1,21 +1,20 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import type { Role } from '@/types/users'
 import { Check } from 'lucide-react'
 import { useState } from 'react'
 
-type CollaboratorRole = 'ADMIN' | 'COLLABORATOR' | 'VIEWER'
-
 type CollaboratorRoleSelectProps = {
-  initialRole: CollaboratorRole
+  initialRole: Role
 }
 
 export function CollaboratorRoleSelect({ initialRole }: CollaboratorRoleSelectProps) {
-  const [value, setValue] = useState<CollaboratorRole>(initialRole)
+  const [value, setValue] = useState<Role>(initialRole)
   const [isDirty, setIsDirty] = useState(false)
 
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const nextRole = event.target.value as CollaboratorRole
+    const nextRole = event.target.value as Role
     setValue(nextRole)
     setIsDirty(nextRole !== initialRole)
   }

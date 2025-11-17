@@ -1,5 +1,6 @@
 'use client'
 
+import { deleteSupplierAction } from '@/app/(private)/suppliers/actions'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -12,20 +13,19 @@ import {
 } from '@/components/ui/dialog'
 import { Trash2 } from 'lucide-react'
 import * as React from 'react'
-import { deleteUpdateAction } from './actions'
 
-export function DeleteUpdateDialog({ updateId }: { updateId: string }) {
+export function DeleteSupplierDialog({ supplierId }: { supplierId: string }) {
   const [open, setOpen] = React.useState(false)
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Delete update">
+        <Button variant="ghost" size="icon" aria-label="Delete supplier">
           <Trash2 className="size-4" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Delete update?</DialogTitle>
+          <DialogTitle>Delete supplier?</DialogTitle>
           <DialogDescription>This action cannot be undone.</DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-2">
@@ -34,10 +34,10 @@ export function DeleteUpdateDialog({ updateId }: { updateId: string }) {
           </Button>
           <form
             action={async fd => {
-              await deleteUpdateAction(fd)
+              await deleteSupplierAction(fd)
               setOpen(false)
             }}>
-            <input type="hidden" name="updateId" value={updateId} />
+            <input type="hidden" name="supplierId" value={supplierId} />
             <Button variant="destructive" type="submit">
               Delete
             </Button>

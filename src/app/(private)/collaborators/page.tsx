@@ -1,29 +1,8 @@
-import { CollaboratorRoleSelect } from '@/components/private/collaborator-role-select'
-import { EmptyState } from '@/components/private/empty-state'
+import { CollaboratorsTable } from '@/components/private/collaborators/collaborators-table'
 import { PageHeader } from '@/components/private/page-header'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { api } from '@convex/_generated/api'
+import { getUserByWorkosUserId, getUsers } from '@/lib/data/users'
+import type { Collaborator } from '@/types/users'
 import { withAuth } from '@workos-inc/authkit-nextjs'
-import { fetchQuery } from 'convex/nextjs'
-import { updateRoleAction } from './actions'
-
-type Collaborator = {
-  _id: string
-  email: string
-  name: string
-  avatarUrl?: string
-  role: 'ADMIN' | 'COLLABORATOR' | 'VIEWER'
-}
-
-async function getUserByWorkosUserId(workosUserId: string) {
-  'use cache'
-  return await fetchQuery(api.users.getByWorkosUserId, { workosUserId })
-}
-
-async function getUsers() {
-  'use cache'
-  return await fetchQuery(api.users.list, {})
-}
 
 export default async function CollaboratorsPage() {
   const { user } = await withAuth({ ensureSignedIn: true })
@@ -33,37 +12,7 @@ export default async function CollaboratorsPage() {
   return (
     <section className="space-y-6">
       <PageHeader title="Collaborators" />
-      {users.length === 0 ? (
-        <EmptyState message="No collaborators yet" />
-      ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {users.map((u: Collaborator) => (
-              <TableRow key={String(u._id)}>
-                <TableCell>{u.name}</TableCell>
-                <TableCell>{u.email}</TableCell>
-                <TableCell>
-                  {canAdmin ? (
-                    <form action={updateRoleAction} className="flex items-center gap-2">
-                      <input type="hidden" name="userId" value={String(u._id)} />
-                      <CollaboratorRoleSelect initialRole={u.role} />
-                    </form>
-                  ) : (
-                    u.role
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      )}
+      <CollaboratorsTable collaborators={users} canAdmin={canAdmin} />
     </section>
   )
 }

@@ -1,16 +1,10 @@
+import { UpdatesTable } from '@/components/private/journal/updates-table'
 import { PageHeader } from '@/components/private/page-header'
 import { Button } from '@/components/ui/button'
-import { api } from '@convex/_generated/api'
+import { getAllUpdatesForAdmin } from '@/lib/data/updates'
 import { withAuth } from '@workos-inc/authkit-nextjs'
-import { fetchQuery } from 'convex/nextjs'
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
-import { UpdatesTable } from './updates-table'
-
-async function getAllUpdatesForAdmin() {
-  'use cache'
-  return await fetchQuery(api.updates.listAllForAdmin, {})
-}
 
 export default async function UpdatesPage() {
   await withAuth({ ensureSignedIn: true })
