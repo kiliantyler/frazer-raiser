@@ -20,8 +20,17 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import '@tiptap/extension-blockquote'
+import '@tiptap/extension-bold'
+import '@tiptap/extension-bullet-list'
+import '@tiptap/extension-code'
+import '@tiptap/extension-heading'
 import Highlight from '@tiptap/extension-highlight'
+import '@tiptap/extension-image'
+import '@tiptap/extension-italic'
 import Link from '@tiptap/extension-link'
+import '@tiptap/extension-ordered-list'
+import '@tiptap/extension-strike'
 import { Table } from '@tiptap/extension-table'
 import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
@@ -177,7 +186,7 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
       const currentHtml = editor.getHTML()
       // Only update if different to prevent flickering
       if (currentHtml !== initialContentHtml) {
-        editor.commands.setContent(initialContentHtml ?? '<p></p>', { emitUpdate: false })
+        editor.commands.setContent(initialContentHtml ?? '<p></p>', false)
         initialContentRef.current = initialContentHtml
       }
     }
