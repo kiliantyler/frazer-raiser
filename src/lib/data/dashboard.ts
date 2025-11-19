@@ -40,5 +40,6 @@ export async function getSettings() {
 
 export async function getRecentUpdates() {
   'use cache'
-  return await fetchQuery(api.updates.listPublicForTimeline, {})
+  const data = await fetchQuery(api.updates.listPublicForTimeline, {})
+  return data.items.filter(item => item.type === 'update')
 }
