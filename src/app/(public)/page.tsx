@@ -11,7 +11,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <HomeHero />
-      <section aria-label="Frazer project overview" className="mx-auto max-w-5xl px-6 -mt-10 pb-16 sm:-mt-16 sm:pb-24">
+      <section aria-label="Frazer project overview" className="mx-auto max-w-5xl px-6 -mt-12 pb-20 sm:-mt-24 sm:pb-32">
         <ChromeCard>
           <BuildSheetHeader />
           <div className="divide-y divide-border/60">

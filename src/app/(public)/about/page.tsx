@@ -29,7 +29,7 @@ export default function AboutPage() {
         <SectionFadeIn>
           <ChromeCard>
             <div className="space-y-10 p-6 sm:p-8 lg:p-10">
-              <div className="prose prose-invert max-w-2xl text-sm leading-relaxed sm:text-base prose-headings:mt-5 prose-headings:mb-2 lg:max-w-3xl">
+              <div className="mx-auto prose prose-invert max-w-2xl text-sm leading-relaxed sm:text-base prose-headings:mt-5 prose-headings:mb-2 lg:max-w-3xl">
                 <AboutIntroSection />
                 <KaiserFrazerSection />
                 <FrazerDesignSection />
