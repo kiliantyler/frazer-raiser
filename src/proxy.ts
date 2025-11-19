@@ -26,7 +26,8 @@ export async function proxy(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
 
   // Skip processing if this is a static asset or invalid path
-  if (!isValidReturnPath(pathname)) {
+  // We explicitly allow /api/uploadthing because it needs to resolve the user via withAuth
+  if (!isValidReturnPath(pathname) && !pathname.startsWith('/api/uploadthing')) {
     return NextResponse.next()
   }
 
