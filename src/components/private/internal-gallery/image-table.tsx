@@ -25,11 +25,12 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useMutation, useQuery } from 'convex/react'
-import { GripVertical, Trash2 } from 'lucide-react'
+import { GripVertical } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { EmptyState } from '../empty-state'
 import { DeleteImageDialog } from './delete-image-dialog'
+import { DeleteMassImagesDialog } from './delete-mass-images-dialog'
 
 interface ImageRowProps {
   image: {
@@ -213,9 +214,8 @@ export function ImageTable({
     setSelectedIds(newSelected)
   }
 
-  const handleMassDelete = async () => {
-    if (!confirm(`Are you sure you want to delete ${selectedIds.size} images?`)) return
-    await deleteImages({ imageIds: Array.from(selectedIds) as Id<'images'>[] })
+  const handleMassDelete = async (imageIds: Id<'images'>[]) => {
+    await deleteImages({ imageIds })
     setSelectedIds(new Set())
   }
 
@@ -265,10 +265,13 @@ export function ImageTable({
               <Button variant="outline" size="sm" onClick={() => handleMassPublish(false)}>
                 Unpublish
               </Button>
-              <Button variant="destructive" size="sm" onClick={handleMassDelete}>
-                <Trash2 className="mr-2 h-4 w-4" />
-                Delete
-              </Button>
+              <DeleteMassImagesDialog
+                imageIds={Array.from(selectedIds)}
+                onDelete={handleMassDelete}
+                onSuccess={() => {
+                  // Selection is cleared in handleMassDelete
+                }}
+              />
             </>
           ) : (
             <Button variant="outline" size="sm" onClick={handleSortByDate}>
