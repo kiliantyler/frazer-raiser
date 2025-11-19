@@ -39,6 +39,7 @@ import {
   Wrench,
 } from 'lucide-react'
 import type { Route } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useCallback, useMemo } from 'react'
@@ -87,9 +88,12 @@ export function PrivateSidebar({ user }: { user: CurrentUser }) {
     <Sidebar collapsible="icon">
       <SidebarHeader>
         <Link href="/" className="flex items-center gap-3 px-2 py-2 hover:opacity-80 transition-opacity">
-          <div
-            className="h-6 w-6 bg-primary shrink-0"
-            style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }}
+          <Image
+            src="/frazer.svg"
+            alt="Frazer Raiser"
+            width={24}
+            height={120}
+            className="h-12 w-12 shrink-0"
             aria-hidden="true"
           />
           <div className="flex flex-col min-w-0 group-data-[collapsible=icon]/sidebar-wrapper:hidden">
