@@ -1,3 +1,5 @@
+import { PublicGallery } from '@/components/public/gallery/public-gallery'
+
 export default function PublicGalleryPage() {
   return (
     <main className="mx-auto max-w-6xl px-6 pt-20 pb-12 sm:pt-24">
@@ -15,12 +17,7 @@ export default function PublicGalleryPage() {
           </p>
         </div>
 
-        {/* Gallery grid will be wired up later; for now keep layout consistent with other public pages */}
-        <div className="rounded-2xl border border-dashed border-border/60 bg-muted/10 px-6 py-10 text-center sm:px-10">
-          <p className="text-sm text-muted-foreground sm:text-base">
-            The gallery is still warming up. Once there are photos to share, they&apos;ll land here.
-          </p>
-        </div>
+        <PublicGallery />
       </section>
     </main>
   )
