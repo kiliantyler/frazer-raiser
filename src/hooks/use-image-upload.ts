@@ -1,8 +1,12 @@
 'use client'
 
 import { api } from '@convex/_generated/api'
+import type { Id } from '@convex/_generated/dataModel'
 import { useConvex } from 'convex/react'
 import * as React from 'react'
+
+// We'll use a server action for the actual deletion which has the permissions/UTApi access
+import { deleteImage } from '@/app/(private)/internal-gallery/actions'
 
 type FileResponse = {
   url?: string
@@ -26,6 +30,7 @@ export function useImageUpload({ onImageIdChange, onImageUrlChange }: UseImageUp
   const [imageUrl, setImageUrl] = React.useState<string | null>(null)
   const [imageId, setImageId] = React.useState<string | null>(null)
   const imageIdRef = React.useRef<string | null>(null)
+  const [isDeleting, setIsDeleting] = React.useState(false)
 
   // Keep ref in sync with state
   React.useEffect(() => {
@@ -164,7 +169,28 @@ export function useImageUpload({ onImageIdChange, onImageUrlChange }: UseImageUp
     setIsUploading(true)
   }
 
-  const removeImage = () => {
+  const removeImage = async () => {
+    // If we have an image ID, we should delete it from the server
+    if (imageId) {
+      setIsDeleting(true)
+      try {
+        console.log('[useImageUpload] Deleting image:', imageId)
+        const result = await deleteImage(imageId as Id<'images'>)
+
+        if (result.success) {
+          console.log('[useImageUpload] Image deleted successfully')
+        } else {
+          console.error('[useImageUpload] Failed to delete image:', result.error)
+          // Even if server deletion fails, we clear local state to keep UI responsive
+          // But in a robust app we might want to show an error
+        }
+      } catch (error) {
+        console.error('[useImageUpload] Error deleting image:', error)
+      } finally {
+        setIsDeleting(false)
+      }
+    }
+
     setImageId(null)
     setImageUrl(null)
     updateImageId(null)
@@ -203,6 +229,7 @@ export function useImageUpload({ onImageIdChange, onImageUrlChange }: UseImageUp
     imageId,
     imageUrl,
     isUploading,
+    isDeleting,
     imageIdRef,
     handleUploadComplete,
     handleUploadError,
