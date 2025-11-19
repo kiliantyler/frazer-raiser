@@ -1,43 +1,63 @@
-import { SectionFadeIn } from '@/components/shared/section-fade-in'
-import { Cog, Image as ImageIcon, Newspaper } from 'lucide-react'
-import { FeatureCard } from './feature-card'
+import { ArrowRight, Cog, Image as ImageIcon, Newspaper } from 'lucide-react'
+
+import Link from 'next/link'
 
 export function HomeFeatures() {
   return (
-    <section aria-label="Explore more" className="px-6 py-10 sm:px-10 sm:py-12">
-      <div className="mx-auto w-full">
-        <SectionFadeIn delayMs={120}>
-          <div className="mb-8 mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-semibold uppercase text-primary font-frazer tracking-widest">Follow Along</h2>
-            <p className="mt-4 text-pretty text-muted-foreground">
-              I&apos;m documenting every step. See the wins, the mistakes, and everything in between.
-            </p>
-          </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <FeatureCard
-              Icon={Newspaper}
-              title="Latest updates"
-              description="Progress notes, parts that showed up, and what's next."
-              href="/updates"
-              ariaLabel="Browse latest updates"
-            />
-            <FeatureCard
-              Icon={ImageIcon}
-              title="Photo gallery"
-              description="Photos from the shop—before, during, and after."
-              href="/gallery"
-              ariaLabel="Open gallery"
-            />
-            <FeatureCard
-              Icon={Cog}
-              title="About the project"
-              description="Why this car, a bit of history, and how I'm approaching the build."
-              href="/about"
-              ariaLabel="Read about the project"
-            />
-          </div>
-        </SectionFadeIn>
+    <div className="w-full">
+      <div className="mb-8 max-w-2xl">
+        <p className="text-pretty text-muted-foreground">
+          I&apos;m documenting every step. See the wins, the mistakes, and everything in between.
+        </p>
       </div>
-    </section>
+      <div className="space-y-2">
+        <Link
+          href="/updates"
+          className="group flex items-center justify-between rounded-lg border border-border/40 bg-card/30 px-4 py-3 transition-colors hover:bg-primary/5 hover:border-primary/20">
+          <div className="flex items-center gap-3">
+            <div className="flex size-8 items-center justify-center rounded bg-primary/10 text-primary">
+              <Newspaper className="size-4" />
+            </div>
+            <div>
+              <div className="text-sm font-semibold text-foreground">Latest updates</div>
+              <div className="text-xs text-muted-foreground">
+                Progress notes, parts that showed up, and what&apos;s next.
+              </div>
+            </div>
+          </div>
+          <ArrowRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />
+        </Link>
+        <Link
+          href="/gallery"
+          className="group flex items-center justify-between rounded-lg border border-border/40 bg-card/30 px-4 py-3 transition-colors hover:bg-primary/5 hover:border-primary/20">
+          <div className="flex items-center gap-3">
+            <div className="flex size-8 items-center justify-center rounded bg-primary/10 text-primary">
+              <ImageIcon className="size-4" />
+            </div>
+            <div>
+              <div className="text-sm font-semibold text-foreground">Photo gallery</div>
+              <div className="text-xs text-muted-foreground">Photos from the shop - before, during, and after.</div>
+            </div>
+          </div>
+          <ArrowRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />
+        </Link>
+        <Link
+          href="/about"
+          className="group flex items-center justify-between rounded-lg border border-border/40 bg-card/30 px-4 py-3 transition-colors hover:bg-primary/5 hover:border-primary/20">
+          <div className="flex items-center gap-3">
+            <div className="flex size-8 items-center justify-center rounded bg-primary/10 text-primary">
+              <Cog className="size-4" />
+            </div>
+            <div>
+              <div className="text-sm font-semibold text-foreground">About the project</div>
+              <div className="text-xs text-muted-foreground">
+                Why this car, a bit of history, and how I&apos;m approaching the build.
+              </div>
+            </div>
+          </div>
+          <ArrowRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />
+        </Link>
+      </div>
+    </div>
   )
 }
