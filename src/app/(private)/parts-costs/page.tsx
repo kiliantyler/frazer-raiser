@@ -30,8 +30,9 @@ export default async function PartsCostsPage() {
     <section className="space-y-6">
       <PageHeader title="Parts & Cost Tracker" action={<PartDialog mode="create" suppliers={suppliers} />} />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <StatCard title="Total Spent" value={formatCurrency(totalCents)} valueClassName="text-red-600" />
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard title="Total Spend" value={formatCurrency(totalCents)} valueClassName="text-red-600" />
+        <StatCard title="Part Spend" value={formatCurrency(totalCentsForCar)} valueClassName="text-red-600" />
         <StatCard title="Total Parts" value={totalParts} />
         <StatCard title="Average Cost per Part" value={formatCurrency(averageCents)} />
       </div>
