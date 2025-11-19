@@ -1,40 +1,52 @@
 import { Cog, Hammer, Search, Sparkles } from 'lucide-react'
-import { MilestoneCard } from './milestone-card'
 
 export function HomeMilestones() {
   return (
-    <section className="px-6 py-10 sm:px-10 sm:py-12">
-      <div className="mx-auto w-full">
-        <div className="text-center">
-          <h2 className="text-3xl font-semibold uppercase text-primary font-frazer tracking-widest">Milestones</h2>
-          <p className="mt-4 mx-auto max-w-2xl text-pretty text-muted-foreground">
-            The major phases of the restoration process, from discovery to completion.
-          </p>
-        </div>
+    <div className="w-full">
+      <div className="mb-8 max-w-2xl">
+        <p className="text-pretty text-muted-foreground">
+          The major phases of the restoration process, from discovery to completion.
+        </p>
+      </div>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <MilestoneCard
-            Icon={Search}
-            title="Discovery & Teardown"
-            description="Pulling it apart, bagging and tagging, and figuring out what's good and what's not."
-          />
-          <MilestoneCard
-            Icon={Hammer}
-            title="Body & Chassis Work"
-            description="Rust repair, metalwork, and getting the shell straight and solid."
-          />
-          <MilestoneCard
-            Icon={Cog}
-            title="Mechanical Overhaul"
-            description="Brakes, fuel, wiring, engine—and everything that makes it move and stop."
-          />
-          <MilestoneCard
-            Icon={Sparkles}
-            title="Paint & Final Assembly"
-            description="Paint, chrome, interior, and the satisfying puzzle of putting it all back together."
-          />
+      <div className="space-y-6">
+        <div className="grid gap-4 sm:grid-cols-[1fr_2fr] items-baseline border-b border-border/40 pb-4 last:border-0 last:pb-0">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <Search className="size-4 text-primary" />
+            Discovery & Teardown
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Pulling it apart, bagging and tagging, and figuring out what&apos;s good and what&apos;s not.
+          </div>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-[1fr_2fr] items-baseline border-b border-border/40 pb-4 last:border-0 last:pb-0">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <Hammer className="size-4 text-primary" />
+            Body & Chassis Work
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Rust repair, metalwork, and getting the shell straight and solid.
+          </div>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-[1fr_2fr] items-baseline border-b border-border/40 pb-4 last:border-0 last:pb-0">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <Cog className="size-4 text-primary" />
+            Mechanical Overhaul
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Brakes, fuel, wiring, engine - and everything that makes it move and stop.
+          </div>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-[1fr_2fr] items-baseline border-b border-border/40 pb-4 last:border-0 last:pb-0">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <Sparkles className="size-4 text-primary" />
+            Paint & Final Assembly
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Paint, chrome, interior, and the satisfying puzzle of putting it all back together.
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   )
 }
