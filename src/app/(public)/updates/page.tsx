@@ -1,3 +1,4 @@
+import { SpendingWidget } from '@/components/public/spending-widget'
 import { UpdatesViewToggle } from '@/components/public/updates-view-toggle'
 import { UpdatesViewControls } from '@/components/public/updates/updates-view-controls'
 import { SectionFadeIn } from '@/components/shared/section-fade-in'
@@ -16,20 +17,24 @@ export const metadata: Metadata = {
 }
 
 export default async function PublicUpdatesPage() {
-  const items = await getUpdates()
+  const { items, totalSpentCents } = await getUpdates()
 
   return (
     <main className="relative mx-auto max-w-5xl px-6 pt-20 pb-12 sm:pt-24">
-      <div className="absolute right-6 top-20 flex items-center gap-3 sm:top-24">
-        <UpdatesViewControls />
-        <Link
-          href="/api/rss"
-          className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
-          aria-label="Subscribe to RSS feed"
-          title="RSS Feed">
-          <Rss className="size-3.5" />
-          <span className="hidden sm:inline">RSS</span>
-        </Link>
+      <div className="absolute right-6 top-20 flex flex-col items-end gap-3 sm:flex-row sm:items-center sm:top-24">
+        <SpendingWidget amount={totalSpentCents} />
+        <div className="hidden h-4 w-px bg-border sm:block" />
+        <div className="flex items-center gap-3">
+          <UpdatesViewControls />
+          <Link
+            href="/api/rss"
+            className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            aria-label="Subscribe to RSS feed"
+            title="RSS Feed">
+            <Rss className="size-3.5" />
+            <span className="hidden sm:inline">RSS</span>
+          </Link>
+        </div>
       </div>
       <section aria-label="Project journal updates">
         <div className="mb-10 text-center sm:mb-12">
