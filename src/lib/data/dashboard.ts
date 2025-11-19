@@ -1,5 +1,7 @@
 import { api } from '@convex/_generated/api'
 import { fetchQuery } from 'convex/nextjs'
+import { headers } from 'next/headers'
+import { unstable_noStore as noStore } from 'next/cache'
 
 export async function getUpcomingTasks(limit: number) {
   'use cache'
@@ -25,7 +27,9 @@ export async function getLatestImages(limit: number, visibility: 'private' | 'pu
 }
 
 export async function getInternalImages(limit: number) {
-  'use cache'
+  // Access request data first to prevent static generation
+  await headers()
+  noStore()
   return await fetchQuery(api.images.listInternal, { limit })
 }
 
