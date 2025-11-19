@@ -35,13 +35,13 @@ interface ImageRowProps {
   image: {
     _id: Id<'images'>
     url: string
-    dateTaken?: number
+    dateTaken?: number | null
     isPublished?: boolean
     order?: number
   }
   isSelected: boolean
   onSelect: (checked: boolean) => void
-  onUpdate: (id: Id<'images'>, updates: { dateTaken?: number; isPublished?: boolean }) => void
+  onUpdate: (id: Id<'images'>, updates: { dateTaken?: number | null; isPublished?: boolean }) => void
 }
 
 function SortableRow({ image, isSelected, onSelect, onUpdate }: ImageRowProps) {
@@ -83,8 +83,18 @@ function SortableRow({ image, isSelected, onSelect, onUpdate }: ImageRowProps) {
       </td>
       <td className="p-3">
         <DatePicker
-          value={image.dateTaken ? new Date(image.dateTaken) : undefined}
-          onChange={date => onUpdate(image._id, { dateTaken: date?.getTime() })}
+          value={image.dateTaken && image.dateTaken !== null ? new Date(image.dateTaken) : undefined}
+          onChange={date => {
+            const updates: { dateTaken?: number | null } = {}
+            if (date === undefined) {
+              // Explicitly clear the date
+              updates.dateTaken = null
+            } else {
+              // Set the date
+              updates.dateTaken = date.getTime()
+            }
+            onUpdate(image._id, updates)
+          }}
         />
       </td>
       <td className="p-3">
