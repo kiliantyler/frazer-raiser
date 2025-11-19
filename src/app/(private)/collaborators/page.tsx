@@ -1,5 +1,4 @@
 import { CollaboratorsTable } from '@/components/private/collaborators/collaborators-table'
-import { PageHeader } from '@/components/private/page-header'
 import { getUserByWorkosUserId, getUsers } from '@/lib/data/users'
 import type { Collaborator } from '@/types/users'
 import { withAuth } from '@workos-inc/authkit-nextjs'
@@ -11,7 +10,6 @@ export default async function CollaboratorsPage() {
   const users = (await getUsers()) as Collaborator[]
   return (
     <section className="space-y-6">
-      <PageHeader title="Collaborators" />
       <CollaboratorsTable collaborators={users} canAdmin={canAdmin} />
     </section>
   )

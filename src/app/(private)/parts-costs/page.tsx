@@ -1,5 +1,3 @@
-import { PageHeader } from '@/components/private/page-header'
-import { PartDialog } from '@/components/private/parts-costs/part-dialog'
 import { PartsTable } from '@/components/private/parts-costs/parts-table'
 import { StatCard } from '@/components/private/stat-card'
 import { getParts, getSuppliers } from '@/lib/data/parts'
@@ -28,8 +26,6 @@ export default async function PartsCostsPage() {
 
   return (
     <section className="space-y-6">
-      <PageHeader title="Parts & Cost Tracker" action={<PartDialog mode="create" suppliers={suppliers} />} />
-
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard title="Total Spend" value={formatCurrency(totalCents)} valueClassName="text-red-600" />
         <StatCard title="Part Spend" value={formatCurrency(totalCentsForCar)} valueClassName="text-red-600" />

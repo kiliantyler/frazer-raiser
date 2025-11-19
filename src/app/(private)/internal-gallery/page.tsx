@@ -1,6 +1,5 @@
 import { ImageTable } from '@/components/private/internal-gallery/image-table'
 import { ImageUpload } from '@/components/private/internal-gallery/image-upload'
-import { PageHeader } from '@/components/private/page-header'
 import { getInternalImages } from '@/lib/data/dashboard'
 
 export default async function InternalGalleryPage() {
@@ -8,7 +7,6 @@ export default async function InternalGalleryPage() {
 
   return (
     <section className="space-y-6">
-      <PageHeader title="Internal Gallery" />
       <ImageUpload />
       <div>
         <h2 className="mb-4 text-lg font-semibold">Uploaded Images</h2>

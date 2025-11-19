@@ -1,5 +1,6 @@
 'use server'
 
+import { getCurrentUserOrNull } from '@/lib/auth'
 import type { PartStatus } from '@/types/parts'
 import { api } from '@convex/_generated/api'
 import type { Id } from '@convex/_generated/dataModel'
@@ -7,44 +8,88 @@ import { withAuth } from '@workos-inc/authkit-nextjs'
 import { fetchMutation, fetchQuery } from 'convex/nextjs'
 import { revalidatePath } from 'next/cache'
 
+export async function getSuppliersAction() {
+  const user = await getCurrentUserOrNull()
+  if (!user) {
+    throw new Error('Unauthorized')
+  }
+
+  try {
+    const suppliers = await fetchQuery(api.suppliers.list, {})
+    return { success: true, data: suppliers }
+  } catch (error) {
+    console.error('Failed to fetch suppliers:', error)
+    return { success: false, error: 'Failed to fetch suppliers' }
+  }
+}
+
 export async function createPartAction(formData: FormData) {
   const name = String(formData.get('name') ?? '').trim()
-  const vendor = String(formData.get('vendor') ?? '').trim() || undefined
-  const partNumber = String(formData.get('partNumber') ?? '').trim() || undefined
-  const sourceUrlRaw = String(formData.get('sourceUrl') ?? '').trim()
-  const sourceUrl = sourceUrlRaw || undefined
   const supplierIdRaw = String(formData.get('supplierId') ?? '').trim()
   const supplierId = supplierIdRaw ? (supplierIdRaw as unknown as Id<'suppliers'>) : undefined
-  // Price field is expected in dollars; convert to cents
-  const priceDollars = Number(formData.get('price') ?? 0)
-  const priceCents = Math.round(priceDollars * 100)
-  // Quantity field
-  const quantityRaw = String(formData.get('quantity') ?? '1').trim()
-  const quantity = quantityRaw ? Number(quantityRaw) : 1
-  // Is for car checkbox
+  const partNumber = String(formData.get('partNumber') ?? '').trim() || undefined
+  const sourceUrl = String(formData.get('sourceUrl') ?? '').trim() || undefined
+  const priceStr = String(formData.get('price') ?? '').trim()
+  const quantityStr = String(formData.get('quantity') ?? '1').trim()
+  const purchasedOnStr = String(formData.get('purchasedOn') ?? '').trim()
   const isForCar = formData.get('isForCar') === 'on'
-  // Purchased on date (YYYY-MM-DD) -> epoch ms
-  const purchasedOnStr = String(formData.get('purchasedOn') ?? '')
-  const purchasedOn = purchasedOnStr ? new Date(purchasedOnStr + 'T00:00:00').getTime() : Date.now()
-  if (!name || Number.isNaN(priceCents)) return
+
+  if (!name) return
+
+  const priceCents = priceStr ? Math.round(Number.parseFloat(priceStr) * 100) : 0
+  const quantity = quantityStr ? Number.parseInt(quantityStr, 10) : 1
+  const purchasedOn = purchasedOnStr ? new Date(purchasedOnStr).getTime() : undefined
+
   const { user } = await withAuth({ ensureSignedIn: true })
   if (!user) return
   const me = await fetchQuery(api.users.getByWorkosUserId, { workosUserId: user.id })
   if (!me) return
+
   await fetchMutation(api.parts.create, {
     name,
-    vendor,
     supplierId,
     partNumber,
-    priceCents,
-    quantity: quantity > 0 ? quantity : undefined,
-    isForCar: isForCar || undefined,
-    purchasedOn,
-    notes: undefined,
     sourceUrl,
-    linkedTaskId: undefined,
-    imageIds: [],
+    priceCents,
+    quantity,
+    isForCar,
+    purchasedOn,
     createdBy: me._id,
+  })
+  revalidatePath('/parts-costs')
+}
+
+export async function updatePartAction(formData: FormData) {
+  const partIdRaw = String(formData.get('partId') ?? '')
+  if (!partIdRaw) return
+  const partId = partIdRaw as unknown as Id<'parts'>
+
+  const name = String(formData.get('name') ?? '').trim()
+  const supplierIdRaw = String(formData.get('supplierId') ?? '').trim()
+  const supplierId = supplierIdRaw ? (supplierIdRaw as unknown as Id<'suppliers'>) : undefined
+  const partNumber = String(formData.get('partNumber') ?? '').trim() || undefined
+  const sourceUrl = String(formData.get('sourceUrl') ?? '').trim() || undefined
+  const priceStr = String(formData.get('price') ?? '').trim()
+  const quantityStr = String(formData.get('quantity') ?? '1').trim()
+  const purchasedOnStr = String(formData.get('purchasedOn') ?? '').trim()
+  const isForCar = formData.get('isForCar') === 'on'
+
+  if (!name) return
+
+  const priceCents = priceStr ? Math.round(Number.parseFloat(priceStr) * 100) : undefined
+  const quantity = quantityStr ? Number.parseInt(quantityStr, 10) : undefined
+  const purchasedOn = purchasedOnStr ? new Date(purchasedOnStr).getTime() : undefined
+
+  await fetchMutation(api.parts.update, {
+    partId,
+    name,
+    supplierId,
+    partNumber,
+    sourceUrl,
+    priceCents,
+    quantity,
+    isForCar,
+    purchasedOn,
   })
   revalidatePath('/parts-costs')
 }
@@ -58,50 +103,13 @@ export async function deletePartAction(formData: FormData) {
   revalidatePath('/parts-costs')
 }
 
-export async function updatePartAction(formData: FormData) {
-  const partIdRaw = String(formData.get('partId') ?? '')
-  if (!partIdRaw) return
-  const partId = partIdRaw as unknown as Id<'parts'>
-  const name = String(formData.get('name') ?? '').trim()
-  const vendor = String(formData.get('vendor') ?? '').trim() || undefined
-  const partNumber = String(formData.get('partNumber') ?? '').trim() || undefined
-  const sourceUrlRaw = String(formData.get('sourceUrl') ?? '').trim()
-  const sourceUrl = sourceUrlRaw || undefined
-  const supplierIdRaw = String(formData.get('supplierId') ?? '').trim()
-  const supplierId = supplierIdRaw ? (supplierIdRaw as unknown as Id<'suppliers'>) : undefined
-  const priceDollars = Number(formData.get('price') ?? Number.NaN)
-  const priceCents = Number.isNaN(priceDollars) ? undefined : Math.round(priceDollars * 100)
-  const quantityRaw = String(formData.get('quantity') ?? '').trim()
-  const quantity = quantityRaw ? Number(quantityRaw) : undefined
-  const isForCar = formData.get('isForCar') === 'on'
-  const purchasedOnStr = String(formData.get('purchasedOn') ?? '')
-  const purchasedOn = purchasedOnStr ? new Date(purchasedOnStr + 'T00:00:00').getTime() : undefined
-  const { user } = await withAuth({ ensureSignedIn: true })
-  if (!user) return
-  await fetchMutation(api.parts.update, {
-    partId,
-    name: name || undefined,
-    vendor,
-    supplierId,
-    partNumber,
-    priceCents,
-    quantity: quantity && quantity > 0 ? quantity : undefined,
-    isForCar: isForCar ? true : false,
-    purchasedOn,
-    sourceUrl,
-  })
-  revalidatePath('/parts-costs')
-}
-
 export async function setPartStatusAction(formData: FormData) {
-  const partIdRaw = String(formData.get('partId') ?? '')
+  const partId = String(formData.get('partId') ?? '')
   const status = String(formData.get('status') ?? '')
-  if (!partIdRaw || !status) return
-  const { user } = await withAuth({ ensureSignedIn: true })
-  if (!user) return
-  await fetchMutation(api.parts.setStatus, {
-    partId: partIdRaw as unknown as Id<'parts'>,
-    status: status as unknown as PartStatus,
+  if (!partId || !status) return
+  await fetchMutation(api.parts.update, {
+    partId: partId as unknown as Id<'parts'>,
+    status: status as PartStatus,
   })
   revalidatePath('/parts-costs')
 }

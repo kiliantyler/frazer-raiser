@@ -2,7 +2,6 @@ import { ActivityItem } from '@/components/private/activity-item'
 import { EmptyState } from '@/components/private/empty-state'
 import { ImageGrid } from '@/components/private/image-grid'
 import { JournalUpdatesPreview } from '@/components/private/journal-updates-preview'
-import { PageHeader } from '@/components/private/page-header'
 import { SectionCard } from '@/components/private/section-card'
 import { SpendingSummary } from '@/components/private/spending-summary'
 import { TaskItem } from '@/components/private/task-item'
@@ -38,11 +37,6 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="1948 Frazer Restoration Dashboard"
-        description="An overview of project status, spending, and recent activity."
-      />
-
       <div className="grid gap-6 md:grid-cols-2">
         <SpendingSummary
           totalSpent={totalSpent}

@@ -1,5 +1,4 @@
 import { FormCard } from '@/components/private/form-card'
-import { PageHeader } from '@/components/private/page-header'
 import { ProfileForm } from '@/components/private/profile/profile-form'
 import { getUserByWorkosUserId } from '@/lib/data/users'
 import { withAuth } from '@workos-inc/authkit-nextjs'
@@ -20,8 +19,6 @@ export default async function ProfilePage() {
 
   return (
     <section className="space-y-6">
-      <PageHeader title="Profile" />
-
       <FormCard title="Personal Information">
         <ProfileForm
           initialName={me.name}

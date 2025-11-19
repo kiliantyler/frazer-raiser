@@ -1,6 +1,5 @@
 import { AdminSections } from '@/components/private/admin/admin-sections'
 import { AdminStats } from '@/components/private/admin/admin-stats'
-import { PageHeader } from '@/components/private/page-header'
 import { getPublishedUpdates, getTasksByStatus, getUserByWorkosUserId, getUsers } from '@/lib/data/admin'
 import type { AppUser } from '@/types/users'
 import { withAuth } from '@workos-inc/authkit-nextjs'
@@ -40,11 +39,6 @@ export default async function AdminPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Admin"
-        description="Administer collaborators, content, and key project data from a single place."
-      />
-
       <AdminStats
         totalUsers={totalUsers}
         totalAdmins={totalAdmins}

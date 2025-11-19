@@ -1,25 +1,12 @@
-import { PageHeader } from '@/components/private/page-header'
 import { TasksByStatus } from '@/components/private/tasks/tasks-by-status'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { withAuth } from '@workos-inc/authkit-nextjs'
-import { createTaskAction } from './actions'
 
 export default async function TasksPage() {
   // Read request data before any non-deterministic libs (Convex) to satisfy Next RSC constraint
   await withAuth({ ensureSignedIn: true })
   return (
     <section className="space-y-6">
-      <PageHeader
-        title="Tasks"
-        action={
-          <form action={createTaskAction} className="flex gap-2">
-            <Input name="title" placeholder="New task title" aria-label="New task title" />
-            <Button type="submit">Add Task</Button>
-          </form>
-        }
-      />
       <Tabs defaultValue="todo">
         <TabsList>
           <TabsTrigger value="todo">To do</TabsTrigger>

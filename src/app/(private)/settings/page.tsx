@@ -1,4 +1,3 @@
-import { PageHeader } from '@/components/private/page-header'
 import { BudgetForm } from '@/components/private/settings/budget-form'
 import { getSettings } from '@/lib/data/settings'
 import { getUserByWorkosUserId } from '@/lib/data/users'
@@ -23,8 +22,6 @@ export default async function SettingsPage() {
 
   return (
     <section className="space-y-6">
-      <PageHeader title="Settings" />
-
       {isAdmin ? (
         <BudgetForm budgetDollars={budgetDollars} />
       ) : (
