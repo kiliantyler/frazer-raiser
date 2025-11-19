@@ -1,7 +1,6 @@
 'use client'
 
 import { createUpdateAction, updateUpdateAction } from '@/app/(private)/journal/actions'
-import { HeroImageUpload } from '@/components/private/hero-image-upload'
 import { RichTextEditor } from '@/components/private/rich-text-editor'
 import { UpdateEditorHeader } from '@/components/private/update-editor-header'
 import { useImageUpload } from '@/hooks/use-image-upload'
@@ -120,8 +119,14 @@ export function UpdateEditor({ mode, updateId, initialUpdate }: UpdateEditorProp
         eventDate={eventDate}
         mode={mode}
         isUploading={imageUpload.isUploading}
+        isDeleting={imageUpload.isDeleting}
+        imageUrl={imageUpload.imageUrl}
         onTitleChange={handleTitleChange}
         onEventDateChange={setEventDate}
+        onUploadComplete={imageUpload.handleUploadComplete}
+        onUploadError={imageUpload.handleUploadError}
+        onUploadBegin={imageUpload.handleUploadBegin}
+        onRemove={imageUpload.removeImage}
       />
       <div className="absolute inset-0 top-16 bottom-0 left-0 right-0 flex flex-col">
         <form id="editor-form" onSubmit={handleFormSubmit} className="flex flex-col h-full">
@@ -135,16 +140,6 @@ export function UpdateEditor({ mode, updateId, initialUpdate }: UpdateEditorProp
           <div className="flex-1 overflow-auto min-h-0">
             <RichTextEditor id="contentHtml" name="contentHtml" initialContentHtml={currentContentHtml} />
           </div>
-
-          {/* Hero Image section - fixed at bottom */}
-          <HeroImageUpload
-            imageUrl={imageUpload.imageUrl}
-            isUploading={imageUpload.isUploading}
-            onUploadComplete={imageUpload.handleUploadComplete}
-            onUploadError={imageUpload.handleUploadError}
-            onUploadBegin={imageUpload.handleUploadBegin}
-            onRemove={imageUpload.removeImage}
-          />
         </form>
       </div>
     </>

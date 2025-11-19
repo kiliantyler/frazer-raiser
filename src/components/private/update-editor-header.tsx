@@ -1,5 +1,6 @@
 'use client'
 
+import { HeroImageTrigger } from '@/components/private/hero-image-trigger'
 import { Button } from '@/components/ui/button'
 import { DatePicker } from '@/components/ui/date-picker'
 import { Input } from '@/components/ui/input'
@@ -13,8 +14,14 @@ type UpdateEditorHeaderProps = {
   eventDate: Date | undefined
   mode: 'create' | 'edit'
   isUploading: boolean
+  isDeleting?: boolean
+  imageUrl: string | null
   onTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   onEventDateChange: (date: Date | undefined) => void
+  onUploadComplete: (res: unknown) => void
+  onUploadError: () => void
+  onUploadBegin: () => void
+  onRemove: () => void
 }
 
 export function UpdateEditorHeader({
@@ -22,8 +29,14 @@ export function UpdateEditorHeader({
   eventDate,
   mode,
   isUploading,
+  isDeleting = false,
+  imageUrl,
   onTitleChange,
   onEventDateChange,
+  onUploadComplete,
+  onUploadError,
+  onUploadBegin,
+  onRemove,
 }: UpdateEditorHeaderProps) {
   const router = useRouter()
   const [mounted, setMounted] = React.useState(false)
@@ -36,6 +49,15 @@ export function UpdateEditorHeader({
 
   const headerContent = headerContainer ? (
     <div className="flex flex-1 items-center justify-between gap-4 px-4 w-full">
+      <HeroImageTrigger
+        imageUrl={imageUrl}
+        isUploading={isUploading}
+        isDeleting={isDeleting}
+        onUploadComplete={onUploadComplete}
+        onUploadError={onUploadError}
+        onUploadBegin={onUploadBegin}
+        onRemove={onRemove}
+      />
       <div className="flex-1 min-w-0">
         <Input
           id="title"
