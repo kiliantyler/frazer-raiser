@@ -15,15 +15,30 @@ type ProfileFormProps = {
 
 export function ProfileForm({ initialName, initialEmail, initialAvatarUrl, updateProfileAction }: ProfileFormProps) {
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(initialAvatarUrl)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
 
   const handleSubmit = async (formData: FormData) => {
-    if (avatarUrl) {
-      formData.set('avatarUrl', avatarUrl)
-    } else if (initialAvatarUrl) {
-      formData.set('avatarUrl', initialAvatarUrl)
+    setIsSubmitting(true)
+    setShowSuccess(false)
+
+    try {
+      if (avatarUrl) {
+        formData.set('avatarUrl', avatarUrl)
+      } else if (initialAvatarUrl) {
+        formData.set('avatarUrl', initialAvatarUrl)
+      }
+      await updateProfileAction(formData)
+      setShowSuccess(true)
+      setTimeout(() => {
+        setShowSuccess(false)
+      }, 3000)
+    } catch (error) {
+      console.error('Failed to save profile:', error)
+    } finally {
+      setIsSubmitting(false)
     }
-    await updateProfileAction(formData)
   }
 
   return (
@@ -55,9 +70,16 @@ export function ProfileForm({ initialName, initialEmail, initialAvatarUrl, updat
         </p>
       </div>
 
-      <Button type="submit" aria-label="Save profile changes">
-        Save Changes
-      </Button>
+      <div className="space-y-2">
+        <Button type="submit" aria-label="Save profile changes" disabled={isSubmitting}>
+          {isSubmitting ? 'Saving...' : 'Save Changes'}
+        </Button>
+        {showSuccess && (
+          <p className="text-sm text-green-600 dark:text-green-400" role="status" aria-live="polite">
+            Profile saved successfully!
+          </p>
+        )}
+      </div>
     </form>
   )
 }
