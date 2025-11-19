@@ -14,7 +14,13 @@ export default async function PartsCostsPage() {
   const [parts, suppliers] = (await Promise.all([getParts(), getSuppliers()])) as [PartListItem[], Supplier[]]
   const totalCents = parts.reduce((sum: number, p: PartListItem) => sum + (p.priceCents ?? 0) * (p.quantity ?? 1), 0)
   const totalParts = parts.reduce((sum: number, p: PartListItem) => sum + (p.quantity ?? 1), 0)
-  const averageCents = totalParts > 0 ? Math.round(totalCents / totalParts) : 0
+  const partsForCar = parts.filter(p => p.isForCar === true)
+  const totalCentsForCar = partsForCar.reduce(
+    (sum: number, p: PartListItem) => sum + (p.priceCents ?? 0) * (p.quantity ?? 1),
+    0,
+  )
+  const totalPartsForCar = partsForCar.reduce((sum: number, p: PartListItem) => sum + (p.quantity ?? 1), 0)
+  const averageCents = totalPartsForCar > 0 ? Math.round(totalCentsForCar / totalPartsForCar) : 0
 
   return (
     <section className="space-y-6">

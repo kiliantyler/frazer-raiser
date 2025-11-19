@@ -12,6 +12,7 @@ export type PartListItem = {
   status?: PartStatus
   priceCents: number
   quantity?: number
+  isForCar?: boolean
   purchasedOn?: number
   installedOn?: number
   sourceUrl?: string
@@ -27,6 +28,7 @@ export type Part = {
   status?: PartStatus
   priceCents: number
   quantity?: number
+  isForCar?: boolean
   purchasedOn?: number
   installedOn?: number
   notes?: string

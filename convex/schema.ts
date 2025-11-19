@@ -48,6 +48,7 @@ export default defineSchema({
     ),
     priceCents: v.number(),
     quantity: v.optional(v.number()),
+    isForCar: v.optional(v.boolean()),
     purchasedOn: v.optional(v.number()),
     installedOn: v.optional(v.number()),
     notes: v.optional(v.string()),

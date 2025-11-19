@@ -17,7 +17,7 @@ import { formatCurrency } from '@/lib/utils/format'
 import { getPartStatus } from '@/lib/utils/parts'
 import type { PartListItem, StatusFilter } from '@/types/parts'
 import type { Supplier } from '@/types/suppliers'
-import { Search as SearchIcon } from 'lucide-react'
+import { Car, Search as SearchIcon } from 'lucide-react'
 import type { Route } from 'next'
 import Link from 'next/link'
 import * as React from 'react'
@@ -102,18 +102,25 @@ export function PartsTable({ parts, suppliers }: { parts: Array<PartListItem>; s
         <TableBody>
           {paged.map(p => (
             <TableRow key={p._id}>
-              <TableCell className="max-w-[340px] truncate">
-                {p.sourceUrl ? (
-                  <Link
-                    href={p.sourceUrl as Route}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline underline-offset-4 hover:opacity-80">
-                    {p.name}
-                  </Link>
-                ) : (
-                  p.name
-                )}
+              <TableCell className="max-w-[340px]">
+                <div className="flex items-center gap-2 truncate">
+                  {p.isForCar && (
+                    <Car className="size-4 shrink-0 text-muted-foreground" aria-label="Purchased for the car" />
+                  )}
+                  <span className="truncate">
+                    {p.sourceUrl ? (
+                      <Link
+                        href={p.sourceUrl as Route}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline underline-offset-4 hover:opacity-80">
+                        {p.name}
+                      </Link>
+                    ) : (
+                      p.name
+                    )}
+                  </span>
+                </div>
               </TableCell>
               <TableCell className="text-muted-foreground">{p.supplierName ?? p.vendor ?? '—'}</TableCell>
               <TableCell className="text-muted-foreground">{p.partNumber ?? '—'}</TableCell>
@@ -161,6 +168,7 @@ export function PartsTable({ parts, suppliers }: { parts: Array<PartListItem>; s
                       sourceUrl: p.sourceUrl,
                       priceCents: p.priceCents,
                       quantity: p.quantity,
+                      isForCar: p.isForCar,
                       purchasedOn: p.purchasedOn,
                     }}
                     suppliers={suppliers}

@@ -21,6 +21,8 @@ export async function createPartAction(formData: FormData) {
   // Quantity field
   const quantityRaw = String(formData.get('quantity') ?? '1').trim()
   const quantity = quantityRaw ? Number(quantityRaw) : 1
+  // Is for car checkbox
+  const isForCar = formData.get('isForCar') === 'on'
   // Purchased on date (YYYY-MM-DD) -> epoch ms
   const purchasedOnStr = String(formData.get('purchasedOn') ?? '')
   const purchasedOn = purchasedOnStr ? new Date(purchasedOnStr + 'T00:00:00').getTime() : Date.now()
@@ -36,6 +38,7 @@ export async function createPartAction(formData: FormData) {
     partNumber,
     priceCents,
     quantity: quantity > 0 ? quantity : undefined,
+    isForCar: isForCar || undefined,
     purchasedOn,
     notes: undefined,
     sourceUrl,
@@ -70,6 +73,7 @@ export async function updatePartAction(formData: FormData) {
   const priceCents = Number.isNaN(priceDollars) ? undefined : Math.round(priceDollars * 100)
   const quantityRaw = String(formData.get('quantity') ?? '').trim()
   const quantity = quantityRaw ? Number(quantityRaw) : undefined
+  const isForCar = formData.get('isForCar') === 'on'
   const purchasedOnStr = String(formData.get('purchasedOn') ?? '')
   const purchasedOn = purchasedOnStr ? new Date(purchasedOnStr + 'T00:00:00').getTime() : undefined
   const { user } = await withAuth({ ensureSignedIn: true })
@@ -82,6 +86,7 @@ export async function updatePartAction(formData: FormData) {
     partNumber,
     priceCents,
     quantity: quantity && quantity > 0 ? quantity : undefined,
+    isForCar: isForCar ? true : false,
     purchasedOn,
     sourceUrl,
   })

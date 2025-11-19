@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
 import type { Part } from '@/types/parts'
 import type { Supplier } from '@/types/suppliers'
 import { Pencil, Plus } from 'lucide-react'
@@ -22,6 +23,7 @@ export function PartDialog({
 }) {
   const [open, setOpen] = React.useState(false)
   const [supplierId, setSupplierId] = React.useState<string | undefined>(part?.supplierId)
+  const [isForCar, setIsForCar] = React.useState<boolean>(part?.isForCar ?? true)
 
   const isEdit = mode === 'edit'
 
@@ -44,6 +46,7 @@ export function PartDialog({
           <DialogTitle className="font-serif">{isEdit ? 'Edit Part' : 'Add New Part'}</DialogTitle>
         </DialogHeader>
         <form
+          id="part-form"
           action={async formData => {
             if (isEdit) {
               await updatePartAction(formData)
@@ -55,6 +58,7 @@ export function PartDialog({
           className="space-y-4">
           {isEdit ? <input type="hidden" name="partId" value={part?._id ?? ''} /> : null}
           <input type="hidden" name="supplierId" value={supplierId ?? ''} />
+          <input type="hidden" name="isForCar" value={isForCar ? 'on' : ''} />
           <div className="grid gap-2">
             <Label htmlFor="name">Part name</Label>
             <Input id="name" name="name" defaultValue={part?.name ?? ''} required={!isEdit} />
@@ -106,10 +110,18 @@ export function PartDialog({
               defaultValue={part?.purchasedOn ? new Date(part.purchasedOn).toISOString().slice(0, 10) : ''}
             />
           </div>
-          <DialogFooter>
-            <Button type="submit">{isEdit ? 'Save changes' : 'Save'}</Button>
-          </DialogFooter>
         </form>
+        <DialogFooter className="!justify-between -mx-6 -mb-6 px-6 pb-6">
+          <div className="flex items-center space-x-2">
+            <Switch id="isForCar" checked={isForCar} onCheckedChange={setIsForCar} />
+            <Label htmlFor="isForCar" className="text-sm font-normal cursor-pointer">
+              Car Part
+            </Label>
+          </div>
+          <Button type="submit" form="part-form">
+            {isEdit ? 'Save changes' : 'Save'}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
