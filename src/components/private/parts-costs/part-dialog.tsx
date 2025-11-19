@@ -94,6 +94,10 @@ export function PartDialog({
             />
           </div>
           <div className="grid gap-2">
+            <Label htmlFor="quantity">Quantity</Label>
+            <Input id="quantity" name="quantity" type="number" step="1" min="1" defaultValue={part?.quantity ?? '1'} />
+          </div>
+          <div className="grid gap-2">
             <Label htmlFor="purchasedOn">Purchase date</Label>
             <Input
               id="purchasedOn"

@@ -11,6 +11,7 @@ export type PartListItem = {
   partNumber?: string
   status?: PartStatus
   priceCents: number
+  quantity?: number
   purchasedOn?: number
   installedOn?: number
   sourceUrl?: string
@@ -25,6 +26,7 @@ export type Part = {
   partNumber?: string
   status?: PartStatus
   priceCents: number
+  quantity?: number
   purchasedOn?: number
   installedOn?: number
   notes?: string

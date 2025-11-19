@@ -18,6 +18,9 @@ export async function createPartAction(formData: FormData) {
   // Price field is expected in dollars; convert to cents
   const priceDollars = Number(formData.get('price') ?? 0)
   const priceCents = Math.round(priceDollars * 100)
+  // Quantity field
+  const quantityRaw = String(formData.get('quantity') ?? '1').trim()
+  const quantity = quantityRaw ? Number(quantityRaw) : 1
   // Purchased on date (YYYY-MM-DD) -> epoch ms
   const purchasedOnStr = String(formData.get('purchasedOn') ?? '')
   const purchasedOn = purchasedOnStr ? new Date(purchasedOnStr + 'T00:00:00').getTime() : Date.now()
@@ -32,6 +35,7 @@ export async function createPartAction(formData: FormData) {
     supplierId,
     partNumber,
     priceCents,
+    quantity: quantity > 0 ? quantity : undefined,
     purchasedOn,
     notes: undefined,
     sourceUrl,
@@ -64,6 +68,8 @@ export async function updatePartAction(formData: FormData) {
   const supplierId = supplierIdRaw ? (supplierIdRaw as unknown as Id<'suppliers'>) : undefined
   const priceDollars = Number(formData.get('price') ?? Number.NaN)
   const priceCents = Number.isNaN(priceDollars) ? undefined : Math.round(priceDollars * 100)
+  const quantityRaw = String(formData.get('quantity') ?? '').trim()
+  const quantity = quantityRaw ? Number(quantityRaw) : undefined
   const purchasedOnStr = String(formData.get('purchasedOn') ?? '')
   const purchasedOn = purchasedOnStr ? new Date(purchasedOnStr + 'T00:00:00').getTime() : undefined
   const { user } = await withAuth({ ensureSignedIn: true })
@@ -75,6 +81,7 @@ export async function updatePartAction(formData: FormData) {
     supplierId,
     partNumber,
     priceCents,
+    quantity: quantity && quantity > 0 ? quantity : undefined,
     purchasedOn,
     sourceUrl,
   })

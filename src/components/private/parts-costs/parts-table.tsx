@@ -92,6 +92,7 @@ export function PartsTable({ parts, suppliers }: { parts: Array<PartListItem>; s
             <TableHead>Part Name</TableHead>
             <TableHead>Supplier</TableHead>
             <TableHead>Part Number</TableHead>
+            <TableHead>Quantity</TableHead>
             <TableHead>Date</TableHead>
             <TableHead className="text-right">Cost</TableHead>
             <TableHead>Status</TableHead>
@@ -116,10 +117,13 @@ export function PartsTable({ parts, suppliers }: { parts: Array<PartListItem>; s
               </TableCell>
               <TableCell className="text-muted-foreground">{p.supplierName ?? p.vendor ?? '—'}</TableCell>
               <TableCell className="text-muted-foreground">{p.partNumber ?? '—'}</TableCell>
+              <TableCell className="text-muted-foreground">{p.quantity ?? 1}</TableCell>
               <TableCell className="text-muted-foreground">
                 {p.purchasedOn ? new Date(p.purchasedOn).toISOString().slice(0, 10) : '—'}
               </TableCell>
-              <TableCell className="text-right font-medium">{formatCurrency(p.priceCents)}</TableCell>
+              <TableCell className="text-right font-medium">
+                {formatCurrency(p.priceCents * (p.quantity ?? 1))}
+              </TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -156,6 +160,7 @@ export function PartsTable({ parts, suppliers }: { parts: Array<PartListItem>; s
                       partNumber: p.partNumber,
                       sourceUrl: p.sourceUrl,
                       priceCents: p.priceCents,
+                      quantity: p.quantity,
                       purchasedOn: p.purchasedOn,
                     }}
                     suppliers={suppliers}

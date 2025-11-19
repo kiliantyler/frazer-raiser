@@ -47,6 +47,7 @@ export default defineSchema({
       ),
     ),
     priceCents: v.number(),
+    quantity: v.optional(v.number()),
     purchasedOn: v.optional(v.number()),
     installedOn: v.optional(v.number()),
     notes: v.optional(v.string()),
