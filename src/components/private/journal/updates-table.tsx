@@ -1,6 +1,7 @@
 'use client'
 
 import { EmptyState } from '@/components/private/empty-state'
+import { UpdateImageCell } from '@/components/private/journal/update-image-cell'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
@@ -20,6 +21,7 @@ export function UpdatesTable({ updates }: { updates: Array<Update> }) {
     <Table>
       <TableHeader>
         <TableRow>
+          <TableHead className="w-[100px]">Image</TableHead>
           <TableHead>Title</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Created</TableHead>
@@ -32,6 +34,9 @@ export function UpdatesTable({ updates }: { updates: Array<Update> }) {
           const displayDate = update.eventDate ?? update.publishedAt ?? update.createdAt
           return (
             <TableRow key={update._id}>
+              <TableCell>
+                <UpdateImageCell updateId={update._id} initialImageIds={update.imageIds} />
+              </TableCell>
               <TableCell className="font-medium">{update.title}</TableCell>
               <TableCell>
                 <Badge variant={update.publishStatus === 'published' ? 'default' : 'secondary'}>
