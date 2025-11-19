@@ -20,7 +20,7 @@ export default async function UpdateDetailPage({ params }: Props) {
   const displayDate = update.eventDate ?? update.publishedAt ?? update.createdAt
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-12">
+    <main className="mx-auto max-w-3xl px-6 pt-28 pb-12 md:pt-36">
       <article>
         <UpdateHeader
           title={update.title}
