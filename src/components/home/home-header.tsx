@@ -16,7 +16,7 @@ export function HomeHeader() {
           </div>
         </div>
         {/* Mobile Navigation */}
-        <div className="flex items-center justify-center gap-4 pb-4 md:hidden">
+        <div className="flex items-center justify-center gap-2 pb-4 -mx-6 md:hidden">
           <MobileNavLink href="/">Home</MobileNavLink>
           <MobileNavLink href="/about">About</MobileNavLink>
           <MobileNavLink href="/gallery">Gallery</MobileNavLink>

@@ -11,7 +11,7 @@ export function HomeHero() {
         <div className="absolute inset-0 bg-linear-to-b from-black/85 via-black/75 to-black/85" />
       </div>
       <div className="mx-auto flex w-full max-w-7xl px-6 py-16 sm:py-24 lg:py-32">
-        <div className="relative max-w-3xl">
+        <div className="relative w-full max-w-3xl mx-auto sm:mx-0">
           <h1 className="font-display text-balance text-6xl font-bold tracking-tight text-white sm:text-7xl md:text-8xl lg:text-9xl">
             Raising a{' '}
             <span className="font-frazer tracking-[0.2em] uppercase chrome-text" data-text="FRAZER">
@@ -22,11 +22,11 @@ export function HomeHero() {
             We&apos;re bringing a 1948 Frazer back to the road after decades asleep. If you&apos;re into old metal,
             stuck bolts, and small wins, you&apos;ll probably enjoy following along.
           </p>
-          <div className="mt-12 flex flex-col gap-6 sm:flex-row">
+          <div className="mt-12 flex flex-col items-center gap-6 sm:flex-row sm:items-start">
             <Button
               asChild
               size="lg"
-              className="h-14 px-10 text-lg font-semibold shadow-xl transition-transform hover:scale-105"
+              className="w-full sm:w-auto h-14 px-10 text-lg font-semibold shadow-xl transition-transform hover:scale-105"
               aria-label="Explore the updates">
               <Link href="/updates" className="inline-flex items-center gap-2">
                 See the updates
@@ -37,7 +37,7 @@ export function HomeHero() {
               asChild
               variant="outline"
               size="lg"
-              className="h-14 border-white/20 bg-white/5 px-10 text-lg font-semibold text-white backdrop-blur-md shadow-xl transition-all hover:bg-white/10 hover:border-white/40 hover:scale-105"
+              className="w-full sm:w-auto h-14 border-white/20 bg-white/5 px-10 text-lg font-semibold text-white backdrop-blur-md shadow-xl transition-all hover:bg-white/10 hover:border-white/40 hover:scale-105"
               aria-label="View gallery">
               <Link href="/gallery">View Gallery</Link>
             </Button>

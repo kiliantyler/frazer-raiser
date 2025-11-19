@@ -11,8 +11,10 @@ export function MobileNavLink({ href, children }: { href: string; children: Reac
   return (
     <Link
       href={href as Route}
-      className={`text-sm font-medium transition-colors ${
-        isActive ? 'text-primary' : 'text-muted-foreground hover:text-primary'
+      className={`px-4 py-1.5 text-sm font-medium transition-all duration-300 rounded-full ${
+        isActive
+          ? 'text-primary-foreground bg-primary'
+          : 'text-muted-foreground bg-card/50 border border-border/50 backdrop-blur-sm hover:text-primary-foreground hover:bg-primary'
       }`}>
       {children}
     </Link>
