@@ -83,6 +83,9 @@ export default defineSchema({
     size: v.number(),
     mime: v.string(),
     tags: v.optional(v.array(v.string())),
+    dateTaken: v.optional(v.number()),
+    order: v.optional(v.number()),
+    isPublished: v.optional(v.boolean()),
     entityRef: v.optional(
       v.object({
         type: v.union(v.literal('task'), v.literal('update'), v.literal('part')),
@@ -94,7 +97,9 @@ export default defineSchema({
     createdAt: v.number(),
   })
     .index('by_visibility', ['visibility'])
-    .index('by_entityType', ['entityRef.type']),
+    .index('by_entityType', ['entityRef.type'])
+    .index('by_order', ['order'])
+    .index('by_isPublished', ['isPublished']),
 
   workLogs: defineTable({
     date: v.number(),
