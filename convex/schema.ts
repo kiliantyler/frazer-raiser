@@ -83,7 +83,7 @@ export default defineSchema({
     size: v.number(),
     mime: v.string(),
     tags: v.optional(v.array(v.string())),
-    dateTaken: v.optional(v.number()),
+    dateTaken: v.optional(v.union(v.number(), v.null())),
     order: v.optional(v.number()),
     isPublished: v.optional(v.boolean()),
     entityRef: v.optional(

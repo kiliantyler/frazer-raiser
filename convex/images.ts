@@ -251,17 +251,31 @@ export const deleteById = mutation({
 export const updateImage = mutation({
   args: {
     imageId: v.id('images'),
-    dateTaken: v.optional(v.number()),
+    dateTaken: v.optional(v.union(v.number(), v.null())),
     isPublished: v.optional(v.boolean()),
     tags: v.optional(v.array(v.string())),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    await ctx.db.patch(args.imageId, {
-      dateTaken: args.dateTaken,
-      isPublished: args.isPublished,
-      tags: args.tags,
-    })
+    const patch: Record<string, unknown> = {}
+
+    // Only include fields that are explicitly provided
+    // dateTaken can be a number (set) or null (clear)
+    if (args.dateTaken !== undefined) {
+      patch.dateTaken = args.dateTaken
+    }
+    // Only update isPublished if explicitly provided
+    if (args.isPublished !== undefined) {
+      patch.isPublished = args.isPublished
+    }
+    if (args.tags !== undefined) {
+      patch.tags = args.tags
+    }
+
+    // Only patch if there are fields to update
+    if (Object.keys(patch).length > 0) {
+      await ctx.db.patch(args.imageId, patch)
+    }
     return null
   },
 })
@@ -304,7 +318,7 @@ export const listInternal = query({
       width: v.number(),
       height: v.number(),
       createdAt: v.number(),
-      dateTaken: v.optional(v.number()),
+      dateTaken: v.optional(v.union(v.number(), v.null())),
       order: v.optional(v.number()),
       isPublished: v.optional(v.boolean()),
       tags: v.optional(v.array(v.string())),
