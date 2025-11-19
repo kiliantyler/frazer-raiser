@@ -1,10 +1,11 @@
 import { ImageTable } from '@/components/private/internal-gallery/image-table'
 import { ImageUpload } from '@/components/private/internal-gallery/image-upload'
 import { PageHeader } from '@/components/private/page-header'
-import { getLatestImages } from '@/lib/data/dashboard'
+import { api } from '@convex/_generated/api'
+import { fetchQuery } from 'convex/nextjs'
 
 export default async function InternalGalleryPage() {
-  const images = await getLatestImages(100, 'private')
+  const images = await fetchQuery(api.images.listInternal, { limit: 100 })
 
   return (
     <section className="space-y-6">

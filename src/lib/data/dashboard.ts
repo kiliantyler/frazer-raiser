@@ -18,7 +18,10 @@ export async function getRecentActivity(limit: number) {
 
 export async function getLatestImages(limit: number, visibility: 'private' | 'public') {
   'use cache'
-  return await fetchQuery(api.images.listLatest, { limit, visibility })
+  if (visibility === 'public') {
+    return await fetchQuery(api.images.listPublic, {})
+  }
+  return await fetchQuery(api.images.listInternal, { limit })
 }
 
 export async function getSettings() {
