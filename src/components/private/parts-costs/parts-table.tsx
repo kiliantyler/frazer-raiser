@@ -86,17 +86,17 @@ export function PartsTable({ parts, suppliers }: { parts: Array<PartListItem>; s
         </div>
       </div>
 
-      <Table>
+      <Table className="table-fixed">
         <TableHeader>
           <TableRow>
-            <TableHead>Part Name</TableHead>
-            <TableHead>Supplier</TableHead>
-            <TableHead>Part Number</TableHead>
-            <TableHead>Quantity</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead className="text-right">Cost</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className="w-[340px]">Part Name</TableHead>
+            <TableHead className="w-[140px]">Supplier</TableHead>
+            <TableHead className="w-[140px]">Part Number</TableHead>
+            <TableHead className="w-[100px]">Quantity</TableHead>
+            <TableHead className="w-[120px]">Date</TableHead>
+            <TableHead className="w-[120px] text-right">Cost</TableHead>
+            <TableHead className="w-[120px]">Status</TableHead>
+            <TableHead className="w-[120px] text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -131,7 +131,7 @@ export function PartsTable({ parts, suppliers }: { parts: Array<PartListItem>; s
               <TableCell className="text-right font-medium">
                 {formatCurrency(p.priceCents * (p.quantity ?? 1))}
               </TableCell>
-              <TableCell>
+              <TableCell className="w-[120px]">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button aria-label="Change status">
