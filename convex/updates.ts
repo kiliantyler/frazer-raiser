@@ -7,12 +7,17 @@ const PublishStatus = v.union(v.literal('draft'), v.literal('published'))
 
 // Helper function to strip HTML tags and create plain text
 function stripHtml(html: string): string {
-  return html
-    .replaceAll(/<[^>]*>/g, '') // Remove HTML tags
-    .replaceAll('&nbsp;', ' ') // Replace &nbsp; with space
-    .replaceAll(/&[^;]+;/g, '') // Remove other HTML entities
-    .replaceAll(/\s+/g, ' ') // Collapse whitespace
-    .trim()
+  return (
+    html
+      // Replace all HTML tags with a space so adjacent text nodes stay separated
+      .replaceAll(/<[^>]*>/g, ' ')
+      // Replace common HTML entities with spaces so we don't accidentally join words
+      .replaceAll('&nbsp;', ' ')
+      .replaceAll(/&[^;]+;/g, ' ')
+      // Collapse any runs of whitespace down to a single space
+      .replaceAll(/\s+/g, ' ')
+      .trim()
+  )
 }
 
 async function resolveUpdateImageIds(
