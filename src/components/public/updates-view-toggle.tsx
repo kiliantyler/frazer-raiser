@@ -1,11 +1,12 @@
 'use client'
 
+import type { TimelineItem } from '@/types/updates'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { GridUpdatesList } from './updates-grid'
-import { TimelineUpdatesList, type TimelineUpdate } from './updates-timeline'
+import { TimelineUpdatesList } from './updates-timeline'
 
-export function UpdatesViewToggle({ items }: { items: Array<TimelineUpdate> }) {
+export function UpdatesViewToggle({ items }: { items: Array<TimelineItem> }) {
   const searchParams = useSearchParams()
   const viewParam = searchParams.get('view')
   const initialView = viewParam === 'grid' ? 'grid' : 'timeline'

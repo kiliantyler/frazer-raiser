@@ -1,24 +1,7 @@
+import type { TimelineItem } from '@/types/updates'
 import { TimelineEntry } from './timeline-entry'
 
-export type TimelineUpdate = {
-  _id: string
-  title: string
-  slug: string
-  excerpt: string
-  publishedAt: number
-  createdAt: number
-  eventDate?: number
-  authorName: string
-  authorAvatarUrl?: string
-  heroImage: {
-    _id: string
-    url: string
-    width: number
-    height: number
-  } | null
-}
-
-export function TimelineUpdatesList({ items }: { items: Array<TimelineUpdate> }) {
+export function TimelineUpdatesList({ items }: { items: Array<TimelineItem> }) {
   if (items.length === 0) {
     return (
       <div className="py-16 text-center">
@@ -28,13 +11,11 @@ export function TimelineUpdatesList({ items }: { items: Array<TimelineUpdate> })
   }
 
   return (
-    <div className="relative">
-      {/* Central timeline spine on desktop with gradient fade */}
-      <div className="pointer-events-none absolute left-1/2 top-0 hidden h-full w-0.5 -translate-x-1/2 md:block">
-        <div className="h-full w-full bg-gradient-to-b from-transparent via-border/60 to-transparent" />
-      </div>
+    <div className="relative mx-auto max-w-3xl">
+      {/* Timeline spine */}
+      <div className="pointer-events-none absolute left-4 top-0 h-full w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-border/60 to-transparent md:left-32" />
 
-      <div className="space-y-16 md:space-y-20">
+      <div className="space-y-12 md:space-y-16">
         {items.map((entry, index) => (
           <TimelineEntry key={entry._id} entry={entry} index={index} />
         ))}

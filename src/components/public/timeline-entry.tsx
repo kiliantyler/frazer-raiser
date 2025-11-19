@@ -1,80 +1,76 @@
 import { TimelineDateMarker } from '@/components/public/timeline/timeline-date-marker'
 import { TimelineHeroImage } from '@/components/public/timeline/timeline-hero-image'
+import { TimelinePartContent } from '@/components/public/timeline/timeline-part-content'
 import { TimelineTextContent } from '@/components/public/timeline/timeline-text-content'
 import { formatLongDate, getAuthorInitials } from '@/lib/utils/format'
-import type { TimelineUpdate } from '@/types/updates'
+import type { TimelineItem } from '@/types/updates'
+import { Wrench } from 'lucide-react'
 import Link from 'next/link'
 
-export function TimelineEntry({ entry, index }: { entry: TimelineUpdate; index: number }) {
-  const displayDate = entry.eventDate ?? entry.publishedAt
+export function TimelineEntry({ entry }: { entry: TimelineItem; index: number }) {
+  const displayDate = entry.type === 'update' ? (entry.eventDate ?? entry.publishedAt) : entry.date
   const dateStr = formatLongDate(displayDate)
-  const authorInitials = getAuthorInitials(entry.authorName)
-  const isLeft = index % 2 === 0
 
-  return (
-    <div className="relative py-8 md:py-12">
-      <TimelineDateMarker dateStr={dateStr} />
+  // Render logic for regular updates
+  if (entry.type === 'update') {
+    const authorInitials = getAuthorInitials(entry.authorName)
+    return (
+      <div className="relative">
+        {/* Mobile Date (above content) */}
+        <div className="mb-2 pl-12 md:hidden">
+          <span className="text-xs font-medium text-muted-foreground">{dateStr}</span>
+        </div>
 
-      {/* Horizontal connector from spine to content (desktop) */}
-      <div
-        className={`pointer-events-none absolute top-12 left-1/2 hidden h-px w-[calc(50%-2rem)] -translate-x-1/2 md:block ${
-          isLeft
-            ? 'bg-gradient-to-l from-border/50 via-border/30 to-transparent'
-            : 'bg-gradient-to-r from-transparent via-border/30 to-border/50'
-        }`}
-      />
+        {/* Desktop Date (left column) */}
+        <div className="absolute left-4 top-8 hidden -translate-x-full pr-8 md:block md:left-32 md:w-32">
+          <TimelineDateMarker dateStr={dateStr} />
+        </div>
 
-      <Link href={`/updates/${entry.slug}`} className="group block">
-        {/* Mobile: stack image then text */}
-        <div className="space-y-5 md:hidden">
-          <TimelineHeroImage image={entry.heroImage} alt={entry.title} />
-          <div className="rounded-2xl border border-border/50 bg-card/80 p-5 shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
-            <div className="mb-4 text-xs font-medium uppercase tracking-wider text-muted-foreground">{dateStr}</div>
-            <TimelineTextContent
-              title={entry.title}
-              excerpt={entry.excerpt}
-              authorName={entry.authorName}
-              authorAvatarUrl={entry.authorAvatarUrl}
-              authorInitials={authorInitials}
-            />
+        {/* Dot on spine */}
+        <div className="absolute left-4 top-8 size-2.5 -translate-x-1/2 rounded-full border-2 border-background bg-primary shadow-sm md:left-32" />
+
+        <Link href={`/updates/${entry.slug}`} className="group block pl-12 md:pl-44">
+          <div className="space-y-6">
+            <TimelineHeroImage image={entry.heroImage} alt={entry.title} />
+
+            <div className="md:pr-10">
+              <TimelineTextContent
+                title={entry.title}
+                excerpt={entry.excerpt}
+                authorName={entry.authorName}
+                authorAvatarUrl={entry.authorAvatarUrl}
+                authorInitials={authorInitials}
+              />
+            </div>
           </div>
-        </div>
+        </Link>
+      </div>
+    )
+  }
 
-        {/* Desktop: hero on one side, text on the other, alternating */}
-        <div className="hidden md:grid md:grid-cols-2 md:gap-12 md:items-center">
-          {isLeft ? (
-            <>
-              <div className="flex flex-col justify-center pr-10">
-                <TimelineTextContent
-                  title={entry.title}
-                  excerpt={entry.excerpt}
-                  authorName={entry.authorName}
-                  authorAvatarUrl={entry.authorAvatarUrl}
-                  authorInitials={authorInitials}
-                />
-              </div>
-              <div className="transition-transform duration-500 group-hover:scale-[1.02]">
-                <TimelineHeroImage image={entry.heroImage} alt={entry.title} />
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="transition-transform duration-500 group-hover:scale-[1.02]">
-                <TimelineHeroImage image={entry.heroImage} alt={entry.title} />
-              </div>
-              <div className="flex flex-col justify-center pl-10">
-                <TimelineTextContent
-                  title={entry.title}
-                  excerpt={entry.excerpt}
-                  authorName={entry.authorName}
-                  authorAvatarUrl={entry.authorAvatarUrl}
-                  authorInitials={authorInitials}
-                />
-              </div>
-            </>
-          )}
+  // Render logic for parts
+  return (
+    <div className="relative">
+      {/* Mobile Date (above content) */}
+      <div className="mb-2 pl-12 md:hidden">
+        <span className="text-xs font-medium text-muted-foreground">{dateStr}</span>
+      </div>
+
+      {/* Desktop Date (left column) */}
+      <div className="absolute left-4 top-1/2 hidden -translate-y-1/2 -translate-x-full pr-8 md:block md:left-32 md:w-32">
+        <TimelineDateMarker dateStr={dateStr} />
+      </div>
+
+      {/* Dot on spine (wrench icon for parts?) */}
+      <div className="absolute left-4 top-1/2 flex size-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background shadow-sm md:left-32">
+        <Wrench className="size-3 text-muted-foreground" />
+      </div>
+
+      <div className="pl-12 md:pl-44">
+        <div className="max-w-md">
+          <TimelinePartContent title={entry.title} priceCents={entry.priceCents} vendor={entry.vendor} />
         </div>
-      </Link>
+      </div>
     </div>
   )
 }

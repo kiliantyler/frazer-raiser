@@ -33,10 +33,10 @@ export function TimelineTextContent({
             )}
           </Avatar>
           <div className="flex flex-col">
-            <span className="text-sm font-medium text-foreground">{authorName}</span>
             <span className="hidden text-[11px] uppercase tracking-[0.18em] text-muted-foreground md:inline">
-              Entry author
+              Author
             </span>
+            <span className="text-sm font-medium text-foreground">{authorName}</span>
           </div>
         </div>
         <span className="inline-flex items-center gap-1.5 text-xs font-medium text-primary transition-all group-hover:gap-2">

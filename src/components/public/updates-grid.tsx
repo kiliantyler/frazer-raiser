@@ -1,11 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatLongDate, getAuthorInitials } from '@/lib/utils/format'
+import type { TimelineItem, TimelineUpdate } from '@/types/updates'
 import Link from 'next/link'
-import { type TimelineUpdate } from './updates-timeline'
 
-export function GridUpdatesList({ items }: { items: Array<TimelineUpdate> }) {
-  if (items.length === 0) {
+export function GridUpdatesList({ items }: { items: Array<TimelineItem> }) {
+  const updates = items.filter((item): item is TimelineUpdate => item.type === 'update')
+
+  if (updates.length === 0) {
     return (
       <div className="py-10 text-center sm:py-12">
         <p className="text-sm text-muted-foreground sm:text-base">
@@ -17,7 +19,7 @@ export function GridUpdatesList({ items }: { items: Array<TimelineUpdate> }) {
 
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map(item => {
+      {updates.map(item => {
         const displayDate = item.eventDate
           ? formatLongDate(item.eventDate)
           : item.publishedAt
