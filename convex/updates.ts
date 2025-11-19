@@ -243,41 +243,66 @@ export const getBySlug = query({
 
 export const listPublicForTimeline = query({
   args: {},
-  returns: v.array(
-    v.object({
-      _id: v.id('updates'),
-      title: v.string(),
-      slug: v.string(),
-      content: v.string(),
-      excerpt: v.string(),
-      publishedAt: v.number(),
-      createdAt: v.number(),
-      eventDate: v.optional(v.number()),
-      authorName: v.string(),
-      authorAvatarUrl: v.optional(v.string()),
-      heroImage: v.union(
+  returns: v.object({
+    items: v.array(
+      v.union(
         v.object({
-          _id: v.id('images'),
-          url: v.string(),
-          width: v.number(),
-          height: v.number(),
+          type: v.literal('update'),
+          _id: v.id('updates'),
+          title: v.string(),
+          slug: v.string(),
+          content: v.string(),
+          excerpt: v.string(),
+          publishedAt: v.number(),
+          createdAt: v.number(),
+          eventDate: v.optional(v.number()),
+          authorName: v.string(),
+          authorAvatarUrl: v.optional(v.string()),
+          heroImage: v.union(
+            v.object({
+              _id: v.id('images'),
+              url: v.string(),
+              width: v.number(),
+              height: v.number(),
+            }),
+            v.null(),
+          ),
         }),
-        v.null(),
+        v.object({
+          type: v.literal('part'),
+          _id: v.id('parts'),
+          title: v.string(),
+          priceCents: v.number(),
+          date: v.number(),
+          createdAt: v.number(),
+          url: v.optional(v.string()),
+          vendor: v.optional(v.string()),
+          heroImage: v.union(
+            v.object({
+              _id: v.id('images'),
+              url: v.string(),
+              width: v.number(),
+              height: v.number(),
+            }),
+            v.null(),
+          ),
+        }),
       ),
-    }),
-  ),
+    ),
+    totalSpentCents: v.number(),
+  }),
   handler: async ctx => {
-    const rows = await ctx.db
+    const updates = await ctx.db
       .query('updates')
       .filter(q => q.eq(q.field('publishStatus'), 'published'))
       .collect()
 
-    // Sort by eventDate (or publishedAt/createdAt fallback), newest first
-    rows.sort((a, b) => {
-      const aDate = a.eventDate ?? a.publishedAt ?? a.createdAt
-      const bDate = b.eventDate ?? b.publishedAt ?? b.createdAt
-      return bDate - aDate
-    })
+    const parts = await ctx.db
+      .query('parts')
+      .filter(q => q.eq(q.field('isForCar'), true))
+      .collect()
+
+    const totalSpentCents = parts.reduce((acc, part) => acc + part.priceCents, 0)
 
     // Helper to strip markdown or HTML and create excerpt
     const createExcerpt = (update: { content: string; contentHtml?: string }, maxLength = 200): string => {
@@ -305,8 +330,8 @@ export const listPublicForTimeline = query({
     }
 
     // Resolve hero images and create excerpts
-    const results = await Promise.all(
-      rows.map(async update => {
+    const processedUpdates = await Promise.all(
+      updates.map(async update => {
         const imageIds = await resolveUpdateImageIds(ctx, update._id as Id<'updates'>, update.imageIds)
 
         const heroImageId = imageIds[0]
@@ -328,6 +353,7 @@ export const listPublicForTimeline = query({
         const excerpt = createExcerpt(update)
 
         return {
+          type: 'update' as const,
           _id: update._id,
           title: update.title,
           slug: update.slug,
@@ -343,7 +369,52 @@ export const listPublicForTimeline = query({
       }),
     )
 
-    return results
+    const processedParts = await Promise.all(
+      parts.map(async part => {
+        let heroImage = null
+        // Use the first image if available
+        if (part.imageIds && part.imageIds.length > 0) {
+          const firstImageId = part.imageIds[0]
+          if (firstImageId) {
+            const img = await ctx.db.get(firstImageId)
+            if (img) {
+              heroImage = {
+                _id: img._id,
+                url: img.url,
+                width: img.width,
+                height: img.height,
+              }
+            }
+          }
+        }
+
+        return {
+          type: 'part' as const,
+          _id: part._id,
+          title: part.name,
+          priceCents: part.priceCents,
+          date: part.purchasedOn ?? part.installedOn ?? part.createdAt,
+          createdAt: part.createdAt,
+          url: part.sourceUrl,
+          vendor: part.vendor,
+          heroImage,
+        }
+      }),
+    )
+
+    const allItems = [...processedUpdates, ...processedParts]
+
+    // Sort by eventDate (or publishedAt/createdAt fallback), newest first
+    allItems.sort((a, b) => {
+      const aDate = a.type === 'update' ? a.publishedAt : a.date
+      const bDate = b.type === 'update' ? b.publishedAt : b.date
+      return bDate - aDate
+    })
+
+    return {
+      items: allItems,
+      totalSpentCents,
+    }
   },
 })
 
