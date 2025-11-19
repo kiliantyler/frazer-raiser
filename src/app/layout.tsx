@@ -8,7 +8,17 @@ import { bodyFont, displayFont, frazerFont } from './fonts'
 export const metadata: Metadata = {
   title: 'Frazer Raiser',
   description: 'Restoration of a 1948 Frazer',
-  icons: [{ rel: 'icon', url: '/favicon.ico' }],
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-96x96.png', type: 'image/png', sizes: '96x96' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png' },
+    ],
+  },
+  manifest: '/site.webmanifest',
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
