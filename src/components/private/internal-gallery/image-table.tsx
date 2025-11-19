@@ -24,7 +24,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useMutation } from 'convex/react'
+import { useMutation, useQuery } from 'convex/react'
 import { GripVertical, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
@@ -117,22 +117,42 @@ export function ImageTable({
   images: Array<{
     _id: Id<'images'>
     url: string
-    dateTaken?: number
+    dateTaken?: number | null
     isPublished?: boolean
     order?: number
     createdAt: number
   }>
   emptyMessage?: string
 }) {
-  const [images, setImages] = useState(initialImages)
+  // Use Convex query to reactively fetch images, falling back to initialImages for SSR
+  const queriedImages = useQuery(api.images.listInternal, { limit: 100 })
+  const serverImages = queriedImages ?? initialImages
+  // Maintain local state for optimistic updates during drag operations
+  const [localImages, setLocalImages] = useState<typeof serverImages | null>(null)
+  const images = localImages ?? serverImages
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const updateImage = useMutation(api.images.updateImage)
   const reorderImages = useMutation(api.images.reorderImages)
   const deleteImages = useMutation(api.images.deleteImages)
 
+  // Sync local state when server data changes (but not during drag)
   useEffect(() => {
-    setImages(initialImages)
-  }, [initialImages])
+    if (localImages === null) {
+      // Already using server data, no need to update
+      return
+    }
+    // If server data has changed significantly (different items), sync it
+    // This handles cases where data changes from other sources
+    const serverIds = new Set(serverImages.map((img: { _id: Id<'images'> }) => img._id))
+    const localIds = new Set(localImages.map((img: { _id: Id<'images'> }) => img._id))
+    const idsMatch = serverIds.size === localIds.size && [...serverIds].every(id => localIds.has(id))
+
+    // Only sync if items are different (not just reordered)
+    // This prevents clearing local state during the drag animation
+    if (!idsMatch) {
+      setLocalImages(null)
+    }
+  }, [serverImages, localImages])
 
   const sensors = useSensors(
     useSensor(PointerSensor),
