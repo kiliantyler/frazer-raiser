@@ -19,6 +19,24 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/site.webmanifest',
+  openGraph: {
+    title: 'Frazer Raiser',
+    description: 'Restoration of a 1948 Frazer',
+    images: [
+      {
+        url: '/opengraph-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Frazer Raiser',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Frazer Raiser',
+    description: 'Restoration of a 1948 Frazer',
+    images: ['/opengraph-image.jpg'],
+  },
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
