@@ -129,7 +129,7 @@ export function UpdateEditor({ mode, updateId, initialUpdate }: UpdateEditorProp
           {/* Always render imageId input, even if empty, to ensure it's included in form data */}
           <input type="hidden" name="imageId" value={imageUpload.imageId || ''} />
           <input type="hidden" name="title" value={title} />
-          <input type="hidden" name="eventDate" value={eventDate?.toISOString() || ''} />
+          <input type="hidden" name="eventDate" value={eventDate ? eventDate.toISOString().split('T')[0] : ''} />
 
           {/* Full-page editor area - no box, just the editor */}
           <div className="flex-1 overflow-auto min-h-0">

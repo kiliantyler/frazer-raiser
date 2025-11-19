@@ -10,16 +10,6 @@ export type Update = {
   imageIds: string[]
 }
 
-export type JournalUpdate = {
-  _id: string
-  title: string
-  slug?: string
-  publishStatus?: 'draft' | 'published'
-  createdAt: number
-  publishedAt?: number
-  eventDate?: number
-}
-
 export type TimelineUpdate = {
   _id: string
   title: string
