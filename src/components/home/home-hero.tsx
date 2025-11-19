@@ -1,9 +1,31 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { ScrollIndicator } from './scroll-indicator'
 
 export function HomeHero() {
+  const [isScrollPromptVisible, setIsScrollPromptVisible] = useState(true)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 40) {
+        setIsScrollPromptVisible(false)
+      } else {
+        setIsScrollPromptVisible(true)
+      }
+    }
+
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
   return (
     <section className="relative isolate flex h-dvh items-center overflow-hidden">
       <div aria-hidden="true" className="absolute inset-0 -z-10">
@@ -44,7 +66,10 @@ export function HomeHero() {
           </div>
         </div>
       </div>
-      <div className="pointer-events-none absolute inset-x-0 bottom-8 flex flex-col items-center justify-center gap-2 z-10 pb-2">
+      <div
+        className={`pointer-events-none absolute inset-x-0 bottom-8 flex flex-col items-center justify-center gap-2 z-10 pb-2 transition-opacity duration-300 ${
+          isScrollPromptVisible ? 'opacity-100' : 'opacity-0'
+        }`}>
         <span className="text-xs font-medium uppercase tracking-widest text-white/80 animate-pulse">
           Scroll for more
         </span>
