@@ -164,32 +164,40 @@ export function ImageTable({
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event
     if (over && active.id !== over.id) {
-      setImages(items => {
-        const oldIndex = items.findIndex(i => i._id === active.id)
-        const newIndex = items.findIndex(i => i._id === over.id)
-        const newItems = arrayMove(items, oldIndex, newIndex)
+      const currentImages = localImages ?? serverImages
+      const oldIndex = currentImages.findIndex((i: { _id: Id<'images'> }) => i._id === active.id)
+      const newIndex = currentImages.findIndex((i: { _id: Id<'images'> }) => i._id === over.id)
+      const newItems = arrayMove(currentImages, oldIndex, newIndex)
 
-        // Optimistic update
-        const updates = newItems.map((item, index) => ({
-          id: item._id,
-          order: index,
-        }))
-        reorderImages({ updates })
+      // Optimistic update - maintain local state until query refetches
+      setLocalImages(newItems)
 
-        return newItems
-      })
+      // Update server
+      const updates = newItems.map((item: { _id: Id<'images'> }, index: number) => ({
+        id: item._id,
+        order: index,
+      }))
+      await reorderImages({ updates })
+
+      // Clear local state after a short delay to allow animation to complete
+      // The query will refetch and update automatically
+      setTimeout(() => {
+        setLocalImages(null)
+      }, 300)
+    } else {
+      // If drag was cancelled, clear local state
+      setLocalImages(null)
     }
   }
 
-  const handleUpdate = async (id: Id<'images'>, updates: { dateTaken?: number; isPublished?: boolean }) => {
-    // Optimistic update local state
-    setImages(images.map(img => (img._id === id ? { ...img, ...updates } : img)))
+  const handleUpdate = async (id: Id<'images'>, updates: { dateTaken?: number | null; isPublished?: boolean }) => {
+    // The query will automatically refetch after the mutation
     await updateImage({ imageId: id, ...updates })
   }
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedIds(new Set(images.map(i => i._id)))
+      setSelectedIds(new Set(images.map((i: { _id: Id<'images'> }) => i._id)))
     } else {
       setSelectedIds(new Set())
     }
