@@ -32,6 +32,11 @@ export const createOnUpload = mutation({
     if (!uploader) {
       throw new Error('Uploader not recognized')
     }
+
+    // Get the current max order to append the new image at the end
+    const lastImage = await ctx.db.query('images').withIndex('by_order').order('desc').first()
+    const newOrder = (lastImage?.order ?? 0) + 1
+
     return await ctx.db.insert('images', {
       utKey: args.utKey,
       url: args.url,
@@ -44,6 +49,8 @@ export const createOnUpload = mutation({
       uploaderId: uploader._id,
       visibility: args.visibility,
       createdAt: Date.now(),
+      order: newOrder,
+      isPublished: false,
     })
   },
 })
@@ -128,9 +135,16 @@ export const listPublic = query({
   handler: async ctx => {
     const rows = await ctx.db
       .query('images')
-      .filter(q => q.eq(q.field('visibility'), 'public'))
+      .withIndex('by_isPublished', q => q.eq('isPublished', true))
       .collect()
-    return rows.map(i => ({ _id: i._id, url: i.url, width: i.width, height: i.height, tags: i.tags }))
+
+    const sorted = rows.toSorted((a, b) => {
+      const orderA = a.order ?? Number.MAX_SAFE_INTEGER
+      const orderB = b.order ?? Number.MAX_SAFE_INTEGER
+      return orderA - orderB
+    })
+
+    return sorted.map(i => ({ _id: i._id, url: i.url, width: i.width, height: i.height, tags: i.tags }))
   },
 })
 
@@ -231,5 +245,92 @@ export const deleteById = mutation({
   handler: async (ctx, args) => {
     await ctx.db.delete(args.imageId)
     return null
+  },
+})
+
+export const updateImage = mutation({
+  args: {
+    imageId: v.id('images'),
+    dateTaken: v.optional(v.number()),
+    isPublished: v.optional(v.boolean()),
+    tags: v.optional(v.array(v.string())),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.imageId, {
+      dateTaken: args.dateTaken,
+      isPublished: args.isPublished,
+      tags: args.tags,
+    })
+    return null
+  },
+})
+
+export const deleteImages = mutation({
+  args: { imageIds: v.array(v.id('images')) },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    for (const id of args.imageIds) {
+      await ctx.db.delete(id)
+    }
+    return null
+  },
+})
+
+export const reorderImages = mutation({
+  args: {
+    updates: v.array(
+      v.object({
+        id: v.id('images'),
+        order: v.number(),
+      }),
+    ),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    for (const update of args.updates) {
+      await ctx.db.patch(update.id, { order: update.order })
+    }
+    return null
+  },
+})
+
+export const listInternal = query({
+  args: { limit: v.optional(v.number()) },
+  returns: v.array(
+    v.object({
+      _id: v.id('images'),
+      url: v.string(),
+      width: v.number(),
+      height: v.number(),
+      createdAt: v.number(),
+      dateTaken: v.optional(v.number()),
+      order: v.optional(v.number()),
+      isPublished: v.optional(v.boolean()),
+      tags: v.optional(v.array(v.string())),
+    }),
+  ),
+  handler: async (ctx, args) => {
+    const allImages = await ctx.db.query('images').collect()
+
+    const sorted = allImages.toSorted((a, b) => {
+      const orderA = a.order ?? Number.MAX_SAFE_INTEGER
+      const orderB = b.order ?? Number.MAX_SAFE_INTEGER
+      if (orderA !== orderB) return orderA - orderB
+      return b.createdAt - a.createdAt
+    })
+
+    const result = args.limit ? sorted.slice(0, args.limit) : sorted
+    return result.map(i => ({
+      _id: i._id,
+      url: i.url,
+      width: i.width,
+      height: i.height,
+      createdAt: i.createdAt,
+      dateTaken: i.dateTaken,
+      order: i.order,
+      isPublished: i.isPublished,
+      tags: i.tags,
+    }))
   },
 })
