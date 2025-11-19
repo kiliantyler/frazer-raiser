@@ -20,24 +20,9 @@ export default async function PublicUpdatesPage() {
   const { items, totalSpentCents } = await getUpdates()
 
   return (
-    <main className="relative mx-auto max-w-5xl px-6 pt-20 pb-12 sm:pt-24">
-      <div className="absolute right-6 top-20 flex flex-col items-end gap-3 sm:flex-row sm:items-center sm:top-24">
-        <SpendingWidget amount={totalSpentCents} />
-        <div className="hidden h-4 w-px bg-border sm:block" />
-        <div className="flex items-center gap-3">
-          <UpdatesViewControls />
-          <Link
-            href="/api/rss"
-            className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
-            aria-label="Subscribe to RSS feed"
-            title="RSS Feed">
-            <Rss className="size-3.5" />
-            <span className="hidden sm:inline">RSS</span>
-          </Link>
-        </div>
-      </div>
+    <main className="relative mx-auto max-w-5xl px-6 pt-24 pb-12 sm:pt-32">
       <section aria-label="Project journal updates">
-        <div className="mb-10 text-center sm:mb-12">
+        <div className="mb-8 text-center sm:mb-12">
           <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-muted-foreground sm:text-xs">
             Journal & updates
           </p>
@@ -47,6 +32,22 @@ export default async function PublicUpdatesPage() {
           <p className="mt-3 mx-auto max-w-2xl text-sm text-pretty text-muted-foreground sm:text-base">
             Progress notes, parts arrivals, small wins, and occasional setbacks as the Frazer slowly comes back to life.
           </p>
+
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-6">
+            <SpendingWidget amount={totalSpentCents} />
+            <div className="hidden h-4 w-px bg-border sm:block" />
+            <div className="flex items-center gap-3">
+              <UpdatesViewControls />
+              <Link
+                href="/api/rss"
+                className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                aria-label="Subscribe to RSS feed"
+                title="RSS Feed">
+                <Rss className="size-3.5" />
+                <span className="hidden sm:inline">RSS</span>
+              </Link>
+            </div>
+          </div>
         </div>
 
         <SectionFadeIn delayMs={80}>
