@@ -302,7 +302,8 @@ export const listPublicForTimeline = query({
       .filter(q => q.eq(q.field('isForCar'), true))
       .collect()
 
-    const totalSpentCents = parts.reduce((acc, part) => acc + part.priceCents, 0)
+    const activeParts = parts.filter(p => p.status !== 'cancelled')
+    const totalSpentCents = activeParts.reduce((acc, part) => acc + part.priceCents * (part.quantity ?? 1), 0)
 
     // Helper to strip markdown or HTML and create excerpt
     const createExcerpt = (update: { content: string; contentHtml?: string }, maxLength = 200): string => {
@@ -370,7 +371,7 @@ export const listPublicForTimeline = query({
     )
 
     const processedParts = await Promise.all(
-      parts.map(async part => {
+      activeParts.map(async part => {
         let heroImage = null
         // Use the first image if available
         if (part.imageIds && part.imageIds.length > 0) {

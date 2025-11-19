@@ -12,9 +12,13 @@ export default async function PartsCostsPage() {
   // Read request data before any non-deterministic libs (Convex) to satisfy Next RSC constraint
   await withAuth({ ensureSignedIn: true })
   const [parts, suppliers] = (await Promise.all([getParts(), getSuppliers()])) as [PartListItem[], Supplier[]]
-  const totalCents = parts.reduce((sum: number, p: PartListItem) => sum + (p.priceCents ?? 0) * (p.quantity ?? 1), 0)
-  const totalParts = parts.reduce((sum: number, p: PartListItem) => sum + (p.quantity ?? 1), 0)
-  const partsForCar = parts.filter(p => p.isForCar === true)
+  const activeParts = parts.filter(p => p.status !== 'cancelled')
+  const totalCents = activeParts.reduce(
+    (sum: number, p: PartListItem) => sum + (p.priceCents ?? 0) * (p.quantity ?? 1),
+    0,
+  )
+  const totalParts = activeParts.reduce((sum: number, p: PartListItem) => sum + (p.quantity ?? 1), 0)
+  const partsForCar = activeParts.filter(p => p.isForCar === true)
   const totalCentsForCar = partsForCar.reduce(
     (sum: number, p: PartListItem) => sum + (p.priceCents ?? 0) * (p.quantity ?? 1),
     0,

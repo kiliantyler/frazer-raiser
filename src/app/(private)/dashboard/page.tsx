@@ -30,7 +30,8 @@ export default async function DashboardPage() {
     getRecentUpdates(),
   ])
 
-  const totalSpentCents = parts.reduce((sum, p) => sum + p.priceCents * (p.quantity ?? 1), 0)
+  const activeParts = parts.filter(p => p.status !== 'cancelled')
+  const totalSpentCents = activeParts.reduce((sum, p) => sum + p.priceCents * (p.quantity ?? 1), 0)
   const totalSpent = totalSpentCents / 100
   const budgetCents = settings.budgetCents
   const budget = budgetCents / 100
