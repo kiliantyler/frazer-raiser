@@ -234,12 +234,12 @@ export function ImageTable({
     )
       return
     const sorted = [...images].toSorted((a, b) => (a.dateTaken ?? 0) - (b.dateTaken ?? 0))
-    setImages(sorted)
     const updates = sorted.map((item, index) => ({
       id: item._id,
       order: index,
     }))
     await reorderImages({ updates })
+    // The query will automatically refetch after the mutation
   }
 
   if (images.length === 0) {
@@ -291,16 +291,27 @@ export function ImageTable({
               </tr>
             </thead>
             <tbody>
-              <SortableContext items={images.map(i => i._id)} strategy={verticalListSortingStrategy}>
-                {images.map(image => (
-                  <SortableRow
-                    key={image._id}
-                    image={image}
-                    isSelected={selectedIds.has(image._id)}
-                    onSelect={checked => handleSelect(image._id, checked)}
-                    onUpdate={handleUpdate}
-                  />
-                ))}
+              <SortableContext
+                items={images.map((i: { _id: Id<'images'> }) => i._id)}
+                strategy={verticalListSortingStrategy}>
+                {images.map(
+                  (image: {
+                    _id: Id<'images'>
+                    url: string
+                    dateTaken?: number | null
+                    isPublished?: boolean
+                    order?: number
+                    createdAt: number
+                  }) => (
+                    <SortableRow
+                      key={image._id}
+                      image={image}
+                      isSelected={selectedIds.has(image._id)}
+                      onSelect={checked => handleSelect(image._id, checked)}
+                      onUpdate={handleUpdate}
+                    />
+                  ),
+                )}
               </SortableContext>
             </tbody>
           </table>
