@@ -97,6 +97,7 @@ export const getById = query({
       url: v.string(),
       width: v.number(),
       height: v.number(),
+      utKey: v.string(),
     }),
     v.null(),
   ),
@@ -108,6 +109,7 @@ export const getById = query({
       url: img.url,
       width: img.width,
       height: img.height,
+      utKey: img.utKey,
     }
   },
 })
@@ -220,5 +222,14 @@ export const listLatest = query({
       }))
       .toSorted((a, b) => b.createdAt - a.createdAt)
     return args.limit ? sorted.slice(0, args.limit) : sorted
+  },
+})
+
+export const deleteById = mutation({
+  args: { imageId: v.id('images') },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.imageId)
+    return null
   },
 })
