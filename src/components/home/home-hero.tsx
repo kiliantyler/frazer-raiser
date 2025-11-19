@@ -7,7 +7,7 @@ export function HomeHero() {
   return (
     <section className="relative isolate flex h-dvh items-center overflow-hidden">
       <div aria-hidden="true" className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[url('/kaiser.jpg')] bg-cover bg-center bg-no-repeat" />
+        <div className="absolute inset-0 bg-[url('/manhattan.webp')] bg-cover bg-center bg-no-repeat" />
         <div className="absolute inset-0 bg-linear-to-b from-black/85 via-black/75 to-black/85" />
       </div>
       <div className="mx-auto flex w-full max-w-7xl px-6 py-16 sm:py-24 lg:py-32">
@@ -55,7 +55,7 @@ export function HomeHero() {
         className="absolute bottom-0 left-0 right-0 h-16 bg-linear-to-t from-background to-transparent"
       />
       <div className="absolute bottom-4 right-6 z-20">
-        <p className="text-[10px] font-medium uppercase tracking-widest text-white/20">*1947 Kaiser pictured</p>
+        <p className="text-[10px] font-medium uppercase tracking-widest text-white/20">*Manhattan edition pictured</p>
       </div>
     </section>
   )
