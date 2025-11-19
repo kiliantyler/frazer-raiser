@@ -24,6 +24,11 @@ export async function getLatestImages(limit: number, visibility: 'private' | 'pu
   return await fetchQuery(api.images.listInternal, { limit })
 }
 
+export async function getInternalImages(limit: number) {
+  'use cache'
+  return await fetchQuery(api.images.listInternal, { limit })
+}
+
 export async function getSettings() {
   'use cache'
   return await fetchQuery(api.settings.get, {})
