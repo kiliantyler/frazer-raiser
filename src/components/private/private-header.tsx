@@ -3,6 +3,7 @@
 import { PartsCostsHeaderAction } from '@/components/private/parts-costs/parts-costs-header-action'
 import { SupplierDialog } from '@/components/private/suppliers/supplier-dialog'
 import { TaskForm } from '@/components/private/tasks/task-form'
+import { WorkLogDialog } from '@/components/private/work-log/work-log-dialog'
 import { Button } from '@/components/ui/button'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { Plus } from 'lucide-react'
@@ -111,6 +112,11 @@ function HeaderActions() {
   // Parts & Costs page
   if (pathname === '/parts-costs') {
     return <PartsCostsHeaderAction />
+  }
+
+  // Work Log page
+  if (pathname === '/work-log') {
+    return <WorkLogDialog />
   }
 
   // Default fallback - no actions
