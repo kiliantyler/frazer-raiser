@@ -71,6 +71,20 @@ export const getByWorkosUserId = query({
   },
 })
 
+export const me = query({
+  args: {},
+  handler: async ctx => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      return null
+    }
+    return await ctx.db
+      .query('users')
+      .filter(q => q.eq(q.field('workosUserId'), identity.subject))
+      .unique()
+  },
+})
+
 export const list = query({
   args: {},
   returns: v.array(
