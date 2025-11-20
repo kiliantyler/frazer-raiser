@@ -106,12 +106,22 @@ export default defineSchema({
   workLogs: defineTable({
     date: v.number(),
     hours: v.number(),
-    description: v.string(),
+    description: v.optional(v.string()),
+    title: v.string(),
+    tags: v.optional(v.array(v.string())),
+    imageIds: v.optional(v.array(v.id('images'))),
+    contributorIds: v.optional(v.array(v.id('contributors'))),
     taskId: v.optional(v.id('tasks')),
     partId: v.optional(v.id('parts')),
     costDeltaCents: v.optional(v.number()),
     authorId: v.id('users'),
   }).index('by_date', ['date']),
+
+  contributors: defineTable({
+    name: v.string(),
+    userId: v.optional(v.id('users')),
+    createdAt: v.number(),
+  }).index('by_user_id', ['userId']),
 
   guestbook: defineTable({
     name: v.string(),
