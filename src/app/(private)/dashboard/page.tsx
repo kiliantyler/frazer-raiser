@@ -63,26 +63,22 @@ export default async function DashboardPage() {
               <EmptyState message="No recent activity" />
             ) : (
               recentActivity.map(activity => {
-                const Icon = getActivityIcon(activity.description)
+                const description = activity.description || activity.title
+                const Icon = getActivityIcon(description)
                 return (
-                  <ActivityItem
-                    key={activity._id}
-                    description={activity.description}
-                    timestamp={activity.date}
-                    icon={Icon}
-                  />
+                  <ActivityItem key={activity._id} description={description} timestamp={activity.date} icon={Icon} />
                 )
               })
             )}
           </div>
         </SectionCard>
 
-        <SectionCard title="Latest Photos" viewAllHref="/internal-gallery">
-          <ImageGrid images={latestImages} />
-        </SectionCard>
-
         <SectionCard title="Journal Updates" viewAllHref="/journal">
           <JournalUpdatesPreview updates={recentUpdates} />
+        </SectionCard>
+
+        <SectionCard title="Latest Photos" viewAllHref="/internal-gallery" className="md:col-span-2">
+          <ImageGrid images={latestImages} />
         </SectionCard>
       </div>
     </div>

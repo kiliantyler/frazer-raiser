@@ -13,7 +13,7 @@ export function ImageGrid({
   }
 
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
       {images.map(image => (
         <div key={image._id} className="relative aspect-square overflow-hidden rounded-md bg-muted">
           <Image
