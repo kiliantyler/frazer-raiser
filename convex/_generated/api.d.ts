@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as contributors from "../contributors.js";
 import type * as guestbook from "../guestbook.js";
 import type * as images from "../images.js";
 import type * as parts from "../parts.js";
@@ -25,6 +26,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  contributors: typeof contributors;
   guestbook: typeof guestbook;
   images: typeof images;
   parts: typeof parts;
