@@ -27,7 +27,7 @@ import { UploadButton } from '@uploadthing/react'
 import { ContributorSelect } from './contributor-select'
 
 interface WorkLogDialogProps {
-  initialData?: WorkLogItem
+  initialData?: Partial<WorkLogItem>
   trigger?: React.ReactNode
   open?: boolean
   onOpenChange?: (open: boolean) => void
@@ -111,12 +111,12 @@ export function WorkLogDialog({ initialData, trigger, open: controlledOpen, onOp
       )}
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>{initialData ? 'Edit Work Log Entry' : 'Add Work Log Entry'}</DialogTitle>
+          <DialogTitle>{initialData && initialData._id ? 'Edit Work Log Entry' : 'Add Work Log Entry'}</DialogTitle>
           <DialogDescription>Log your work on the car. Click save when you&apos;re done.</DialogDescription>
         </DialogHeader>
         <form
           action={async formData => {
-            if (initialData) {
+            if (initialData && initialData._id) {
               // Handle update
               const title = formData.get('title') as string
               const hours = Number.parseFloat(formData.get('hours') as string)
@@ -139,7 +139,7 @@ export function WorkLogDialog({ initialData, trigger, open: controlledOpen, onOp
               await addWorkLogAction(formData)
             }
             setOpen(false)
-            if (!initialData) {
+            if (!initialData || !initialData._id) {
               setImageIds([])
               setTags([])
               // Reset contributors to just me
@@ -212,6 +212,7 @@ export function WorkLogDialog({ initialData, trigger, open: controlledOpen, onOp
           <input type="hidden" name="tags" value={tags.join(',')} />
           <input type="hidden" name="imageIds" value={imageIds.join(',')} />
           <input type="hidden" name="contributorIds" value={selectedContributors.join(',')} />
+          {initialData?.taskId && <input type="hidden" name="taskId" value={initialData.taskId} />}
 
           <DialogFooter>
             <Button type="submit">Save Entry</Button>

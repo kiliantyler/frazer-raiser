@@ -15,4 +15,5 @@ export type WorkLogItem = {
   }
   contributors?: { name: string; avatarUrl?: string }[]
   contributorIds?: Id<'contributors'>[]
+  taskId?: Id<'tasks'>
 }

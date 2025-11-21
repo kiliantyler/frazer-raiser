@@ -17,6 +17,10 @@ export const addEntry = mutation({
   },
   returns: v.id('workLogs'),
   handler: async (ctx, args) => {
+    if (args.taskId) {
+      await ctx.db.patch(args.taskId, { status: 'done', updatedAt: Date.now() })
+    }
+
     return await ctx.db.insert('workLogs', {
       date: args.date,
       hours: args.hours,

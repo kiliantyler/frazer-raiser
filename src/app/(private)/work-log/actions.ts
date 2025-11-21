@@ -25,6 +25,8 @@ export async function addWorkLogAction(formData: FormData) {
     .map(id => id.trim())
     .filter(Boolean) as Id<'contributors'>[]
 
+  const taskId = formData.get('taskId') as Id<'tasks'> | null
+
   if (!title || Number.isNaN(hours)) return
   const { user } = await withAuth({ ensureSignedIn: true })
   if (!user) return
@@ -47,10 +49,11 @@ export async function addWorkLogAction(formData: FormData) {
     tags: tags.length > 0 ? tags : undefined,
     imageIds: imageIds.length > 0 ? imageIds : undefined,
     contributorIds: finalContributorIds.length > 0 ? finalContributorIds : undefined,
-    taskId: undefined,
+    taskId: taskId || undefined,
     partId: undefined,
     costDeltaCents: costDeltaCents ? Math.round(Number(costDeltaCents)) : undefined,
     authorId: me._id,
   })
   revalidatePath('/work-log')
+  revalidatePath('/tasks')
 }
