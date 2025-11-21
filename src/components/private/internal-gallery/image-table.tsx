@@ -282,7 +282,11 @@ export function ImageTable({
       </div>
 
       <div className="rounded-md border">
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <DndContext
+          id="image-table-dnd-context"
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}>
           <table className="w-full">
             <thead className="border-b bg-muted/50">
               <tr>
