@@ -40,16 +40,26 @@ export async function updateTaskStatusAction(formData: FormData) {
   revalidatePath('/tasks')
 }
 
-export async function assignToMeAction(formData: FormData) {
+export async function updateTaskAction(formData: FormData) {
   const taskId = String(formData.get('taskId') ?? '')
-  if (!taskId) return
-  const { user } = await withAuth({ ensureSignedIn: true })
-  if (!user) return
-  const me = await fetchQuery(api.users.getByWorkosUserId, { workosUserId: user.id })
-  if (!me) return
+  const title = String(formData.get('title') ?? '').trim()
+  const description = String(formData.get('description') ?? '').trim()
+  const priority = String(formData.get('priority') ?? '')
+  const dueDateStr = String(formData.get('dueDate') ?? '')
+  const tags = String(formData.get('tags') ?? '')
+    .split(',')
+    .map(t => t.trim())
+    .filter(Boolean)
+
+  if (!taskId || !title) return
+
   await fetchMutation(api.tasks.update, {
     taskId: taskId as unknown as Id<'tasks'>,
-    assignedTo: me._id,
+    title,
+    description: description || undefined,
+    priority: priority as 'low' | 'medium' | 'high',
+    dueDate: dueDateStr ? new Date(dueDateStr).getTime() : undefined,
+    tags: tags.length > 0 ? tags : undefined,
   })
   revalidatePath('/tasks')
 }

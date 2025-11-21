@@ -2,13 +2,15 @@
 
 import { PartsCostsHeaderAction } from '@/components/private/parts-costs/parts-costs-header-action'
 import { SupplierDialog } from '@/components/private/suppliers/supplier-dialog'
-import { TaskForm } from '@/components/private/tasks/task-form'
+import { TaskDialog } from '@/components/private/tasks/task-dialog'
 import { WorkLogDialog } from '@/components/private/work-log/work-log-dialog'
 import { Button } from '@/components/ui/button'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+
+// ...
 
 function HeaderTitle() {
   const pathname = usePathname()
@@ -101,7 +103,7 @@ function HeaderActions() {
 
   // Tasks page
   if (pathname === '/tasks') {
-    return <TaskForm />
+    return <TaskDialog />
   }
 
   // Suppliers page
