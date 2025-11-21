@@ -140,3 +140,30 @@ export const listUpcoming = query({
     return args.limit ? sorted.slice(0, args.limit) : sorted
   },
 })
+
+export const list = query({
+  args: {},
+  returns: v.array(
+    v.object({
+      _id: v.id('tasks'),
+      title: v.string(),
+      description: v.optional(v.string()),
+      status: TaskStatus,
+      priority: TaskPriority,
+      dueDate: v.optional(v.number()),
+      tags: v.optional(v.array(v.string())),
+    }),
+  ),
+  handler: async ctx => {
+    const tasks = await ctx.db.query('tasks').collect()
+    return tasks.map(t => ({
+      _id: t._id,
+      title: t.title,
+      description: t.description,
+      status: t.status,
+      priority: t.priority,
+      dueDate: t.dueDate,
+      tags: t.tags,
+    }))
+  },
+})
