@@ -1,0 +1,135 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    "config:recommended"
+  ],
+  dependencyDashboard: true,
+  labels: [
+    "dependencies"
+  ],
+  rebaseWhen: "behind-base-branch",
+  semanticCommits: "enabled",
+  semanticCommitType: "chore",
+  semanticCommitScope: "deps",
+  automergeType: "pr",
+  automergeStrategy: "squash",
+  packageRules: [
+    {
+      matchUpdateTypes: [
+        "patch",
+        "pin",
+        "digest"
+      ],
+      automerge: true,
+    },
+    {
+      matchManagers: [
+        "npm",
+        "bun"
+      ],
+      rangeStrategy: "pin",
+    },
+    {
+      matchDepTypes: [
+        "devDependencies"
+      ],
+      matchUpdateTypes: [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      automerge: true,
+    },
+    {
+      matchDepTypes: [
+        "dependencies"
+      ],
+      minimumReleaseAge: "12h",
+    },
+    {
+      matchDepTypes: [
+        "dependencies"
+      ],
+      matchUpdateTypes: [
+        "minor"
+      ],
+      automerge: true,
+      minimumReleaseAge: "12h",
+    },
+    {
+      matchDatasources: [
+        "node-version"
+      ],
+      allowedVersions: "<25",
+    },
+    {
+      matchPackageNames: [
+        "@types/node"
+      ],
+      allowedVersions: "<25",
+    },
+    {
+      matchPackageNames: [
+        "typescript",
+        "eslint-config-next",
+        "eslint-config-prettier",
+        "/^@types//",
+        "/^@typescript-eslint//",
+        "/^eslint/",
+        "/^prettier/",
+        "/^prettier-plugin-/",
+      ],
+      groupName: "dev tooling",
+    },
+    {
+      matchPackageNames: [
+        "next",
+        "react",
+        "react-dom"
+      ],
+      groupName: "next/react",
+    },
+    {
+      groupName: "radix-ui",
+      matchPackageNames: [
+        "/^@radix-ui//"
+      ],
+    },
+    {
+      matchPackageNames: [
+        "tailwindcss",
+        "/^@tailwindcss//"
+      ],
+      groupName: "tailwind",
+    },
+    {
+      matchManagers: [
+        "github-actions"
+      ],
+      matchUpdateTypes: [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      automerge: true,
+      pinDigests: true,
+    },
+    {
+      matchPackageNames: [
+        "next"
+      ],
+      minimumReleaseAge: "0 days",
+    }
+  ],
+  lockFileMaintenance: {
+    enabled: true,
+    schedule: [
+      "every weekend"
+    ],
+    automerge: true,
+    automergeType: "pr",
+  },
+  prConcurrentLimit: 0,
+  prHourlyLimit: 0,
+}
