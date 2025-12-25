@@ -143,7 +143,7 @@ export function RichTextEditor({ id, name, initialContentHtml, onChange }: RichT
       const currentHtml = editor.getHTML()
       // Only update if different to prevent flickering
       if (currentHtml !== initialContentHtml) {
-        editor.commands.setContent(initialContentHtml ?? '<p></p>', false)
+        editor.commands.setContent(initialContentHtml ?? '<p></p>', { emitUpdate: false })
         initialContentRef.current = initialContentHtml
       }
     }
