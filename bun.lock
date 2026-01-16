@@ -45,7 +45,7 @@
         "class-variance-authority": "0.7.1",
         "clsx": "2.1.1",
         "cmdk": "1.1.1",
-        "convex": "1.31.4",
+        "convex": "1.31.5",
         "date-fns": "4.1.0",
         "js-cookie": "3.0.5",
         "lucide-react": "0.562.0",
@@ -704,7 +704,7 @@
 
     "comma-separated-tokens": ["comma-separated-tokens@2.0.3", "", {}, "sha512-Fu4hJdvzeylCfQPp9SGWidpzrMs7tTrlu6Vb8XGaRGck8QSNZJJp538Wrb60Lax4fPwR64ViY468OIUTbRlGZg=="],
 
-    "convex": ["convex@1.31.4", "", { "dependencies": { "esbuild": "0.27.0", "prettier": "^3.0.0" }, "peerDependencies": { "@auth0/auth0-react": "^2.0.1", "@clerk/clerk-react": "^4.12.8 || ^5.0.0", "react": "^18.0.0 || ^19.0.0-0 || ^19.0.0" }, "optionalPeers": ["@auth0/auth0-react", "@clerk/clerk-react", "react"], "bin": { "convex": "bin/main.js" } }, "sha512-iDm283Gb/CFRb30cvhH6Z9qlYof6dhtin415FarKUKB3K7gumO0rn8snY0CTvUrThV3UnCtttbuL/1oY7LscyA=="],
+    "convex": ["convex@1.31.5", "", { "dependencies": { "esbuild": "0.27.0", "prettier": "^3.0.0" }, "peerDependencies": { "@auth0/auth0-react": "^2.0.1", "@clerk/clerk-react": "^4.12.8 || ^5.0.0", "react": "^18.0.0 || ^19.0.0-0 || ^19.0.0" }, "optionalPeers": ["@auth0/auth0-react", "@clerk/clerk-react", "react"], "bin": { "convex": "bin/main.js" } }, "sha512-E1IuJKFwMCHDToNGukBPs6c7RFaarR3t8chLF9n98TM5/Tgmj8lM6l7sKM1aJ3VwqGaB4wbeUAPY8osbCOXBhQ=="],
 
     "cookie": ["cookie@0.7.2", "", {}, "sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w=="],
 
@@ -1333,8 +1333,6 @@
     "@workos-inc/node/iron-session": ["iron-session@6.3.1", "", { "dependencies": { "@peculiar/webcrypto": "^1.4.0", "@types/cookie": "^0.5.1", "@types/express": "^4.17.13", "@types/koa": "^2.13.5", "@types/node": "^17.0.41", "cookie": "^0.5.0", "iron-webcrypto": "^0.2.5" }, "peerDependencies": { "express": ">=4", "koa": ">=2", "next": ">=10" }, "optionalPeers": ["express", "koa", "next"] }, "sha512-3UJ7y2vk/WomAtEySmPgM6qtYF1cZ3tXuWX5GsVX4PJXAcs5y/sV9HuSfpjKS6HkTL/OhZcTDWJNLZ7w+Erx3A=="],
 
     "@workos-inc/node/jose": ["jose@5.6.3", "", {}, "sha512-1Jh//hEEwMhNYPDDLwXHa2ePWgWiFNNUadVmguAAw2IJ6sj9mNxV5tGXJNqlMkJAybF6Lgw1mISDxTePP/187g=="],
-
-    "convex/prettier": ["prettier@3.7.4", "", { "bin": { "prettier": "bin/prettier.cjs" } }, "sha512-v6UNi1+3hSlVvv8fSaoUbggEM5VErKmmpGA7Pl3HF8V6uKY7rvClBOJlH6yNwQtfTueNkGVpOv/mtWL9L4bgRA=="],
 
     "effect/@standard-schema/spec": ["@standard-schema/spec@1.1.0", "", {}, "sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w=="],
 
