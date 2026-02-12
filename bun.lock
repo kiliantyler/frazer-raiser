@@ -58,7 +58,7 @@
         "sanitize-html": "2.17.0",
         "tailwind-merge": "3.4.0",
         "uploadthing": "7.7.4",
-        "yet-another-react-lightbox": "3.28.0",
+        "yet-another-react-lightbox": "3.29.0",
         "zod": "4.3.6",
       },
       "devDependencies": {
@@ -1242,7 +1242,7 @@
 
     "which": ["which@2.0.2", "", { "dependencies": { "isexe": "^2.0.0" }, "bin": { "node-which": "./bin/node-which" } }, "sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA=="],
 
-    "yet-another-react-lightbox": ["yet-another-react-lightbox@3.28.0", "", { "peerDependencies": { "@types/react": "^16 || ^17 || ^18 || ^19", "@types/react-dom": "^16 || ^17 || ^18 || ^19", "react": "^16.8.0 || ^17 || ^18 || ^19", "react-dom": "^16.8.0 || ^17 || ^18 || ^19" }, "optionalPeers": ["@types/react", "@types/react-dom"] }, "sha512-bHjG1/DS4aWPkKb/6hNp0+zcgjda27wQlXBpJvb9TcblC1U1dY3Ih0pe85O8/ZLz+OIy+ZvLxN2gmsbDW0Q/QQ=="],
+    "yet-another-react-lightbox": ["yet-another-react-lightbox@3.29.0", "", { "peerDependencies": { "@types/react": "^16 || ^17 || ^18 || ^19", "@types/react-dom": "^16 || ^17 || ^18 || ^19", "react": "^16.8.0 || ^17 || ^18 || ^19", "react-dom": "^16.8.0 || ^17 || ^18 || ^19" }, "optionalPeers": ["@types/react", "@types/react-dom"] }, "sha512-OdjQ7w4Bsl5QHrv+QI6GIFNLYT9WvYLLzeAtLcUPYUaGcA5k1XbQDjyof4CzxLP1XxXsurxBOiFrto1v6zjvrw=="],
 
     "zod": ["zod@4.3.6", "", {}, "sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg=="],
 
