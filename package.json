@@ -71,7 +71,7 @@
     "react-dom": "19.2.4",
     "react-markdown": "10.1.0",
     "sanitize-html": "2.17.1",
-    "tailwind-merge": "3.4.1",
+    "tailwind-merge": "3.5.0",
     "uploadthing": "7.7.4",
     "yet-another-react-lightbox": "3.29.1",
     "zod": "4.3.6"
