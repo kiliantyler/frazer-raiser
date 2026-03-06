@@ -50,7 +50,7 @@
         "js-cookie": "3.0.5",
         "lucide-react": "0.577.0",
         "next": "16.1.6",
-        "posthog-js": "1.358.1",
+        "posthog-js": "1.359.0",
         "react": "19.2.4",
         "react-day-picker": "9.14.0",
         "react-dom": "19.2.4",
@@ -384,7 +384,7 @@
 
     "@posthog/core": ["@posthog/core@1.23.2", "", { "dependencies": { "cross-spawn": "^7.0.6" } }, "sha512-zTDdda9NuSHrnwSOfFMxX/pyXiycF4jtU1kTr8DL61dHhV+7LF6XF1ndRZZTuaGGbfbb/GJYkEsjEX9SXfNZeQ=="],
 
-    "@posthog/types": ["@posthog/types@1.358.1", "", {}, "sha512-SFfhm+NHYqsk+SAxx5FlSg9FuvqsEPZidfTjPP5TYYM24fif//L+pAzxVGqaxJcnyZojIfF66NRZ3NfM5Jd+eg=="],
+    "@posthog/types": ["@posthog/types@1.359.0", "", {}, "sha512-IcRRmDqDwXnwcB1ISg2NofvDXUwJKUjmIWuRqaEzD1sB+VyY7YX9R1pctXoZ4181cdjYG8Ed/g7fnpJMloZY/A=="],
 
     "@protobufjs/aspromise": ["@protobufjs/aspromise@1.1.2", "", {}, "sha512-j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ=="],
 
@@ -1038,7 +1038,7 @@
 
     "postcss": ["postcss@8.5.8", "", { "dependencies": { "nanoid": "^3.3.11", "picocolors": "^1.1.1", "source-map-js": "^1.2.1" } }, "sha512-OW/rX8O/jXnm82Ey1k44pObPtdblfiuWnrd8X7GJ7emImCOstunGbXUpp7HdBrFQX6rJzn3sPT397Wp5aCwCHg=="],
 
-    "posthog-js": ["posthog-js@1.358.1", "", { "dependencies": { "@opentelemetry/api": "^1.9.0", "@opentelemetry/api-logs": "^0.208.0", "@opentelemetry/exporter-logs-otlp-http": "^0.208.0", "@opentelemetry/resources": "^2.2.0", "@opentelemetry/sdk-logs": "^0.208.0", "@posthog/core": "1.23.2", "@posthog/types": "1.358.1", "core-js": "^3.38.1", "dompurify": "^3.3.1", "fflate": "^0.4.8", "preact": "^10.28.2", "query-selector-shadow-dom": "^1.0.1", "web-vitals": "^5.1.0" } }, "sha512-teipwLZtfErKDrURiUlLMnmpjgjGlni15JxyJ7oRaSlT3sX4E/mgvNatHIbWnp+7z1zYm3Jz5BYwGqwgyesRnw=="],
+    "posthog-js": ["posthog-js@1.359.0", "", { "dependencies": { "@opentelemetry/api": "^1.9.0", "@opentelemetry/api-logs": "^0.208.0", "@opentelemetry/exporter-logs-otlp-http": "^0.208.0", "@opentelemetry/resources": "^2.2.0", "@opentelemetry/sdk-logs": "^0.208.0", "@posthog/core": "1.23.2", "@posthog/types": "1.359.0", "core-js": "^3.38.1", "dompurify": "^3.3.1", "fflate": "^0.4.8", "preact": "^10.28.2", "query-selector-shadow-dom": "^1.0.1", "web-vitals": "^5.1.0" } }, "sha512-W3yrLKgJfc9qm7Z9e7LblPdCuSJsfB8xzg36GSklyFETqb5b8KtmF2cx/tiXMGEDNmKPPJ+oex/N9Q+vdTjPug=="],
 
     "preact": ["preact@10.28.4", "", {}, "sha512-uKFfOHWuSNpRFVTnljsCluEFq57OKT+0QdOiQo8XWnQ/pSvg7OpX5eNOejELXJMWy+BwM2nobz0FkvzmnpCNsQ=="],
 
