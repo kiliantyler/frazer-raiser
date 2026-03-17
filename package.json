@@ -64,7 +64,7 @@
     "date-fns": "4.1.0",
     "js-cookie": "3.0.5",
     "lucide-react": "0.577.0",
-    "next": "16.1.6",
+    "next": "16.1.7",
     "posthog-js": "1.360.2",
     "react": "19.2.4",
     "react-day-picker": "9.14.0",
