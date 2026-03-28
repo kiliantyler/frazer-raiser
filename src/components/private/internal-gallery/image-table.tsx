@@ -6,7 +6,7 @@ import { DatePicker } from '@/components/ui/date-picker'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { Switch } from '@/components/ui/switch'
 import { api } from '@convex/_generated/api'
-import { type Id } from '@convex/_generated/dataModel'
+import type { Id } from '@convex/_generated/dataModel'
 import {
   DndContext,
   type DragEndEvent,
