@@ -117,35 +117,43 @@ function ResizableImageComponent({ node, updateAttributes, selected }: NodeViewP
         <>
           {/* Corner handles */}
           <div
+            role="presentation"
             className="absolute -top-1 -left-1 w-3 h-3 bg-primary border-2 border-white rounded-full cursor-nwse-resize z-10"
             onMouseDown={e => handleMouseDown(e, 'nw')}
           />
           <div
+            role="presentation"
             className="absolute -top-1 -right-1 w-3 h-3 bg-primary border-2 border-white rounded-full cursor-nesw-resize z-10"
             onMouseDown={e => handleMouseDown(e, 'ne')}
           />
           <div
+            role="presentation"
             className="absolute -bottom-1 -left-1 w-3 h-3 bg-primary border-2 border-white rounded-full cursor-nesw-resize z-10"
             onMouseDown={e => handleMouseDown(e, 'sw')}
           />
           <div
+            role="presentation"
             className="absolute -bottom-1 -right-1 w-3 h-3 bg-primary border-2 border-white rounded-full cursor-nwse-resize z-10"
             onMouseDown={e => handleMouseDown(e, 'se')}
           />
           {/* Edge handles */}
           <div
+            role="presentation"
             className="absolute top-1/2 -left-1 w-3 h-8 -translate-y-1/2 bg-primary border-2 border-white rounded-full cursor-ew-resize z-10"
             onMouseDown={e => handleMouseDown(e, 'w')}
           />
           <div
+            role="presentation"
             className="absolute top-1/2 -right-1 w-3 h-8 -translate-y-1/2 bg-primary border-2 border-white rounded-full cursor-ew-resize z-10"
             onMouseDown={e => handleMouseDown(e, 'e')}
           />
           <div
+            role="presentation"
             className="absolute -top-1 left-1/2 h-3 w-8 -translate-x-1/2 bg-primary border-2 border-white rounded-full cursor-ns-resize z-10"
             onMouseDown={e => handleMouseDown(e, 'n')}
           />
           <div
+            role="presentation"
             className="absolute -bottom-1 left-1/2 h-3 w-8 -translate-x-1/2 bg-primary border-2 border-white rounded-full cursor-ns-resize z-10"
             onMouseDown={e => handleMouseDown(e, 's')}
           />
