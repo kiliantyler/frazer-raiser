@@ -40,7 +40,7 @@
         "@tiptap/starter-kit": "3.22.2",
         "@uploadthing/react": "7.3.3",
         "@workos-inc/authkit-nextjs": "3.0.0",
-        "@workos-inc/node": "8.12.0",
+        "@workos-inc/node": "8.12.1",
         "babel-plugin-react-compiler": "1.0.0",
         "class-variance-authority": "0.7.1",
         "clsx": "2.1.1",
@@ -678,7 +678,7 @@
 
     "@workos-inc/authkit-nextjs": ["@workos-inc/authkit-nextjs@3.0.0", "", { "dependencies": { "@workos-inc/node": "^8.9.0", "iron-session": "^8.0.4", "jose": "^5.10.0", "path-to-regexp": "^6.3.0", "valibot": "^1.2.0" }, "peerDependencies": { "next": "^13.5.9 || ^14.2.26 || ^15.2.3 || ^16", "react": "^18.0 || ^19.0.0", "react-dom": "^18.0 || ^19.0.0" } }, "sha512-9qER/fIlxGw0gfkBOcHh9Vi9LMBSq9zVsrJReQ6xbd08Ulz9QcrRDxOvs6CX6xitZjxrQKUwkWi0yH1vwUlhVA=="],
 
-    "@workos-inc/node": ["@workos-inc/node@8.12.0", "", { "dependencies": { "eventemitter3": "^5.0.4" } }, "sha512-y3WGK+A1dxUEsxV6jGXK4q5yVQLj47ZF5qphpEq+51axOhcbiInS28o8XDixVrtsDBCPDcQT+XCG909JmNgpbA=="],
+    "@workos-inc/node": ["@workos-inc/node@8.12.1", "", { "dependencies": { "eventemitter3": "^5.0.4" } }, "sha512-jOYaZACPGb4o1QYvy7NbbBBaDhGUitU6oH//vSYWMh3p2Le5yOt4Q01RQPl78fUKjG7CVtGhVcLi4QLB1+cAtA=="],
 
     "ansi-styles": ["ansi-styles@6.2.3", "", {}, "sha512-4Dj6M28JB+oAH8kFkTLUo+a2jwOFkuqb3yucU0CANcRRUbxS0cP0nZYCGjcc3BNXwRIsUVmDGgzawme7zvJHvg=="],
 
