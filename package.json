@@ -63,7 +63,7 @@
     "convex": "1.38.0",
     "date-fns": "4.1.0",
     "js-cookie": "3.0.5",
-    "lucide-react": "1.14.0",
+    "lucide-react": "1.16.0",
     "next": "16.2.6",
     "posthog-js": "1.373.4",
     "react": "19.2.6",
