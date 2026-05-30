@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import * as React from 'react'
-import type { DayPickerSingleProps } from 'react-day-picker'
+import type { DayPickerProps as ReactDayPickerProps } from 'react-day-picker'
 import { DayPicker } from 'react-day-picker'
 
 import 'react-day-picker/style.css'
@@ -18,7 +18,7 @@ type DatePickerProps = {
   className?: string
   disabled?: boolean
   name?: string
-} & Omit<DayPickerSingleProps, 'mode' | 'selected' | 'onSelect'>
+} & Omit<ReactDayPickerProps, 'mode' | 'selected' | 'onSelect' | 'disabled'>
 
 export function DatePicker({
   value,
@@ -52,7 +52,7 @@ export function DatePicker({
               onChange?.(date)
               setOpen(false)
             }}
-            initialFocus
+            autoFocus
             {...props}
           />
         </PopoverContent>
