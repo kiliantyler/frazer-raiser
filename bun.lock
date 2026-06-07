@@ -86,11 +86,11 @@
   "packages": {
     "@alloc/quick-lru": ["@alloc/quick-lru@5.2.0", "", {}, "sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw=="],
 
-    "@augment-vir/assert": ["@augment-vir/assert@31.72.0", "", { "dependencies": { "@augment-vir/core": "^31.72.0", "@date-vir/duration": "^8.3.2", "deep-eql": "^5.0.2", "expect-type": "^1.3.0", "type-fest": "^5.6.0" } }, "sha512-h7xg5Ctm5dvkmacEvuRCotcY/97/PfR6bLGIVypCLklnSVZWTARed0ob5zGbGyZ9Eljnu3Tq66+3rjKmCDyRqg=="],
+    "@augment-vir/assert": ["@augment-vir/assert@31.72.1", "", { "dependencies": { "@augment-vir/core": "^31.72.1", "@date-vir/duration": "^8.3.2", "deep-eql": "^5.0.2", "expect-type": "^1.3.0", "type-fest": "^5.6.0" } }, "sha512-bJSF822pNUuZO5eDmlXFeUjU1seF4VJgwor/rZ8/eP1fh1V7SCSHadB9fkHatso6IrKx3E2fl3JC/zTP+hYqLg=="],
 
-    "@augment-vir/common": ["@augment-vir/common@31.72.0", "", { "dependencies": { "@augment-vir/assert": "^31.72.0", "@augment-vir/core": "^31.72.0", "@date-vir/duration": "^8.3.2", "@paralleldrive/cuid2": "^3.3.0", "ansi-styles": "^6.2.3", "deepcopy-esm": "^2.1.1", "json5": "^2.2.3", "type-fest": "^5.6.0", "typed-event-target": "^4.3.0" } }, "sha512-zf4vPBA+/h65evmKV0w7gubr0c1qNxcDiJa14vp002AgjbJOi6V0pT1D6uspO+FEukIMXYYygMG7YxTDOGeSOA=="],
+    "@augment-vir/common": ["@augment-vir/common@31.72.1", "", { "dependencies": { "@augment-vir/assert": "^31.72.1", "@augment-vir/core": "^31.72.1", "@date-vir/duration": "^8.3.2", "@paralleldrive/cuid2": "^3.3.0", "ansi-styles": "^6.2.3", "deepcopy-esm": "^2.1.1", "json5": "^2.2.3", "type-fest": "^5.6.0", "typed-event-target": "^4.3.0" } }, "sha512-5cvgQMZTcxJoKFdPzvGozqo0Fe2URn724yT01PI3k/Q20PZYD8LhK/PmgX/u+QJmszKnkFv3KcP/sEbrTui65A=="],
 
-    "@augment-vir/core": ["@augment-vir/core@31.72.0", "", { "dependencies": { "@date-vir/duration": "^8.3.2", "browser-or-node": "^3.0.0", "diff": "^9.0.0", "json5": "^2.2.3", "type-fest": "^5.6.0" } }, "sha512-iUFV13o9JcbpU66o6VFciLDAZGdIDC9WuyQCrBNITGUZhkHyN06UZkktZcLp1VDS6sGIRe8P0CXwA5nCQNUqzA=="],
+    "@augment-vir/core": ["@augment-vir/core@31.72.1", "", { "dependencies": { "@date-vir/duration": "^8.3.2", "browser-or-node": "^3.0.0", "diff": "^9.0.0", "json5": "^2.2.3", "type-fest": "^5.6.0" } }, "sha512-e9OuQr3TP/nQETfqqMExz2gGtf3AKbqcMo78F/J5S1R6a5O9rXMM45FyWmBD0l+4VU1tWiEA2VZNZ+mQ74YcOg=="],
 
     "@babel/helper-string-parser": ["@babel/helper-string-parser@7.29.7", "", {}, "sha512-Pb5ijPrZ89GDH8223L4UP8i6QApWxs04RbPQJTeWDV0/keR2E36MeKnyr6LYmUUvqRRI+Iv87SuF1W6ErINzYw=="],
 
