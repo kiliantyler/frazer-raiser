@@ -84,7 +84,7 @@
     "@types/react-dom": "19.2.3",
     "@types/sanitize-html": "2.16.1",
     "knip": "6.16.1",
-    "oxlint": "1.68.0",
+    "oxlint": "1.69.0",
     "postcss": "8.5.15",
     "prettier": "3.8.3",
     "prettier-plugin-multiline-arrays": "4.1.9",
