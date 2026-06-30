@@ -71,7 +71,7 @@
         "knip": "6.23.0",
         "oxlint": "1.72.0",
         "postcss": "8.5.16",
-        "prettier": "3.9.3",
+        "prettier": "3.9.4",
         "prettier-plugin-multiline-arrays": "4.1.9",
         "prettier-plugin-organize-attributes": "1.0.0",
         "prettier-plugin-organize-imports": "4.3.0",
@@ -922,7 +922,7 @@
 
     "preact": ["preact@10.29.3", "", {}, "sha512-D9NL1GAnJZhc3RndVs4gDdxEeU9TcHgywMrhhOsnpdlvFjdbx0gAsLUnH6JEhlJH5giL7Tx5biWPUSEXE/HPzw=="],
 
-    "prettier": ["prettier@3.9.3", "", { "bin": { "prettier": "bin/prettier.cjs" } }, "sha512-HWmu+K+zvHNpaMfSnYeqdqrDbR16cuIXaPx8WoHaviQkDJh1/0BNtOZmHVQI5jc3wXv0H1yXc9wjvFdXh+n3hQ=="],
+    "prettier": ["prettier@3.9.4", "", { "bin": { "prettier": "bin/prettier.cjs" } }, "sha512-yWG/o/4oJfo036EKAfK6ACAoDOfHeRHx4tuxkfBZiauURiaSmYwlpOr5LQqKtIkRD2z1PLteme2WoxEnj4tHTg=="],
 
     "prettier-plugin-multiline-arrays": ["prettier-plugin-multiline-arrays@4.1.9", "", { "dependencies": { "@augment-vir/assert": "^31.71.3", "@augment-vir/common": "^31.71.3", "proxy-vir": "^2.0.2" }, "peerDependencies": { "prettier": ">=3.0.0 <4.0.0" } }, "sha512-rI4HdfJAFkXkvmh0LSE0ItPrRwJrR6TBaNWamrwOOnHzRLGoVuuuBhljU1pnsf9K/oU/ZsZpjQcuAle471yZ8A=="],
 
