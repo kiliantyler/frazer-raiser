@@ -65,7 +65,7 @@
     "js-cookie": "3.0.8",
     "lucide-react": "1.25.0",
     "next": "16.2.11",
-    "posthog-js": "1.405.3",
+    "posthog-js": "1.406.2",
     "react": "19.2.8",
     "react-day-picker": "10.0.1",
     "react-dom": "19.2.8",
