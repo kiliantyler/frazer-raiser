@@ -86,7 +86,7 @@
     "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "knip": "6.29.0",
     "oxlint": "1.76.0",
-    "postcss": "8.5.23",
+    "postcss": "8.5.24",
     "prettier": "3.9.6",
     "prettier-plugin-multiline-arrays": "4.1.10",
     "prettier-plugin-organize-attributes": "1.0.0",
