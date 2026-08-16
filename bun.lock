@@ -101,7 +101,7 @@
 
     "@date-fns/tz": ["@date-fns/tz@1.5.0", "", {}, "sha512-lwYN/vDPeNRULcepoE/LO2Pgx+7/RV+S9ARfbc9lr2DtGkOD7pAiruHvbR1RX3Qyf6ja47EWJDMsNK5vK08DJg=="],
 
-    "@date-vir/duration": ["@date-vir/duration@9.0.0", "", { "dependencies": { "@augment-vir/assert": "^32.2.1", "@types/luxon": "^3.7.3", "luxon": "^3.7.2", "type-fest": "^5.8.0" } }, "sha512-UPYY9VzN+Z79yohQWWRwKWKISonkBzY5fYf9UjtHKfAjEhj6c4nzO6To/ELBKCw3gMYdQ7mFklbNZRP+LaTU2Q=="],
+    "@date-vir/duration": ["@date-vir/duration@9.1.0", "", { "dependencies": { "@augment-vir/assert": "^32.2.1", "@types/luxon": "^3.7.3", "luxon": "^3.7.2", "type-fest": "^5.8.0" } }, "sha512-oQr3BaRBL9hFumc4XU5z0qkqmgtm4tL3T+bOpE3AYDMgbqFKjZzq60OCsiLaDdzdbfGUdyVOGg76jSepZ069BQ=="],
 
     "@dnd-kit/accessibility": ["@dnd-kit/accessibility@3.1.1", "", { "dependencies": { "tslib": "^2.0.0" }, "peerDependencies": { "react": ">=16.8.0" } }, "sha512-2P+YgaXF+gRsIihwwY1gCsQSYnu9Zyj2py8kY5fFvUM1qm2WA2u639R6YNVfU4GWr+ZM5mqEsfHZZLoRONbemw=="],
 
