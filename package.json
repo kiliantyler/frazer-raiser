@@ -54,7 +54,7 @@
     "@tiptap/react": "3.31.3",
     "@tiptap/starter-kit": "3.31.3",
     "@uploadthing/react": "7.3.3",
-    "@workos-inc/authkit-nextjs": "4.2.0",
+    "@workos-inc/authkit-nextjs": "4.3.1",
     "@workos-inc/node": "10.13.0",
     "babel-plugin-react-compiler": "1.0.0",
     "class-variance-authority": "0.7.1",
