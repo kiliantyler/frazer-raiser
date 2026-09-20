@@ -789,7 +789,7 @@
 
     "fast-check": ["fast-check@3.23.2", "", { "dependencies": { "pure-rand": "^6.1.0" } }, "sha512-h5+1OzzfCC3Ef7VbtKdcv7zsstUQwUDlYpUTvjeUsJAssPgLn7QzbboPtL5ro04Mq0rPOsMzl7q5hIbRs2wD1A=="],
 
-    "fast-equals": ["fast-equals@5.4.2", "", {}, "sha512-Ywe6jodPTWOTL9/k0bV7gdfP8twKL5Y8I8CZ933fAY5gBekICZSUQTbyH6ut2NZCNyB05mSUwAuEqdEIaOOlDQ=="],
+    "fast-equals": ["fast-equals@5.4.3", "", {}, "sha512-8unmvA0qrfpFWBYUate9BTGtQdKHWBYt+KdAIkag7Vvxe7wz8Q2nJg7fLMC0bJqe0bjP31kca7Ckaawrs4Istg=="],
 
     "fd-package-json": ["fd-package-json@2.0.0", "", { "dependencies": { "walk-up-path": "^4.0.0" } }, "sha512-jKmm9YtsNXN789RS/0mSzOC1NUq9mkVd65vbSSVsKdjGvYXBuE4oWe2QOEoFeRmJg+lPuZxpmrfFclNhoRMneQ=="],
 
