@@ -73,7 +73,7 @@
     "sanitize-html": "2.18.1",
     "tailwind-merge": "3.7.0",
     "uploadthing": "7.7.4",
-    "yet-another-react-lightbox": "3.32.2",
+    "yet-another-react-lightbox": "3.33.0",
     "zod": "4.6.7"
   },
   "devDependencies": {
